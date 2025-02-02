@@ -1,0 +1,82 @@
+<!-- Daily Activity -->
+<mat-card class="w-100">
+  <mat-card-content>
+    <h4 class="mb-56">Configuraciones generales del sistema</h4>
+    <div class="example-action-buttons">
+        <button mat-button (click)="accordion().openAll()">Expandir Todos</button>
+        <button mat-button (click)="accordion().closeAll()">Colapsar  Todos</button>
+      </div>
+      <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Información de tu negocio</mat-panel-title>
+            <mat-panel-description>
+            Configura las información de tu empresa y adapta el sistema a tu negocio.
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+      
+          <mat-list>
+            <mat-list-item><a [routerLink]="['/settings/company']">Mi empresa</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['/settings/role']">Roles</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['/settings/users']">Usuarios</a></mat-list-item>
+          </mat-list>
+          
+        </mat-expansion-panel>
+        <!-- <mat-expansion-panel disabled>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Destination </mat-panel-title>
+            <mat-panel-description>
+              Type the country name
+              <mat-icon>map</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+      
+          <mat-form-field>
+            <mat-label>Country</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </mat-expansion-panel> -->
+      
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Facturación </mat-panel-title>
+            <mat-panel-description>
+                Configura la información que se mostrará en tus facturas.
+              <mat-icon>date_range</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+      
+          <mat-list>
+            <mat-list-item><a [routerLink]="['/settings/paymentsterms']">Terminos de pago</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['/settings/numbers']">Numeraciones</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['empresa']">Datos generales</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['empresa']">Vendedores</a></mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Impuestos </mat-panel-title>
+              <mat-panel-description>
+                Define aquí los tipos de impuestos y retenciones que aplicas a tus facturas
+                <mat-icon>database</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+
+            <mat-list>
+              <mat-list-item><a [routerLink]="['empresa']">Impuestos</a></mat-list-item>
+              <mat-divider></mat-divider>
+            </mat-list>
+          </mat-expansion-panel>
+
+      </mat-accordion>
+  </mat-card-content>
+</mat-card>
+
