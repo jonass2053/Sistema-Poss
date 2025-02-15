@@ -63,17 +63,13 @@
                                   <mat-radio-button formControlName="estado" value="0">Inactivo</mat-radio-button>
                                  </mat-radio-group> -->
 
-
-
-
-
                             </div>
 
                         </div>
                         <div class="modal-footer">
                             <button mat-raised-button class="me-8 mb-8" color="primary"
                                 (click)="save()">Guardar</button>
-                            <button mat-raised-button class="me-8 mb-8" color="warn"
+                            <button *ngIf="editando" mat-raised-button class="me-8 mb-8" color="warn"
                                 (click)="resetForm()">Cancelar</button>
                         </div>
                     </form>
@@ -130,7 +126,7 @@
                                             <button class="btnaccion" (click)="editar(element)"> <mat-icon
                                                     class="editarcolor">edit</mat-icon></button>
                                             <button class="btnaccion" (click)="delete(element)"> <mat-icon
-                                                    class="editarcolor">delete</mat-icon></button>
+                                                    class="deletecolor">delete</mat-icon></button>
 
                                         </div>
                                     </td>
@@ -149,3 +145,5 @@
         </div>
     </mat-card-content>
 </mat-card>
+
+

@@ -81,13 +81,15 @@ export const  importaciones : any =[
   MatCardModule, MatChipsModule, MatProgressBarModule,
   MatTableModule,
   MatExpansionModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule,
+  MatProgressBarModule
 
 
 ]
 
 import { MatDateFormats } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 

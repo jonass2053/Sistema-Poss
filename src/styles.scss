@@ -44,6 +44,9 @@
   .acciones{
     display: flex;
     flex-direction: row;
+    // border: 1px solid red;
+    justify-content: center;
+    align-items: center;
   }
   .btnaccion
   {
@@ -51,17 +54,67 @@
     flex-direction: row;
     padding: 5px;
     margin: 0 7px 0 1px;
-    border-radius: 100px;
-    background-color: rgb(220, 220, 220);
+    // border-radius: 100px;
+    // background-color: rgb(220, 220, 220);
     width: 30px;
     height: 30px;
+    border: none;
+    background-color: transparent;
   }
+
   .btnaccion mat-icon
   {
-    width:15px;
-    height: 15px;
+    // width:15px;
+    // height: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    // font-size: 20px;
+  }
+  .tiuloParaleto
+  {
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  .filterandbutton{
+    display: flex;
+    justify-content: space-between;
+
+  }
+  .filterandbutton button{
+    display: flex;
+    justify-content: space-between;
+    background-color: red;
+
+  }
+  .editarcolor
+  {
+    color: green;
+  }
+  .deletecolor
+  {
+    color: red;
+
+  }
+  
+  .centerall
+  {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    border-radius: 10px;
+  }
+  
+  .centerall i-feather
+  {
+    margin-left: 8px;
+    margin-right: 8px;
+    font-size: 10px !important;
+    width: 15px;
+    display: flex;
+  }
+
+  .margin2{
+    margin: 2px;
   }

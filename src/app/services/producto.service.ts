@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ServiceResponse } from '../interfaces/service-response-login';
 import { Observable, catchError } from 'rxjs';
-import { iImpuestoProductoCodigo } from '../interfaces/iTermino';
+import { iImpuestoProductoCodigo, iProducto } from '../interfaces/iTermino';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 import { baseUrl } from '../Core/utilities/enviroment.';
 
@@ -18,6 +18,9 @@ export class ProductoService {
      ) { }
    
   
+
+     productoForEdit! : iProducto;
+
      insert(formualrio : any) : any
      {
         return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(catchError((error)=>

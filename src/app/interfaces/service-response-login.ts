@@ -5,7 +5,7 @@ export interface ServiceResponse {
     statusCode : number,
     currentPage: number,
     cantPage: number,
-    totalPage: number,
+    totalItems: number,
     data: any
 }
 

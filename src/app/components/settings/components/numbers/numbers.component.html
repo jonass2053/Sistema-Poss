@@ -9,7 +9,7 @@
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
             <mat-card appearance="raised" class="cardForm">
                 <mat-card-content>
-                    <form class="formulario" [formGroup]="miFormulario" (ngSubmit)="save()">
+                    <form class="formulario" [formGroup]="miFormulario" >
                         <div class="container">
                             <div class="row">
                                 <div class="mb-8">
@@ -191,8 +191,13 @@
                                 <ng-container matColumnDef="predeterminada">
                                     <th mat-header-cell *matHeaderCellDef> Predeterminada </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.predeterminada }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                                        <p class="mb-0 fw-medium">{{ element.predeterminada }}
+                                            <mat-slide-toggle (click)="setNumberDefault(element.idNumeracion)"
+                                                class="example-margin-details" [color]="color"
+                                                [checked]="element.predeterminada">
+                                            </mat-slide-toggle>
+                                        </p>
+
                                     </td>
                                 </ng-container>
 
@@ -205,8 +210,8 @@
 
                                             <button class="btnaccion" (click)="editar(element)"> <mat-icon
                                                     class="editarcolor">edit</mat-icon></button>
-                                            <button class="btnaccion" (click)="delete(element)"> <mat-icon
-                                                    class="editarcolor">delete</mat-icon></button>
+                                            <button class="btnaccion" (click)="delete(element.idNumeracion)"> <mat-icon
+                                                    class="deletecolor">delete</mat-icon></button>
 
                                         </div>
                                     </td>

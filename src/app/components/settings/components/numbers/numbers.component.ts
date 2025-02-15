@@ -45,7 +45,7 @@ export class NumbersComponent {
       idTipoNumeracion: this.fb.control(""),
       nombre: this.fb.control("", Validators.required),
       predeterminada: this.fb.control(false),
-      vigencia: this.fb.control(""),
+      vigencia: this.fb.control("", Validators.required),
       prefijo: this.fb.control(""),
       numeracionInicial: this.fb.control("", Validators.required),
       contador: this.fb.control("", Validators.required),
@@ -63,7 +63,7 @@ export class NumbersComponent {
   disabled = false;
   documentoSeleccionado :  any ="";
   displayedColumns: string[] = ['idNumeracion', 'nombre', 'prefijo', 'numeracionInicial', 'contador', 'predeterminada', 'acciones'];
-
+ 
 
 
 
@@ -74,8 +74,8 @@ export class NumbersComponent {
       setTimeout(() => {
         this.alertaService.successAlert(data.message);
         if (data.status) {
-          this.resetForm();
           this.getAll();
+          this.resetForm();
          }
       }, 1000);
     })
@@ -105,6 +105,7 @@ export class NumbersComponent {
       setTimeout(() => {
         this.alertaService.successAlert(data.message);
         data.status ? this.resetForm : '';
+        this.resetForm();
         this.getAll();
       }, 1000);
     })

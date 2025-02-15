@@ -15,3 +15,62 @@
   top: 0;
   z-index: 1;
 }
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.example-tree .mat-nested-tree-node div[role=group] {
+  padding-left: 40px;
+}
+
+/*
+ * Padding for leaf nodes.
+ * Leaf nodes need to have padding so as to align with other non-leaf nodes
+ * under the same parent.
+ */
+.example-tree div[role=group] > .mat-nested-tree-node {
+  padding-left: 40px;
+}
+
+
+.contItem {
+  display: flex;
+  flex-direction: column;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease-out;
+  // background-color: rgb(244, 243, 243);
+  width: 100%;
+}
+
+.contItem a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #545454;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.contItem a:hover {
+  background-color: #cecece;
+}
+
+.contItem.show {
+  max-height: 500px;
+  /* Ajusta este valor según la altura de tu contenido */
+}
+.logorectangular{
+  width: 50px;
+}

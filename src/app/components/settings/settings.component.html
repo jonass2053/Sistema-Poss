@@ -54,9 +54,9 @@
             <mat-divider></mat-divider>
             <mat-list-item><a [routerLink]="['/settings/numbers']">Numeraciones</a></mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item><a [routerLink]="['empresa']">Datos generales</a></mat-list-item>
+            <!-- <mat-list-item><a [routerLink]="['empresa']">Datos generales</a></mat-list-item> -->
             <mat-divider></mat-divider>
-            <mat-list-item><a [routerLink]="['empresa']">Vendedores</a></mat-list-item>
+            <mat-list-item><a [routerLink]="['/settings/sallers']">Vendedores</a></mat-list-item>
           </mat-list>
         </mat-expansion-panel>
 
@@ -65,13 +65,13 @@
               <mat-panel-title> Impuestos </mat-panel-title>
               <mat-panel-description>
                 Define aquí los tipos de impuestos y retenciones que aplicas a tus facturas
-                <mat-icon>database</mat-icon>
+                <mat-icon>paid</mat-icon>
               </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
 
             <mat-list>
-              <mat-list-item><a [routerLink]="['empresa']">Impuestos</a></mat-list-item>
+              <mat-list-item><a [routerLink]="['/settings/taxes']">Impuestos</a></mat-list-item>
               <mat-divider></mat-divider>
             </mat-list>
           </mat-expansion-panel>

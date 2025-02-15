@@ -4,7 +4,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, Observable, throwError } from 'rxjs';
 import { iFactura, iPago } from '../interfaces/iTermino';
 import { UsuarioService } from './usuario.service';
-import { error } from 'console';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 import { baseUrl } from '../Core/utilities/enviroment.';
 

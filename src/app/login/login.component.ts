@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     importaciones
-    
+
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -23,9 +23,9 @@ export class LoginComponent {
     private usuario: UsuarioService,
     private fb: FormBuilder,
     private alertasService: AlertServiceService,
-    private information : InformationService) { }
-    alerta : Boolean = false;
-    mensaje : string = "";
+    private information: InformationService) { }
+  alerta: Boolean = false;
+  mensaje: string = "";
 
   miFormulario: FormGroup = this.fb.group(
     {
@@ -41,36 +41,32 @@ export class LoginComponent {
   }
 
   login(): any {
-    
+
     if (this.miFormulario.valid) {
       this.alerta = true;
-      // this.alertasService.ShowLoading();
       this.usuario.login(this.miFormulario.value).subscribe((data: ServiceResponseLogin) => {
-        
-        if(data.status == true)
-          {    
-            this.alerta = false;
-            this.usuario.usuarioLogueado = data;  
-            this.information.idEmpresa =data.data.sucursal.idEmpresa; 
-            this.information.idSucursal = data.data.sucursal.idSucursal;
-            localStorage.setItem('user', JSON.stringify(data))
-            document.defaultView?.localStorage.setItem('token', JSON.stringify(data.token))
-            this.routess.navigate(['/home'])
-            this.alertasService.successAlert(`Bienvenido ${data.data.nombre} ${data.data.apellidos}`);
-          }  
-          else
-          {
-            // this.alertasService.hideLoading();
-            this.mensaje = data.message; 
-            this.alerta = false;
-           console.log("en el else")
-          }
-        
+
+        if (data.status == true) {
+          this.alerta = false;
+          this.usuario.usuarioLogueado = data.data;
+          this.information.idEmpresa = data.data.sucursal.idEmpresa;
+          this.information.idSucursal = data.data.sucursal.idSucursal;
+          localStorage.setItem('user', JSON.stringify(data))
+          document.defaultView?.localStorage.setItem('token', JSON.stringify(data.token))
+          this.routess.navigate(['/home'])
+          this.alertasService.successAlert(`Bienvenido ${data.data.nombre} ${data.data.apellidos}`);
+        }
+        else {
+          this.mensaje = data.message;
+          this.alerta = false;
+          console.log("en el else")
+        }
+
       })
-    } 
+    }
     else {
       this.alertasService.warnigAlert(`Complete los campos`);
-    } 
+    }
   }
 
 

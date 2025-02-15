@@ -33,7 +33,7 @@
                   <input type="submit"  class="btnGuardar" value="Guardar"> -->
 
                             <button mat-raised-button class="me-8 mb-8" color="primary">Guardar</button>
-                            <button mat-raised-button class="me-8 mb-8" color="warn"
+                            <button *ngIf="editando" mat-raised-button class="me-8 mb-8" color="warn"
                                 (click)="resetForm()">Cancelar</button>
                         </div>
                     </form>

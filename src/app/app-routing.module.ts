@@ -25,6 +25,16 @@ import { RoleComponent } from './components/settings/components/role/role.compon
 import { UsersComponent } from './components/settings/components/users/users.component';
 import { PaymentTermsComponent } from './components/settings/components/payment-terms/payment-terms.component';
 import { NumbersComponent } from './components/settings/components/numbers/numbers.component';
+import { TaxesComponent } from './components/settings/components/taxes/taxes.component';
+import { SallersComponent } from './components/settings/components/sallers/sallers.component';
+import { InventaryComponent } from './components/inventary/inventary.component';
+import { ProductsComponent } from './components/inventary/components/products/products.component';
+import { ContactosService } from './services/contactos.service';
+import { ContactsComponent } from './components/contacts/contacts.component';
+import { NewcontactComponent } from './components/contacts/newcontact/newcontact.component';
+import { SaleslistComponent } from './components/saleslist/saleslist.component';
+import { SalesComponent } from './dashboard/dashboard-components/sales/sales.component';
+import { NewsalesComponent } from './components/saleslist/newsales/newsales.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -36,12 +46,23 @@ const routes: Routes = [
     children: [
       {path:"", redirectTo:"/home", pathMatch:"full"},
       {path:"home", component:DashboardComponent},
+      {path:"sales", component:DashboardComponent},
+      {path:"contacts", component : ContactsComponent},
+      {path:"contacts/new/:id", component : NewcontactComponent },
       {path:"settings", component : SettingsComponent},
       {path:"settings/company", component : CompanyComponent},
       {path:"settings/role", component : RoleComponent},
       {path:"settings/paymentsterms", component : PaymentTermsComponent},
       {path:"settings/users", component : UsersComponent},
       {path:"settings/numbers", component : NumbersComponent},
+      {path:"settings/taxes", component : TaxesComponent},
+      {path:"settings/sallers", component : SallersComponent},
+      {path:"inventary", component : InventaryComponent},
+      {path:"inventary/product/:id", component : ProductsComponent},
+      {path:"sales/salelist", component : SaleslistComponent},
+      {path:"sales/pricelist", component : SaleslistComponent},
+      {path:"sales/newsale/:id", component : NewsalesComponent},
+      {path:"sales/newprice/:id", component : NewsalesComponent},
       {path:"alerts", component:AlertsComponent},
       {path:"forms", component:FormsComponent},
       {path:"table", component:ProductComponent},

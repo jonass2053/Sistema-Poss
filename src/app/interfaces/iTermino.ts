@@ -150,7 +150,8 @@ export interface iProducto
     idEmpresa : number
     impuestos : iiMpuesto[]
     ImpuestosObj : iiMpuesto[]
-
+    idMarca : number,
+    idModelo : number
 }
 
 export interface iCuentas

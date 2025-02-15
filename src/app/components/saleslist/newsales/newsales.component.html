@@ -1,0 +1,381 @@
+<form [formGroup]="miFormulario">
+    <mat-card appearance="outlined">
+        <mat-card-content>
+
+            <div class="headerNavCard">
+
+                <h4 class="mb-56">Nueva <span *ngIf="document=='Cotizacción'">Cotizaciones</span><span
+                        *ngIf="document!=='Cotizacción'">Factura</span></h4>
+                <h2 *ngIf="document!=='Cotizacción'">Punto de Venta</h2>
+
+                <a (click)="retroceder()">
+                    <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+                </a>
+            </div>
+            <div class="row">
+
+
+                <div class="col-12">
+                    <mat-card appearance="outlined">
+                        <mat-card-header>
+                            <mat-card-title> Datos del cliente</mat-card-title>
+                        </mat-card-header>
+
+                        <mat-card-content style="height: 120px; display: flex;">
+                            <mat-form-field appearance="outline" class="control" style="width: 20%;">
+                                <mat-icon matSuffix>person_add</mat-icon>
+                                <mat-label
+                                    matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
+                                <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
+                                    (input)="searchContacto($event)">
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                                    (optionSelected)="selectContacto($event)">
+                                    <mat-option *ngFor="let contacto of dataListContactos" [value]="contacto">
+                                        {{ contacto.nombreRazonSocial }}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            &nbsp;
+                            <mat-form-field class="control" appearance="outline" style="width: 20%;">
+                                <mat-label>Fecha</mat-label>
+                                <input matInput [matDatepicker]="pickerFecha" formControlName="fecha"
+                                    (dateChange)="setVencimiento($event)">
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerFecha"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFecha></mat-datepicker>
+                            </mat-form-field>
+                            &nbsp;
+                            <mat-form-field class="control" appearance="outline" style="width: 20%;">
+                                <mat-label>Plazo</mat-label>
+                                <mat-select formControlName="idTermino" (selectionChange)="setVencimiento($event)">
+                                    @for (termino of dataListTerminos; track termino) {
+                                    <mat-option [value]="termino.idTermino">{{termino.nombre}}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                            &nbsp;
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 20%;">
+                                <mat-label>Vencimiento</mat-label>
+                                <input type="datetime" matInput formControlName="vencimiento">
+                            </mat-form-field>
+                            &nbsp;
+                            <mat-form-field class="control" appearance="outline" style="width: 20%;">
+                                <mat-label>Vendedor</mat-label>
+                                <mat-select formControlName="idVendedor" (selectionChange)="setVencimiento()">
+                                    @for (vendedor of dataListVendedores; track vendedor) {
+                                    <mat-option [value]="vendedor.idVendedor">{{vendedor.nombre}}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+
+
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+                <div class="col-9">
+                    <mat-card appearance="outlined">
+                        <mat-card-content>
+                            <p>
+                            <section style="margin-bottom: 8px;">Producto</section>
+                            <mat-divider></mat-divider>
+                            <mat-form-field appearance="outline" class="control">
+                                <mat-icon matSuffix>search</mat-icon>
+                                <mat-label matTooltip="Puede consultar un producto por su nombre">Buscar producto
+                                    por codigo o por nombre</mat-label>
+                                <input type="text" #inputProducto matInput [matAutocomplete]="prductoBuscador"
+                                    (input)="searchProducto($event)" formControlName="producto">
+                                <mat-autocomplete #prductoBuscador="matAutocomplete" [displayWith]="displayFnProducto"
+                                    (optionSelected)="selectProducto($event)">
+                                    <mat-option *ngFor="let producto of dataListProductosSearch" [value]="producto">
+                                        {{ producto.nombre }}
+                                    </mat-option>
+                                </mat-autocomplete>
+
+                            </mat-form-field>
+
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 15%;">
+                                <mat-label>Cant.</mat-label>
+                                <input type="number" matInput formControlName="cantidad" (keyup)="calcular()">
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 15%;">
+                                <mat-label>Desc. %</mat-label>
+                                <input type="number" matInput formControlName="descuento" (keyup)="calcular()">
+                            </mat-form-field>
+                            <!-- <mat-form-field class="example-full-width control" appearance="outline">
+                            <mat-label>Descripcion</mat-label>
+                            <input matInput formControlName="descripcion">
+                         </mat-form-field> -->
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 15%;">
+                                <mat-label>Precio</mat-label>
+                                <input matInput type="number" formControlName="precio" readonly="true">
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 15%;">
+                                <mat-label>SubTotal</mat-label>
+                                <input matInput type="number" formControlName="subTotalDetails" readonly="true">
+                            </mat-form-field>
+
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 15%;">
+                                <mat-label>Impuesto</mat-label>
+                                <input matInput type="number" formControlName="impuesto" readonly="true">
+                            </mat-form-field>
+
+                            <mat-form-field class="example-full-width control" appearance="outline" style="width: 25%;">
+                                <mat-label>Total</mat-label>
+                                <input matInput formControlName="total" readonly="true">
+                            </mat-form-field>
+
+
+
+                            <button mat-raised-button color="primary" class="margin2"
+                                (click)="addDetails()"><mat-icon>add</mat-icon> Agregar fila</button>
+                            <mat-divider></mat-divider>
+                            <div class="table-responsive">
+                                <table mat-table [dataSource]="dataSource" class="text-nowrap w-100">
+
+                                    <!-- Id Column -->
+                                    <ng-container matColumnDef="item">
+                                        <th mat-header-cell *matHeaderCellDef> Item</th>
+                                        <td mat-cell class="mb-0 fw-medium op-5"
+                                            *matCellDef="let element; let i = index">
+                                            {{i +1}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="descripcion">
+                                        <th mat-header-cell *matHeaderCellDef> Descripción</th>
+                                        <td mat-cell class="mb-0 fw-medium op-5" *matCellDef="let element">
+                                            {{element.nombre}} </td>
+                                    </ng-container>
+
+
+
+                                    <!-- Assigned Column -->
+                                    <ng-container matColumnDef="cantidad">
+                                        <th mat-header-cell *matHeaderCellDef> Cant. </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <p class="mb-0 fw-medium op-5">{{ element.cantidad }}</p>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Project Column -->
+                                    <ng-container matColumnDef="precio">
+                                        <th mat-header-cell *matHeaderCellDef> Precio </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <p class="mb-0 fw-medium op-5">{{moneda.simbolo}}
+                                                {{element.precio | number : '1.2-5'}}</p>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Budget Column -->
+                                    <ng-container matColumnDef="subtotal">
+                                        <th mat-header-cell *matHeaderCellDef> SubTotal </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <p class="mb-0 fw-medium op-5">
+                                                {{moneda.simbolo}}{{
+                                                element.total | number:'1.2-2' }}</p>
+                                        </td>
+                                    </ng-container>
+
+                                    <!-- Budget Column -->
+                                    <ng-container matColumnDef="descuento">
+                                        <th mat-header-cell *matHeaderCellDef>Desc %.
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <p class="mb-0 fw-medium op-5">{{element.descuento}}</p>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="total">
+                                        <th mat-header-cell *matHeaderCellDef>Total
+                                        </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <p class="mb-0 fw-medium op-5">{{element.total}}</p>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="acciones">
+                                        <th mat-header-cell *matHeaderCellDef> </th>
+                                        <td mat-cell *matCellDef="let element; let i=index"
+                                            style="text-align: right; width: 70px;">
+                                            <div class="mb-0 fw-medium op-5 acciones">
+                                                <!-- {{element.project}} -->
+
+                                                <mat-icon (click)="editRow(element, i )" class="btnEditar"
+                                                    style="cursor: pointer;" matTooltip="Editar">edit</mat-icon>
+                                                <mat-icon (click)="removeItem(i, element)" class="btnEliminar"
+                                                    style="cursor: pointer;" matTooltip="Eliminar">closed</mat-icon>
+
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                </table>
+                            </div>
+
+
+
+
+
+
+
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+
+                <div class="col-3">
+                    <mat-card appearance="outlined">
+                        <mat-card-content>
+
+
+
+                            <div>
+                                <div class="container">
+                                    <!-- <h3 style="margin: 0; padding: 0;">---------------------------METODO DE
+                                        PAGO---------------------------</h3> -->
+                                    <div>
+
+                                        <div class="containerTotalesResumen">
+                                            <p>Subtotal</p>
+                                            <h3>{{moneda.simbolo}} {{subTotalGeneral | number : '1.2-5'}}</h3>
+                                        </div>
+
+                                        <div class="containerTotalesResumen">
+                                            <p>Descuento</p>
+                                            <h3>{{moneda.simbolo}} {{descuentoGeneral | number : '1.2-5'}}</h3>
+                                        </div>
+
+                                        <div class="containerTotalesResumen">
+
+                                            <p>ITBIS</p>
+                                            <h3>{{moneda.simbolo}}{{impuestosGenerales |number : '1.2-5'}}</h3>
+
+                                        </div>
+                                        <div class="containerTotalesResumen">
+                                            <p>Total</p>
+                                            <h3 class="mat-primmary">{{moneda.simbolo}} {{totalGeneral | number :
+                                                '1.2-5'}}</h3>
+                                        </div>
+
+
+                                        <div
+                                            style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
+                                            <button mat-raised-button color="primary" class="margin2"
+                                                (click)="onPayment()"><mat-icon>payment</mat-icon> Pagar documento
+                                            </button>
+                                            <button mat-raised-button color="primary" class="margin2"
+                                                (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar</button>
+
+                                            <button mat-raised-button color="warn" class="margin2"
+                                                (click)="resetData()"><mat-icon>cancel</mat-icon> Cancelar</button>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+
+                            <div>
+
+
+                            </div>
+
+
+
+                        </mat-card-content>
+                    </mat-card>
+
+
+
+                </div>
+                
+                <div class="col-12">
+                    
+                    <mat-card *ngIf="activePayment" appearance="outlined">
+                        <mat-card-content>
+                            <p>Seleccione el metodo de pago de su preferencia</p>
+                            <div class="" style="display: flex; justify-content: center;">
+                                <div class="color-box" [ngClass]="{'active': activeIndex === 0}"
+                                    (click)="setMetodoPago(1,'EFECTIVO', 0)" class="icono">
+                                    <div><mat-icon>payments</mat-icon> <br>EFECTIVO</div>
+                                </div>
+                                <div class="color-box" [ngClass]="{'active': activeIndex === 1}"
+                                    (click)="setMetodoPago(2, 'TARJETA', 1)" class="icono">
+                                    <div><mat-icon>credit_card</mat-icon> <br>TARGETA</div>
+                                </div>
+                                <div cclass="color-box" matTooltip="Trasnsferencia"
+                                    [ngClass]="{'active': activeIndex === 2}"
+                                    (click)="setMetodoPago(3, 'TRASNFERENCIA', 2)" class="icono">
+                                    <div><mat-icon>account_balance</mat-icon> <br>TRANSF.</div>
+                                </div>
+                            </div>
+
+                            <div>
+
+                                <div *ngIf="metodoPagoSeleccionado!==''">
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Efectivo</mat-label>
+                                        <input type="number" (keyup)="calcularPagoEfectivo($event)" matInput
+                                            formControlName="secondCtrl" placeholder="Dijiste el monto a pagar"
+                                            required>
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%;" *ngIf="metodoPagoSeleccionado!=='EFECTIVO'">
+                                        <mat-label>Cuenta bancaria</mat-label>
+                                        <mat-select>
+                                            @for (banco of dataListBancos; track banco) {
+                                            <mat-option [value]="banco.idBanco">{{banco.tipoCuenta.nombre}}
+                                                {{banco.nombreCuenta}}</mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field style="width: 100%;" *ngIf="metodoPagoSeleccionado!=='EFECTIVO'">
+                                        <mat-label>Numero Ticket</mat-label>
+                                        <input type="text" matInput formControlName="noComprobante"
+                                            placeholder="No de Ticket o comprobante de pago">
+                                    </mat-form-field>
+
+
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-label>Observación</mat-label>
+                                        <input type="text" matInput formControlName="observacionPago"
+                                            placeholder="Escriba una observación">
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="metodoPagoSeleccionado!==''">
+                                    <div style="display: flex;">
+                                        <button mat-raised-button color="primary" class="margin2"
+                                            (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar y
+                                            pagar</button>
+                                        &nbsp;
+                                        <button mat-raised-button color="warn" class="margin2"
+                                            (click)="resetFormPago()"><mat-icon>cancel</mat-icon> Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+            </div>
+        </mat-card-content>
+    </mat-card>
+</form>

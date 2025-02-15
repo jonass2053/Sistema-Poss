@@ -41,7 +41,7 @@ export class RoleComponent {
   dataList: iRol[] = [];
   cargando : boolean = false;
   sinRegistros : boolean = false;
- 
+  editando : boolean = false;
   
 
 
@@ -87,6 +87,7 @@ export class RoleComponent {
         this.alertaService.successAlert(data.message);
         data.status ? this.resetForm : '';
         this.getAll();
+        this.resetForm();
       }, 1000);
     })
   }
@@ -107,11 +108,13 @@ export class RoleComponent {
   }
 
   editar(rol: iRol) {
+    this.editando=true;
     this.miFormulario.patchValue(
       { 'idRol': rol.idRol, 'nombre': rol.nombre })
   }
 
   resetForm() {
     this.miFormulario.reset();
+    this.editando = false;
   }
 }

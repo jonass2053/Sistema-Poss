@@ -7,13 +7,15 @@ import { IUsuario } from 'src/app/interfaces/i-usuario';
 import { iRol, ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { RolesService } from 'src/app/services/roles.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { TaxesComponent } from "../taxes/taxes.component";
 
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [
-    importaciones
-  ],
+    importaciones,
+    TaxesComponent
+],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -104,6 +106,7 @@ export class UsersComponent {
         this.alertaService.successAlert(data.message);
         data.status ? this.resetForm : '';
         this.getAll();
+        this.resetForm();
       }, 1000);
     })
   }
