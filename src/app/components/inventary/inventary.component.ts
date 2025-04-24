@@ -15,6 +15,7 @@ import { CategoriaService } from 'src/app/services/categoria.service';
 import { CategoryComponent } from "./components/category/category.component";
 import { ModelsComponent } from "./components/models/models.component";
 import { BrandComponent } from "./components/brand/brand.component";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export interface PeriodicElement {
   id: number;
@@ -35,15 +36,15 @@ export interface PeriodicElement {
     CategoryComponent,
     ModelsComponent,
     BrandComponent
-],
+  ],
   templateUrl: './inventary.component.html',
   styleUrl: './inventary.component.scss'
 })
 export class InventaryComponent {
-  displayedColumns: string[] = ['imagen','idProducto', 'nombre','descripcion', 'precioBase', 'impuesto', 'cantInicial', 'acciones'];
+  displayedColumns: string[] = ['imagen', 'idProducto', 'nombre', 'descripcion', 'precioBase', 'impuesto', 'cantInicial', 'acciones'];
   dataList: iProducto[] = [];
- moneda!: iMoneda;
- impuestosCodigos: iImpuestoProductoCodigo[] = [];
+  moneda!: iMoneda;
+  impuestosCodigos: iImpuestoProductoCodigo[] = [];
   impuestosData: iiMpuesto[] = [];
   dataListAlmacenes: iAlmacen[] = [];
   dataListUnidades: iUnidades[] = [];
@@ -70,46 +71,43 @@ export class InventaryComponent {
     private informationService: InformationService,
     private productoService: ProductoService,
     private usuarioService: UsuarioService,
-    private alertasService: AlertServiceService,
-    private marcaService : MarcasService,
-    private modeloService : ModelosService,
-    private categoriaService : CategoriaService) {
+    public alertasService: AlertServiceService,
+    private marcaService: MarcasService,
+    private modeloService: ModelosService,
+    private categoriaService: CategoriaService,
+    private fb : FormBuilder
+    ) {
     this.getAll();
     this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
     this.getAllUnidadesFilter('a');
-
-
   }
 
-  goToNewProduct(idProducto : number) {
+
+ 
+
+  goToNewProduct(idProducto: number) {
     this.router.navigate([`inventary/product/${idProducto}`]);
-    this.productoService.productoForEdit.idProducto=0;
+    this.productoService.productoForEdit.idProducto = 0;
   }
 
   getAll() {
-    this.alertasService.ShowLoading();
+    this.loading();
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: any) => {
       this.dataList = data.data;
-      console.log(this.dataList);
       if (this.dataList.length > 0) {
-        // this.sinRegistros = false
-        // this.cargando = false;
+        this.loading();
+       
       }
       else {
         // this.sinRegistros = true;
         // this.cargando = false;
       }
-      this.alertasService.hideLoading();
 
     })
   }
 
-
-
-
   async delete(id: any) {
     if (await this.alertasService.questionDelete()) {
-      this.alertasService.ShowLoading();
       this.productoService.delete(id).subscribe(((data: ServiceResponse) => {
         if (data.status) {
           this.alertasService.successAlert(data.message);
@@ -130,7 +128,7 @@ export class InventaryComponent {
     }
   }
 
-  
+
 
 
   onFileSelected(event: any) {
@@ -149,7 +147,7 @@ export class InventaryComponent {
     }
   }
 
-  
+
 
   getAllFilter(event: any) {
     const filtro = (event.target as HTMLInputElement).value;
@@ -157,25 +155,27 @@ export class InventaryComponent {
       this.getAll();
     }
     else {
-      this.cargando = true;
+      this.loading();
       this.productoService.getAllFilter(filtro).subscribe((data: any) => {
         this.dataList = data.data;
         if (this.dataList.length > 0) {
           this.sinRegistros = false
-          this.cargando = false;
         }
         else {
           this.sinRegistros = true;
-          this.cargando = false;
         }
       })
+      this.loading();
     }
   }
 
 
+
+
+
   //Set precio total controla el impuesto
   contadorExecnto: number = 0;
- 
+
 
 
 
@@ -194,7 +194,21 @@ export class InventaryComponent {
   }
 
   editar(producto: iProducto) {
-   this.productoService.productoForEdit=producto;
-   this.goToNewProduct(producto.idProducto!);
+    this.productoService.productoForEdit = producto;
+    this.goToNewProduct(producto.idProducto!);
   }
+
+  loading() {
+    if (this.cargando === false) {
+      this.cargando = true;
+      console.log('if')
+    }
+    else {
+      this.cargando = false;
+      console.log('else')
+    }
+    
+  }
+
+  
 }

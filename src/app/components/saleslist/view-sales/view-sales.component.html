@@ -1,0 +1,318 @@
+<mat-card appearance="outlined">
+    <mat-card-content>
+
+        <div class="container" *ngIf="cargando==false && factura!==undefined">
+
+
+            <div class="headerNavCard">
+                <!-- <div class="containerIcoText">
+                    <mat-icon>description</mat-icon> {{factura.numeracionObj.nombre.toUpperCase()}}
+                    {{factura.numeracion.toUpperCase()}}
+                </div>
+                <a (click)="retroceder()">
+                    <div class="containerIcoText"><mat-icon>arrow_back</mat-icon>Retroceder</div>
+                </a> -->
+
+                <div class="titulo"> <mat-icon>description</mat-icon> {{factura.numeracion.toUpperCase()}} <span style="margin-left: 10px;"> </span> </div>
+                <!-- <h2 *ngIf="document!=='Cotizacción'">Punto de Venta</h2> -->
+                <a (click)="retroceder()">
+                    <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+                </a>
+            </div>
+            <!-- <div class="btnheader">
+                <section>
+                    <div class="example-button-row">
+                        <button *ngIf="factura.montoPagado==0" (click)="editar(factura)"
+                            mat-stroked-button><mat-icon>edit</mat-icon>Editar</button>
+                        <button mat-stroked-button (click)="printFactura(factura)"><mat-icon>print</mat-icon>
+                            Imprimir</button>
+                    </div>
+                </section>
+            </div> -->
+
+            <!-- <div class="barraResumen">
+                         
+                <div class="containerTotalesResumen">
+                    <p>Monto total</p>
+                    <h3>RD$2500.00</h3>
+                </div>
+        
+                <div class="containerTotalesResumen">
+                    <p>Monto cobrado</p>
+                    <h3>RD$2500.00</h3>
+                </div>
+                <div class="containerTotalesResumen">
+                    <p>Monto por cobrar</p>
+                    <h3>RD$5000.00</h3>
+                </div>
+            
+                
+            </div> -->
+
+
+
+            <div class="cards">
+                <div class="card blue">
+                    <p class="tip">Monto total</p>
+                    <p class="second-text">{{moneda}}{{factura.totalGeneral | number:'1.2-2'}}</p>
+                </div>
+                <div class="card green">
+                    <p class="tip">Monto cobrado</p>
+                    <p class="second-text">{{moneda}}{{factura.montoPagado | number:'1.2-2'}}</p>
+                </div>
+                <div class="card red">
+                    <p class="tip">Monto por cobrar</p>
+                    <p class="second-text">{{moneda}}{{factura.montoPorPagar| number:'1.2-2'}}</p>
+                </div>
+                <div class="card purple">
+                    <p class="tip">Monto recibido</p>
+                    <p class="second-text">{{moneda}}{{factura.totalRecibido| number:'1.2-2'}}</p>
+                </div>
+                <div class="card greendark">
+                    <p class="tip">Cambio</p>
+                    <p class="second-text">{{moneda}}{{factura.cambio | number:'1.2-2'}}</p>
+                </div>
+
+            </div>
+
+            <div class="body">
+                <div class="headerbody">
+                    <section>
+                        <div class="estado" [style.background-color]="factura.estadoFactura.color">
+                            {{factura.estadoFactura.nombre.toUpperCase()}}</div>
+                    </section>
+                    <section class="empresa">{{factura.empresaObj.razonSocial.toUpperCase()}} <br> </section>
+                    <section class="nofactura">{{factura.numeracionObj.nombre.toUpperCase()}}
+                        <br>{{factura.numeracion.toUpperCase()}}
+                    </section>
+                </div>
+                <hr>
+
+
+
+
+
+
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="">
+                            <div>
+                                <div> Cliente : {{factura.contacto.nombreRazonSocial}}</div>
+                                <div>Identificación : {{factura.contacto.rnc}}</div>
+                                <div>Teléfono : {{factura.contacto.telefono1}}</div>
+                            </div>
+                            <div>
+                                <div> Fecha : {{factura.fechaCreacion | date: "dd/MM/yyyy"}}</div>
+                                <div>Vencimiento : {{factura.vencimiento | date: "dd/MM/yyyy"}}</div>
+                                <div>Plazo : {{factura.terminoObj.nombre}}</div>
+                            </div>
+
+                        </div>
+
+
+
+
+
+                    </div>
+
+                    <div class="col-10  ">
+
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="dataSource" class="text-nowrap w-100">
+
+                                <!-- Id Column -->
+                                <ng-container matColumnDef="item">
+                                    <th mat-header-cell *matHeaderCellDef> Item</th>
+                                    <td mat-cell class="mb-0 fw-medium op-5" *matCellDef="let element; let i = index">
+                                        {{i +1}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="descripcion">
+                                    <th mat-header-cell *matHeaderCellDef> Descripción</th>
+                                    <td mat-cell class="mb-0 fw-medium op-5" *matCellDef="let element">
+                                        {{element.nombre}} </td>
+                                </ng-container>
+
+
+
+                                <!-- Assigned Column -->
+                                <ng-container matColumnDef="cantidad">
+                                    <th mat-header-cell *matHeaderCellDef> Cant. </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p class="mb-0 fw-medium op-5">{{ element.cantidad }}</p>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Project Column -->
+                                <ng-container matColumnDef="precio">
+                                    <th mat-header-cell *matHeaderCellDef> Precio </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p class="mb-0 fw-medium op-5">{{moneda}}
+                                            {{element.precio | number : '1.2-5'}}</p>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Budget Column -->
+                                <ng-container matColumnDef="subtotal">
+                                    <th mat-header-cell *matHeaderCellDef> SubTotal </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p class="mb-0 fw-medium op-5">
+                                            {{moneda}}{{
+                                            element.total | number:'1.2-2' }}</p>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="itbis">
+                                    <th mat-header-cell *matHeaderCellDef>Itbis
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p class="mb-0 fw-medium op-5">{{moneda}} {{element.impuestos | number:'1.2-2'}}
+                                        </p>
+                                    </td>
+                                </ng-container>
+                                <!-- Budget Column -->
+                                <ng-container matColumnDef="descuento">
+                                    <th mat-header-cell *matHeaderCellDef>Desc %.
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p class="mb-0 fw-medium op-5"> {{moneda}}{{element.descuento | number:'1.2-2'}}
+                                        </p>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="total">
+                                    <th mat-header-cell *matHeaderCellDef>Total
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p class="mb-0 fw-medium op-5">{{element.total | number:'1.2-2'}}</p>
+                                    </td>
+                                </ng-container>
+
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-2 ">
+
+                        <div class="resumenContainer">
+                            <!-- <h3 style="margin: 0; padding: 0;">---------------------------METODO DE
+                                        PAGO---------------------------</h3> -->
+                            <div>
+                                <div class="containerTotalesResumen">
+                                    <p>Subtotal</p>
+                                    <h3>{{moneda}} {{factura.subTotal| number : '1.2-5'}}</h3>
+                                </div>
+
+                                <div class="containerTotalesResumen">
+                                    <p>Descuento</p>
+                                    <h3>{{moneda}} {{factura.descuento| number : '1.2-5'}}</h3>
+                                </div>
+
+                                <div class="containerTotalesResumen">
+
+                                    <p>ITBIS</p>
+                                    <h3>{{moneda}}{{factura.itbis |number : '1.2-5'}}</h3>
+
+                                </div>
+                                <div class="containerTotalesResumen">
+                                    <p>Total</p>
+                                    <h3 class="mat-primmary">{{moneda}} {{factura.totalGeneral | number :
+                                        '1.2-5'}}</h3>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+            <div class="bodypagos">
+                <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+                    <mat-tab label="Pagos recibidos">
+
+                        <div *ngIf="pagosDataList.length<1"
+                            style="width: 100%; height: 150px; color: rgb(146, 146, 146);  display: grid; place-items: center; ">
+                            <div
+                                style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <mat-icon style="font-size: 40px; width: 60px; height: auto;">summarize</mat-icon> <br>
+                                Tu factura aún no tiene pagos recibidos
+                            </div>
+
+                        </div>
+
+                        <table id="customers" *ngIf="pagosDataList.length>0" class="table table-hover table-striped control"
+                            style="margin-top:  10px;">
+                            <thead class="con">
+                                <tr>
+                                    <th scope="col">Item</th>
+                                    <th scope="col" class="d-lg-block d-md-block d-sm-none d-xs-none">Fecha</th>
+                                    <th scope="col">Método de pago</th>
+                                    <th scope="col">Monto</th>
+                                    <th scope="col">Referencia</th>
+                                    <th scope="col">Acciones</th>
+
+
+                                    <!-- <th class="cargandoTableIcono">
+                                        <div *ngIf="cargando" class="loaderTable"></div>
+                                    </th>    -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let pago of pagosDataList let i =  index" class="filaBody">
+
+                                    <td>
+                                        <div>{{i +1}}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{pago.fecha | date: "dd/MM/yyyy hh:mm:ss"}}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{pago.metodoPagoObj.nombre}}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{moneda}}{{pago.monto| number:'1.2-2'}}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{pago.notaPago}}</div>
+                                    </td>
+                                    <td>
+                                        <button matTooltip="Eliminar pago" class="btnaccion"
+                                            (click)="deletPago(pago.idPago!)" data-target="#exampleModal"><mat-icon
+                                                class="btnEliminar" data-toggle="modal">delete</mat-icon></button>
+                                    </td>
+
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+
+
+
+
+
+
+
+
+                    </mat-tab>
+                    <!-- <mat-tab label="Contabilidad"> Content 2 </mat-tab> -->
+                </mat-tab-group>
+            </div>
+
+
+
+
+        </div>
+
+
+    </mat-card-content>
+</mat-card>

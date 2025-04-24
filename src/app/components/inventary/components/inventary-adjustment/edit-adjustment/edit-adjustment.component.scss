@@ -1,0 +1,25 @@
+.cardProducto
+{
+    margin-bottom: 10px;
+    border: 1px solid silver;
+    box-shadow: 1px 1px 0px 0px black;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius:  10px;
+    display: grid;
+    place-items: center;
+}
+.cardProducto .detail
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.cardP
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}   

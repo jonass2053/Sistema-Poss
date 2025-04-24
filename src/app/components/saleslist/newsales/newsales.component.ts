@@ -187,6 +187,7 @@ export class NewsalesComponent {
   identificacion: string = "jonas dia";
   telefono: string = "";
   efectivo: number = 0;
+  editDatils : boolean = false;
   dataListNumeracion: idNumeracion[] = [];
   dataListVendedores: iVendedor[] = [];
   dataListDetalleFactura: iDetalleFactura[] = [];
@@ -502,6 +503,7 @@ export class NewsalesComponent {
 
 
   resetDetails() {
+    this.editando=false;
     this.cantidad = 1;
     this.precio = 0;
     this.subTotal = 0;
@@ -608,6 +610,9 @@ export class NewsalesComponent {
   resetData() {
     this.resetDetails();
   }
+
+  
+
   resetHeader() {
     this.dataSource.data=[];
     this.dataListDetalleFactura = [];

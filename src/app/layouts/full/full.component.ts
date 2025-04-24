@@ -52,6 +52,9 @@ export class FullComponent {
     this.listIngresos==false? this.listIngresos=true : this.listIngresos=false;
     this.rowIcon==false?   this.rowIcon=true :   this.rowIcon=false;
   }
+  showInvetario(){
+    this.listInventario==false? this.listInventario=true : this.listInventario=false;
+  }
   sidebarMenu: sidebarMenu[] = [
     {
       link: "/sales",
@@ -97,125 +100,125 @@ export class FullComponent {
       chield : []
 
     },
-    {
-      link: "/home",
-      icon: "home",
-      menu: "Dashboard",
-      chield : []
+    // {
+    //   link: "/home",
+    //   icon: "home",
+    //   menu: "Dashboard",
+    //   chield : []
 
-    },
-    {
-      link: "/button",
-      icon: "disc",
-      menu: "Buttons",
-      chield : []
+    // },
+    // {
+    //   link: "/button",
+    //   icon: "disc",
+    //   menu: "Buttons",
+    //   chield : []
 
-    },
-    {
-      link: "/forms",
-      icon: "layout",
-      menu: "Forms",
-      chield : []
+    // },
+    // {
+    //   link: "/forms",
+    //   icon: "layout",
+    //   menu: "Forms",
+    //   chield : []
 
-    },
-    {
-      link: "/alerts",
-      icon: "info",
-      menu: "Alerts",
-      chield : []
+    // },
+    // {
+    //   link: "/alerts",
+    //   icon: "info",
+    //   menu: "Alerts",
+    //   chield : []
 
-    },
-    {
-      link: "/grid-list",
-      icon: "file-text",
-      menu: "Grid List",
-      chield : []
+    // },
+    // {
+    //   link: "/grid-list",
+    //   icon: "file-text",
+    //   menu: "Grid List",
+    //   chield : []
 
-    },
-    {
-      link: "/menu",
-      icon: "menu",
-      menu: "Menus",
-      chield : []
+    // },
+    // {
+    //   link: "/menu",
+    //   icon: "menu",
+    //   menu: "Menus",
+    //   chield : []
 
-    },
-    {
-      link: "/table",
-      icon: "grid",
-      menu: "Tables",
-      chield : []
+    // },
+    // {
+    //   link: "/table",
+    //   icon: "grid",
+    //   menu: "Tables",
+    //   chield : []
 
-    },
-    {
-      link: "/expansion",
-      icon: "divide-circle",
-      menu: "Expansion Panel",
-      chield : []
+    // },
+    // {
+    //   link: "/expansion",
+    //   icon: "divide-circle",
+    //   menu: "Expansion Panel",
+    //   chield : []
 
-    },
-    {
-      link: "/chips",
-      icon: "award",
-      menu: "Chips",
-      chield : []
+    // },
+    // {
+    //   link: "/chips",
+    //   icon: "award",
+    //   menu: "Chips",
+    //   chield : []
 
-    },
-    {
-      link: "/tabs",
-      icon: "list",
-      menu: "Tabs",
-      chield : []
+    // },
+    // {
+    //   link: "/tabs",
+    //   icon: "list",
+    //   menu: "Tabs",
+    //   chield : []
 
-    },
-    {
-      link: "/progress",
-      icon: "bar-chart-2",
-      menu: "Progress Bar",
-      chield : []
+    // },
+    // {
+    //   link: "/progress",
+    //   icon: "bar-chart-2",
+    //   menu: "Progress Bar",
+    //   chield : []
 
-    },
-    {
-      link: "/toolbar",
-      icon: "voicemail",
-      menu: "Toolbar",
-      chield : []
+    // },
+    // {
+    //   link: "/toolbar",
+    //   icon: "voicemail",
+    //   menu: "Toolbar",
+    //   chield : []
 
-    },
-    {
-      link: "/progress-snipper",
-      icon: "loader",
-      menu: "Progress Snipper",
-      chield : []
+    // },
+    // {
+    //   link: "/progress-snipper",
+    //   icon: "loader",
+    //   menu: "Progress Snipper",
+    //   chield : []
 
-    },
-    {
-      link: "/tooltip",
-      icon: "bell",
-      menu: "Tooltip",
-      chield : []
+    // },
+    // {
+    //   link: "/tooltip",
+    //   icon: "bell",
+    //   menu: "Tooltip",
+    //   chield : []
 
-    },
-    {
-      link: "/snackbar",
-      icon: "slack",
-      menu: "Snackbar",
-      chield : []
+    // },
+    // {
+    //   link: "/snackbar",
+    //   icon: "slack",
+    //   menu: "Snackbar",
+    //   chield : []
 
-    },
-    {
-      link: "/slider",
-      icon: "sliders",
-      menu: "Slider",
-      chield : []
+    // },
+    // {
+    //   link: "/slider",
+    //   icon: "sliders",
+    //   menu: "Slider",
+    //   chield : []
 
-    },
-    {
-      link: "/slide-toggle",
-      icon: "layers",
-      menu: "Slide Toggle",
-      chield : []
+    // },
+    // {
+    //   link: "/slide-toggle",
+    //   icon: "layers",
+    //   menu: "Slide Toggle",
+    //   chield : []
 
-    },
+    // },
   ];
 
   selectDocument(tipoDocument : string){

@@ -7,18 +7,19 @@
             <mat-card appearance="raised">
                 
                 <mat-card-content>
-                    <div class="headerNavCard">
-                        <h4 class="mb-56">Mantenimiento de productos</h4>
-                        <a [routerLink]="['/inventary']">
-                            <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
-                        </a>
-                    </div>
+                    
                         <div class="container">
+                            <div class="headerNavCard">
+                                <h4 >Mantenimiento de productos</h4>
+                                <a [routerLink]="['/inventary']">
+                                    <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+                                </a>
+                            </div>
                             <div class="row">
                                 <div>
                                     <div class="row">
 
-                                        <div class="col-md-6  col-sm-12 col-xs-12 mb-3">
+                                        <div class="col-md-6  col-sm-12 col-xs-12 " style="margin-bottom: 15px;">
 
                                             <mat-radio-group aria-label="Select an option" formControlName="isProduct">
                                                 <mat-radio-button (click)="isProductView(1)"

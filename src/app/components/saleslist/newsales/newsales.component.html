@@ -3,17 +3,13 @@
         <mat-card-content>
 
             <div class="headerNavCard">
-
-                <h4 class="mb-56">Nueva <span *ngIf="document=='Cotizacción'">Cotizaciones</span><span
-                        *ngIf="document!=='Cotizacción'">Factura</span></h4>
+               <div class="titulo"> <mat-icon>description</mat-icon> {{document}} <span style="margin-left: 10px;" *ngIf="facturaForEdit!==undefined">{{facturaForEdit.numeracion}} </span> </div>
                 <h2 *ngIf="document!=='Cotizacción'">Punto de Venta</h2>
-
                 <a (click)="retroceder()">
                     <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
                 </a>
             </div>
             <div class="row">
-
 
                 <div class="col-12">
                     <mat-card appearance="outlined">
@@ -129,6 +125,8 @@
 
                             <button mat-raised-button color="primary" class="margin2"
                                 (click)="addDetails()"><mat-icon>add</mat-icon> Agregar fila</button>
+                            <button *ngIf="editando" mat-raised-button color="warn" class="margin2"
+                                (click)="resetData()"><mat-icon>cancel</mat-icon> Cancelar edición</button>
                             <mat-divider></mat-divider>
                             <div class="table-responsive">
                                 <table mat-table [dataSource]="dataSource" class="text-nowrap w-100">
@@ -261,14 +259,14 @@
 
                                         <div
                                             style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
-                                            <button mat-raised-button color="primary" class="margin2"
+                                            <button *ngIf="document!=='Cotización'" mat-raised-button color="accent" class="margin2"
                                                 (click)="onPayment()"><mat-icon>payment</mat-icon> Pagar documento
                                             </button>
                                             <button mat-raised-button color="primary" class="margin2"
                                                 (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar</button>
 
                                             <button mat-raised-button color="warn" class="margin2"
-                                                (click)="resetData()"><mat-icon>cancel</mat-icon> Cancelar</button>
+                                                (click)="resetData()"><mat-icon>clear_all</mat-icon> Cancelar y limpiar</button>
                                         </div>
 
 
@@ -300,9 +298,9 @@
 
 
                 </div>
-                
+
                 <div class="col-12">
-                    
+
                     <mat-card *ngIf="activePayment" appearance="outlined">
                         <mat-card-content>
                             <p>Seleccione el metodo de pago de su preferencia</p>

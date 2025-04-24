@@ -1,1 +1,117 @@
-<p>payment works!</p>
+<mat-card appearance="outlined">
+    <mat-card-content>
+      <div class="demo-tab-content">
+        <!-- Daily Activity -->
+       
+            <div class="tiuloParaleto">
+              <h4 class="mb-56">Listado de pagos realizados</h4>
+            </div>
+  
+            <div class="filterandbutton">
+              <button (click)="newPay()" mat-raised-button class="me-8 mb-8" color="primary">Crear nuevo</button>
+              <div class="containerfuncionesheader input-parent">
+                <mat-form-field appearance="outline">
+                  <mat-label>Buscar</mat-label>
+                  <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+              </div>
+  
+  
+            </div>
+                <mat-progress-bar style="margin-top: 10px;" *ngIf="dataList.length<1" mode="indeterminate"></mat-progress-bar>
+                <div class="table-responsive">
+                  <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
+                    <ng-container matColumnDef="idPago">
+                      <th mat-header-cell *matHeaderCellDef> Id </th>
+                      <td mat-cell class="fw-medium" *matCellDef="let element">
+                        {{element.idPago}} </td>
+                    </ng-container>
+      
+                    <!-- Assigned Column -->
+                    <ng-container matColumnDef="cliente">
+                      <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                      <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{ element.contactoObj.nombreRazonSocial }}</p>
+                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                      </td>
+                    </ng-container>
+      
+                    <!-- Assigned Column -->
+                    <ng-container matColumnDef="noDocumento">
+                      <th mat-header-cell *matHeaderCellDef> No.Documento </th>
+                      <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{ element.facturaObj.numeracion }}</p>
+                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="tipoDocumento">
+                      <th mat-header-cell *matHeaderCellDef> Tipo de documento </th>
+                      <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{ element.facturaObj.tipoDocumentoObj.nombre}}</p>
+                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="fecha">
+                      <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                      <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{ element.fecha | date : 'dd/MM/YYYY hh:MM:ss'}}</p>
+                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                      </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="cuenta">
+                        <th mat-header-cell *matHeaderCellDef> Cuenta </th>
+                        <td mat-cell *matCellDef="let element">
+                          <p class="mb-0 fw-medium">{{ element.bancoObj.nombreCuenta || ''}}</p>
+                          <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                        </td>
+                      </ng-container>
+      
+                      
+                    <ng-container matColumnDef="monto">
+                        <th mat-header-cell *matHeaderCellDef> Monto </th>
+                        <td mat-cell *matCellDef="let element">
+                          <p class="mb-0 fw-medium"> {{moneda.simbolo}} {{ element.monto || '' |  number : '1.2-5'}}</p>
+                          <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                        </td>
+                      </ng-container>
+        
+      
+      
+      
+      
+                    <!-- Budget Column -->
+                    <ng-container matColumnDef="correo">
+                      <th mat-header-cell *matHeaderCellDef>Correo Electrónico
+                      </th>
+                      <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{element.correo}}</p>
+                      </td>
+                    </ng-container>
+      
+                    <ng-container matColumnDef="acciones">
+                      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                      <td mat-cell *matCellDef="let element">
+                        <div class="mb-0 fw-medium op-5 acciones">
+                          <!-- {{element.project}} -->
+      
+                          <button class="btnaccion" (click)="editar(element)">
+                            <mat-icon class="editarcolor">edit</mat-icon></button>
+                          <button class="btnaccion" (click)="delete(element.idPago)">
+                            <mat-icon class="deletecolor">delete</mat-icon></button>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>  
+              
+              
+            
+      </div>
+    </mat-card-content>
+  </mat-card>

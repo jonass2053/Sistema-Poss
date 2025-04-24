@@ -7,7 +7,7 @@
     <div class="p-16">
       <div class="mb-16">
         <a href="javascript:void(0)" class="d-flex align-items-center">
-          <img src="../../../assets/images/ICONO.png" class="logorectangular" alt=""> <span class="ms-16 fw-medium fs-26">PAYNOVA </span>
+          <!-- <img src="../../../assets/images/ICONO.png" class="logorectangular" alt=""> <span class="ms-16 fw-medium fs-26">PAYNOVA </span> -->
         </a>
 
       </div>
@@ -37,8 +37,7 @@
               <div class="contItem" [class.show]="listIngresos" *ngIf="sidenav.menu=='Ventas'">
                 <a  (click)="selectDocument('Factura')">  <span class="centerall"> Facturas</span></a>
                 <a  (click)="selectDocument('Cotización')"><span class="centerall"> Cotización</span></a>
-                <a  [routerLink]="['pagos']"><span class="centerall"> Pagos recibidos</span></a>
-                <a ><span class="centerall">  Consultar cotización</span></a>
+                <a  [routerLink]="['sales/payment']"><span class="centerall"> Pagos recibidos</span></a>
               </div>
             </div>
 

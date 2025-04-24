@@ -151,7 +151,11 @@ export interface iProducto
     impuestos : iiMpuesto[]
     ImpuestosObj : iiMpuesto[]
     idMarca : number,
-    idModelo : number
+    idModelo : number,
+    diferencia : number,
+    razonAjuste :  string
+    stockAjustado : number
+
 }
 
 export interface iCuentas
@@ -336,3 +340,42 @@ export interface iMoneda
     totalVentasPorCobrar : number,
     cantTotalVentasPorCobrar : number
   }
+
+  export interface iAjusteInventario {
+    idAjuste: number
+    idProducto: number
+    stockActual: string
+    stockAjustado: string
+    diferencia: number
+    razonAjuste: number
+    createdBy: number
+    idSucursal: number
+  }
+  
+  export interface iAjusteInventarioGet {
+    idAjuste: number
+    idProducto: number
+    productoObj : iProducto
+    stockActual: string
+    stockAjustado: string
+    diferencia: number
+    razonAjuste: number
+    createdBy: number
+    usuarioObj : IUsuario
+    idSucursal: number
+  }
+  
+  export interface iMovimientoProductos {
+    idMovimiento: number
+    idDetalleFactura: number
+    idProducto: number
+    productoObj: iProducto
+    isEntrada: boolean
+    cantidad: number
+    referencia: string
+    fecha: string
+    idAjuste : number
+    ajusteObj : iAjusteInventario
+
+  }
+

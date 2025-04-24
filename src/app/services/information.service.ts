@@ -6,14 +6,9 @@ import { UsuarioService } from './usuario.service';
 })
 export class InformationService {
 
-  constructor(usuarioService : UsuarioService) { 
-    console.log(usuarioService.usuarioLogueado)
-  
-  }
   idEmpresa: number=0;
   idSucursal : number=0;
   tipoDocumento : string="";
-
-
+  idUsuario! : number;
 
 }

@@ -19,7 +19,6 @@ export class FacturaService {
   constructor(
     private http: HttpClient,
     private usuarioService: UsuarioService) {
-
     this.headers = new HttpHeaders({ 'Authorization': `Bearer ${usuarioService.usuarioLogueado.token}` });
     this.header = { headers: this.headers };
   }
@@ -45,7 +44,6 @@ export class FacturaService {
     return this.http.get<ServiceResponse>(`${this.url}/getallFacturasPendientesByIdCliente/${idSucursal}/${idCliente}/${pageNumber}/${pageSize}`, this.header)
   }
   getById(idFactura: number): Observable<ServiceResponse> {
-    console.log(this.header)
     return this.http.get<ServiceResponse>(`${this.url}/getbyid/${idFactura}`, this.header)
   }
   getAllMetodoPago(): Observable<ServiceResponse> {

@@ -7,7 +7,12 @@ import Swal from 'sweetalert2'
 })
 export class AlertServiceService {
 
+cargando : boolean = false;
+loading(){
+  this.cargando ==this.cargando==true? false : true;
  
+} 
+
 ShowLoading()
   { 
     Swal.fire({
@@ -75,6 +80,7 @@ hideLoading = ()=>{
     }).then((result) => {
       if (result.isConfirmed) {
         value= true;
+        this.successAlert("Se removio un elemento");
       }
       else
       {
@@ -89,6 +95,29 @@ hideLoading = ()=>{
     let value;
    await Swal.fire({
       title: "Esta seguro que desea salir del sistema?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        value= true;
+      }
+      else
+      {
+        value=false;
+      }
+    });
+    return value;
+  }
+
+  async questionEjecut()
+  {
+    let value;
+   await Swal.fire({
+      title: "Esta seguro de que quiere realizar esta accion?",
       text: "",
       icon: "warning",
       showCancelButton: true,

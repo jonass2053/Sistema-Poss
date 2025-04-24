@@ -145,10 +145,10 @@ export class SaleslistComponent implements OnInit {
 
   verFactura(idFactura: number) {
     if (this.informacion.tipoDocumento === 'Cotización') {
-      this.router.navigateByUrl(`layout/detalle_cotizacion/${idFactura}`);
+      this.router.navigateByUrl(`sales/newprice/view/${idFactura}`);
     }
     else {
-      this.router.navigateByUrl(`layout/detalle_factura/${idFactura}`);
+      this.router.navigateByUrl(`sales/newsales/view/${idFactura}`);
     }
   }
 

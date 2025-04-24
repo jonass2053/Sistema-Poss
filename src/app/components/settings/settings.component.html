@@ -60,6 +60,27 @@
           </mat-list>
         </mat-expansion-panel>
 
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Inventario </mat-panel-title>
+            <mat-panel-description>
+                Configura todo lo necesario para el buen funcionamiento del inventario
+              <mat-icon>inventory_2</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+      
+          <mat-list>
+            <mat-list-item><a [routerLink]="['/settings/categories']">Categorias</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['/settings/brands']">Marcas</a></mat-list-item>
+            <mat-divider></mat-divider>
+            <!-- <mat-list-item><a [routerLink]="['empresa']">Datos generales</a></mat-list-item> -->
+            <mat-divider></mat-divider>
+            <mat-list-item><a [routerLink]="['/settings/models']">Modelos</a></mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+
         <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title> Impuestos </mat-panel-title>

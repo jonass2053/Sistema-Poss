@@ -35,6 +35,13 @@ import { NewcontactComponent } from './components/contacts/newcontact/newcontact
 import { SaleslistComponent } from './components/saleslist/saleslist.component';
 import { SalesComponent } from './dashboard/dashboard-components/sales/sales.component';
 import { NewsalesComponent } from './components/saleslist/newsales/newsales.component';
+import { ViewSalesComponent } from './components/saleslist/view-sales/view-sales.component';
+import { CategoryComponent } from './components/inventary/components/category/category.component';
+import { ModelsComponent } from './components/inventary/components/models/models.component';
+import { BrandComponent } from './components/inventary/components/brand/brand.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { NewPayComponent } from './components/payment/new-pay/new-pay.component';
+import { InventaryAdjustmentComponent } from './components/inventary/components/inventary-adjustment/inventary-adjustment.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -57,12 +64,21 @@ const routes: Routes = [
       {path:"settings/numbers", component : NumbersComponent},
       {path:"settings/taxes", component : TaxesComponent},
       {path:"settings/sallers", component : SallersComponent},
+      {path:"settings/models", component : ModelsComponent},
+      {path:"settings/categories", component : CategoryComponent},
+      {path:"settings/brands", component : BrandComponent},
       {path:"inventary", component : InventaryComponent},
       {path:"inventary/product/:id", component : ProductsComponent},
+      {path:"inventary/inventary-adjustment", component : InventaryAdjustmentComponent},
+
       {path:"sales/salelist", component : SaleslistComponent},
       {path:"sales/pricelist", component : SaleslistComponent},
       {path:"sales/newsale/:id", component : NewsalesComponent},
       {path:"sales/newprice/:id", component : NewsalesComponent},
+      {path:"sales/newsales/view/:id", component : ViewSalesComponent},
+      {path:"sales/newprice/view/:id", component : ViewSalesComponent},
+      {path:"sales/payment", component : PaymentComponent},
+      {path:"payment/newpay", component : NewPayComponent},
       {path:"alerts", component:AlertsComponent},
       {path:"forms", component:FormsComponent},
       {path:"table", component:ProductComponent},

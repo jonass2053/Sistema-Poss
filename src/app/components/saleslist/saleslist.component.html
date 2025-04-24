@@ -9,7 +9,6 @@
         <mat-card-content>
           <div class="tiuloParaleto">
             <h4 class="mb-56">Listado de {{doc}}</h4>
-
           </div>
 
           <div class="filterandbutton">
@@ -30,7 +29,7 @@
           <div class="table-responsive">
             <mat-progress-bar *ngIf="dataSource.data.length<1" mode="indeterminate"></mat-progress-bar>
             <div class="mat-elevation-z8">
-              <table mat-table [dataSource]="dataSource">
+              <table id="" mat-table [dataSource]="dataSource">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                 <!-- Position Column -->
                 <ng-container matColumnDef="Numero">
@@ -74,7 +73,7 @@
                 <ng-container matColumnDef="Estado">
                   <th mat-header-cell *matHeaderCellDef> Estado </th>
                   <td mat-cell *matCellDef="let element">
-                    <div style="text-align: center; border-radius: 5px; padding: 1px; color: white;"
+                    <div class="badge rounded-pill" style="text-align: center; border-radius: 5px; padding: 1px; color: white;"
                       [style.background-color]="element.estadoFactura.color">
                       {{element.estadoFactura.nombre.toUpperCase() || ''}}</div>
                     <!-- {{element.estadoFactura.nombre}}  -->

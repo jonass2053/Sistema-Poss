@@ -25,6 +25,13 @@ import {MatChipsModule} from '@angular/material/chips'
 import {MatTableModule} from '@angular/material/table';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import { TableModule } from 'primeng/table'; // Importación de PrimeNG Table
+import { Dialog } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AvatarModule } from 'primeng/avatar';
+import { DatePicker } from 'primeng/datepicker';
+
 
 
 
@@ -83,7 +90,15 @@ export const  importaciones : any =[
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatButtonToggleModule,
+  TableModule,
+  Dialog,
+  ButtonModule, 
+  InputTextModule, 
+  AvatarModule,
+  DatePicker
+  
 
 
 ]
@@ -92,6 +107,7 @@ import { MatDateFormats } from '@angular/material/core';
 import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
   parse: {

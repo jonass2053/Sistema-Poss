@@ -72,6 +72,7 @@ export class ProductsComponent {
     this.getAllAlmacenes();
     this.getAllCategorias();
     this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
+    this.miFormulario.patchValue({idSucursal : this.informationService.idSucursal})
     this.idProducto= this.route.snapshot.paramMap.get('id');
     if (this.idProducto !=='0') {
       this.getById(this.idProducto);
@@ -183,6 +184,7 @@ export class ProductsComponent {
   }
 
   save() {
+    this.formData.append('idSucursal', this.informationService.idSucursal.toString())
     this.formData.append('idEmpresa', this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa)
     this.formData.append('nombre', this.miFormulario.get('nombre')?.value);
     this.formData.append('idProducto', this.miFormulario.get('idProducto')?.value)
