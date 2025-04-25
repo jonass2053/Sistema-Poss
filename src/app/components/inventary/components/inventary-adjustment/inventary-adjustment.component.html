@@ -9,27 +9,29 @@
                             <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
                         </a>
                     </div>
-                    <div class="controlesfilter">
+
+                    <form action="" [formGroup]="formularioFecha" class="controlesfilter">
                         <mat-form-field appearance="fill">
                             <mat-label>Buscar</mat-label>
-                            <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar producto">
+                            <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar producto"
+                                formControlName="filtro">
                             <mat-icon matSuffix>search</mat-icon>
                         </mat-form-field>
                         &nbsp;
-                        <form action="" [formGroup]="formularioFecha" >
-                            <mat-form-field>
-                                <mat-label>Rango de fecha</mat-label>
-                                <mat-date-range-input [rangePicker]="picker">
-                                    <input matStartDate placeholder="Desde" formControlName="desde">
-                                    <input matEndDate placeholder="Hasta" formControlName="hasta" (dateChange)="filter($event)">
-                                </mat-date-range-input>
-                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-date-range-picker #picker></mat-date-range-picker>
-                            </mat-form-field>
-                        </form>
+                        <mat-form-field *ngIf="controlVistasTablas!=0">
+                            <mat-label>Rango de fecha</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate placeholder="Desde" formControlName="desde">
+                                <input matEndDate placeholder="Hasta" formControlName="hasta"
+                                    (dateChange)="masterFilter($event)">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                        </mat-form-field>
+
                         &nbsp;
-                        <button style="margin-top: 10px; margin-left: 10px;" mat-icon-button [matMenuTriggerFor]="menu"
-                            aria-label="Example icon-button with a menu">
+                        <button *ngIf="controlVistasTablas!=0" style="margin-top: 10px; margin-left: 10px;"
+                            mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
@@ -46,7 +48,11 @@
                                 <span>Descargar</span>
                             </button>
                         </mat-menu>
-                    </div>
+
+
+                    </form>
+
+
                 </div>
                 <div class="filter">
                     <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="toogle">
@@ -58,16 +64,9 @@
                             productos</mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="flexright">
-                        <!-- <section>
-                    <div class="example-button-container">
-                        <button class="btnrefrescar" mat-fab extended routerLink="." (click)="refrescar()">
-                          <mat-icon >refresh</mat-icon>
-                          refrescar
-                        </button>
-                      </div>
-                  </section> -->
 
 
+                
 
 
 
@@ -76,9 +75,11 @@
 
                     </div>
                 </div>
-                <div class="table-responsive" *ngIf="listarAjuste==0">
+                <div class="table-responsive" *ngIf="controlVistasTablas==0">
                     <div class="ajustes">
                         <h3>Listado de productos</h3>
+                        <mat-icon (click)="refrescar()">refresh</mat-icon>
+
                     </div>
                     <mat-divider></mat-divider>
                     <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
@@ -195,9 +196,11 @@
 
 
 
-                <div class="table-responsive" *ngIf="listarAjuste===1">
+                <div class="table-responsive" *ngIf="controlVistasTablas===1">
                     <div class="ajustes">
                         <h3>Productos ajustados</h3>
+                        <mat-icon (click)="getAllAjustes()">refresh</mat-icon>
+
                     </div>
                     <mat-divider></mat-divider>
                     <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
@@ -307,9 +310,10 @@
                 </div>
 
 
-                <div class="table-responsive" *ngIf="listarAjuste===2">
+                <div class="table-responsive" *ngIf="controlVistasTablas===2">
                     <div class="ajustes">
                         <h3>Movimiento de los productos</h3>
+                        <mat-icon (click)="getMovimientosProductos()">refresh</mat-icon>
                     </div>
                     <mat-divider></mat-divider>
                     <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
@@ -342,9 +346,12 @@
 
                             <td mat-cell *matCellDef="let element">
                                 <ng-container *ngIf="element.isEntrada==true ; else isEntrada">
-                                    <p class="mb-0 fw-medium">Entrada</p>
+                                    <p class="mb-0 fw-medium entradalcolor">Entrada</p>
                                 </ng-container>
-                                <ng-template #isEntrada>Salida</ng-template>
+                                <ng-template #isEntrada>
+                                    <p class="mb-0 fw-medium salidalcolor">Salida</p>
+
+                                </ng-template>
                                 <!-- <p class="mb-0 fw-normal op-5s">{{ element.work }}</p> -->
                             </td>
                         </ng-container>

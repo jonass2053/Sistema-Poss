@@ -63,6 +63,8 @@ export class InventaryAdjustmentComponent {
 
   }
 
+  desde : any =null;
+  hasta : any = null;
 
   adjustmentReasons = [
     "Inventario físico",
@@ -72,7 +74,9 @@ export class InventaryAdjustmentComponent {
     "Devolución de cliente",
     "Otros"
   ]
-  listarAjuste = 0;
+
+  //Esta variable controla que tabla se va a mostrar y en que momento
+  controlVistasTablas = 0;
 
 
   miFormulario: FormGroup = this.fb.group({
@@ -87,16 +91,17 @@ export class InventaryAdjustmentComponent {
 
   })
 
-  formularioFecha : FormGroup = this.fb.group(
+  formularioFecha: FormGroup = this.fb.group(
     {
-        desde :  this.fb.control(null, Validators.required),
-        hasta :  this.fb.control(null, Validators.required),
+      filtro : this.fb.control(""),
+      desde: this.fb.control(null, Validators.required),
+      hasta: this.fb.control(null, Validators.required),
     }
   )
 
 
 
-  
+
   ajustar(id: any, event: any) {
     this.dataList.map(c => {
       if (c.idProducto == id) {
@@ -131,7 +136,7 @@ export class InventaryAdjustmentComponent {
     }
   }
 
-
+  // Este es el filter de los productos para realizar el ajuste pertinentes
   getAllFilter(event: any) {
     const filtro = (event.target as HTMLInputElement).value;
     if (filtro == "") {
@@ -142,10 +147,13 @@ export class InventaryAdjustmentComponent {
       this.productoService.getAllFilter(filtro).subscribe((data: any) => {
         this.dataList = data.data;
         if (this.dataList.length > 0) {
+          this.getAllFilterAjustes(event)
+          this.getAllFilterMovimientos(event);
         }
         else {
         }
       })
+     
       this.loading();
     }
   }
@@ -153,14 +161,16 @@ export class InventaryAdjustmentComponent {
 
   //Filter de los movimientos
   getAllFilterMovimientos(event: any) {
-    const filtro = (event.target as HTMLInputElement).value;
+    const filtro = this.formularioFecha.value.filtro;
     if (filtro == "") {
-      this.getAll();
+      this.getMovimientosProductos();
     }
     else {
       this.loading();
-      this.productoService.getAllFilter(filtro).subscribe((data: any) => {
-        this.dataList = data.data;
+      this.desde=this.formatearFecha(this.formularioFecha.value.desde)==''? null : this.formatearFecha(this.formularioFecha.value.desde);
+      this.hasta=this.formatearFecha(this.formularioFecha.value.hasta)==''?null : this.formatearFecha(this.formularioFecha.value.hasta);
+      this.productoService.getAllFilterMovimientos(filtro, this.desde, this.hasta).subscribe((data: any) => {
+        this.dataListMovimietoProductos = data.data;
         if (this.dataList.length > 0) {
           // this.sinRegistros = false
         }
@@ -174,14 +184,17 @@ export class InventaryAdjustmentComponent {
 
   //Filter de los ajustes
   getAllFilterAjustes(event: any) {
-    const filtro = (event.target as HTMLInputElement).value;
+    const filtro = this.formularioFecha.value.filtro;
+    console.log(filtro)
     if (filtro == "") {
-      this.getAll();
+      this.getAllAjustes();
     }
     else {
       this.loading();
-      this.productoService.getAllFilter(filtro).subscribe((data: any) => {
-        this.dataList = data.data;
+      this.desde=this.formatearFecha(this.formularioFecha.value.desde)==''? null : this.formatearFecha(this.formularioFecha.value.desde);
+      this.hasta=this.formatearFecha(this.formularioFecha.value.hasta)==''?null : this.formatearFecha(this.formularioFecha.value.hasta);
+      this.productoService.getAllFilterAjustes(filtro, this.desde, this.hasta).subscribe((data: any) => {
+        this.dataListProductosAjustados = data.data;
         if (this.dataList.length > 0) {
           // this.sinRegistros = false
         }
@@ -194,8 +207,39 @@ export class InventaryAdjustmentComponent {
   }
 
 
-  filter(valor : any) {
-    alert(valor.target.value)
+  // Este es el metodo que consume los otros filtros dependiendo de en que tabla sea
+  // Realizar el ajuste de inventario en la vista de los productos, en la vista de los ajustes ya realizados o en la vista de los movimientos de los productos
+  // Estos son con el objetivos de consultas y reportes que le interesen a los clientes
+
+
+  masterFilter(event: any) {
+    if(event.target.value!=null){
+      switch (this.controlVistasTablas) {
+        case 1:
+          this.getAllFilterAjustes(event)
+          break;
+        case 2:
+          this.getAllFilterMovimientos(event)
+          break;
+        default:
+          this.getAllFilter(event)
+          break;
+      }
+    }
+  
+  }
+
+   formatearFecha(fecha: Date): string {
+    if(fecha==null){
+      return ''
+    }
+    const año = fecha.getFullYear();
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const hora = fecha.getHours().toString().padStart(2, '0');
+    const minuto = fecha.getMinutes().toString().padStart(2, '0');
+    const segundo = fecha.getSeconds().toString().padStart(2, '0');
+    return `${año}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
   }
 
 
@@ -204,6 +248,7 @@ export class InventaryAdjustmentComponent {
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: any) => {
       this.dataList = data.data;
       this.loading();
+      this.resetFormDate();
 
     })
   }
@@ -213,6 +258,8 @@ export class InventaryAdjustmentComponent {
     this.productoService.GetAjusteInventario(1, 100, this.informationService.idSucursal).subscribe((data: any) => {
       this.dataListProductosAjustados = data.data;
       this.loading();
+      this.resetFormDate();
+
     })
   }
   getMovimientosProductos() {
@@ -220,20 +267,18 @@ export class InventaryAdjustmentComponent {
     this.productoService.GetAllMovimientoProductos(1, 100, this.informationService.idSucursal).subscribe((data: any) => {
       this.dataListMovimietoProductos = data.data;
       this.loading();
+      this.resetFormDate();
+
     })
   }
-
-
-
 
 
   loading() {
     this.cargando = this.cargando == false ? true : false;
   }
 
-
   verAjuste(valor: number) {
-    this.listarAjuste = valor;
+    this.controlVistasTablas = valor;
   }
 
   selectRazon(razon: any, idProducto: number) {
@@ -258,6 +303,10 @@ export class InventaryAdjustmentComponent {
   refrescar() {
     this.getAll();
     this.getAllAjustes();
+  }
+
+  resetFormDate(){
+    this.formularioFecha.reset();
   }
 
 }
