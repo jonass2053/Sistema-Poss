@@ -74,13 +74,14 @@
 
     <!-- Header -->
     <mat-toolbar class="header ps-24 pe-24">
-      <button type="button" class="ms-4" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <i-feather name="menu" class="text-light-muted feather-base mt-n3"></i-feather>
-      </button>
+     
       <button mat-icon-button class="ms-4 me-4" (click)="search=!search">
         <i-feather name="search" class="mt-n3 text-light-muted feather-base text-dark"></i-feather>
       </button>
+      <button (click)="openShift('0ms', '0ms')" mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
+      <button (click)="openModalCloseShift()" mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+
+
       <div class="ms-auto">
         <button mat-button class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted d-flex align-items-center"
           [matMenuTriggerFor]="menu">

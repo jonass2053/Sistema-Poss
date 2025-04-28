@@ -378,4 +378,22 @@ export interface iMoneda
     ajusteObj : iAjusteInventario
 
   }
-
+export interface iTurno{
+  idTurno: number,
+  baseInicial: number,
+  fechaApertura: string,
+  fechaCierre: string ,
+  vEfc: number,
+  vTc: number,
+  vTd: number,
+  vTtrasf: number,
+  devolucion: number,
+  retiroEfectivo: number,
+  totalTurno: number,
+  dineroEsperadoCaja: number,
+  dineroRealEnCaja: number,
+  isOpen: true,
+  idUsuario: number,
+  idSucursal: number,
+  descripcion : string
+}

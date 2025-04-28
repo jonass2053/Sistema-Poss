@@ -42,6 +42,7 @@ import { BrandComponent } from './components/inventary/components/brand/brand.co
 import { PaymentComponent } from './components/payment/payment.component';
 import { NewPayComponent } from './components/payment/new-pay/new-pay.component';
 import { InventaryAdjustmentComponent } from './components/inventary/components/inventary-adjustment/inventary-adjustment.component';
+import { ShiftsComponent } from './components/shifts/shifts.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -70,7 +71,7 @@ const routes: Routes = [
       {path:"inventary", component : InventaryComponent},
       {path:"inventary/product/:id", component : ProductsComponent},
       {path:"inventary/inventary-adjustment", component : InventaryAdjustmentComponent},
-
+      {path:"shifts", component : ShiftsComponent},
       {path:"sales/salelist", component : SaleslistComponent},
       {path:"sales/pricelist", component : SaleslistComponent},
       {path:"sales/newsale/:id", component : NewsalesComponent},

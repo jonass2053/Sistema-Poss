@@ -6,6 +6,8 @@
     /* The background property is added to clearly distinguish the borders between drawer and main
        content */
     background: #eee;
+    border: 1px solid silver;
+    border-radius: 5px;
 }
 
 .example-container mat-drawer {
@@ -20,11 +22,86 @@
 }
 
 .item {
-    border: 1px solid silver !important;
-    height: 40px;
+ 
+    display: flex !important;
+    justify-content: space-between;
+    padding: 10px;
+    color: rgb(116, 115, 115);
+}
+.item :hover
+{
+    cursor: pointer;
+    color: silver;
+}
+.item .estadoClosed {
+    color: white;
     background-color: red;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 20px; 
 }
 
-.item :hover {
-    background-color: rgb(148, 0, 0) !important;
+.item .estadoOpen {
+    color: white;
+    background-color: green;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 20px; 
+}
+
+
+
+
+.header
+{
+    padding-left: 20px;
+    padding-right   : 20px;
+
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+    
+    
+}
+
+mat-list-item .estado
+{
+    color: white;
+    background-color: red;
+    width: auto;
+}
+.carddetalle
+{
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+}
+
+.carddetalle .header
+{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    background-color: rgb(242, 242, 242) !important;
+}
+
+.carddetalle ul li
+{
+   display: flex;
+   justify-content: space-between;
+   padding: 13px;
+
+}
+.carddetalle .footer
+{
+   height: 50px;
+   display: flex;
+   align-items: center;
 }

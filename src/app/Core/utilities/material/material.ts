@@ -31,6 +31,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
 import { DatePicker } from 'primeng/datepicker';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 
@@ -97,7 +98,8 @@ export const  importaciones : any =[
   ButtonModule, 
   InputTextModule, 
   AvatarModule,
-  DatePicker
+  DatePicker,
+  MatSidenavModule
   
 
 

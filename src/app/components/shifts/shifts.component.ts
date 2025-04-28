@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones } from 'src/app/Core/utilities/material/material';
-export interface Section {
-  name: string;
-  updated: Date;
-}
+import { iTurno } from 'src/app/interfaces/iTermino';
+import { ServiceResponse } from 'src/app/interfaces/service-response-login';
+import { InformationService } from 'src/app/services/information.service';
+import { ShiftsService } from 'src/app/services/shifts.service';
+import { CloseShiftComponent } from './close-shift/close-shift.component';
+
 @Component({
   selector: 'app-shifts',
   standalone: true,
@@ -12,16 +16,27 @@ export interface Section {
   styleUrl: './shifts.component.scss'
 })
 export class ShiftsComponent {
-  datalist: Section[] = [
-    {
-      name: 'Cierre No. 1',
-      updated: new Date('1/1/16'),
-    },
-    {
-      name: 'Cierre No. 2',
-      updated: new Date('1/1/16'),
-    },
-    
-   
-  ];
+  readonly dialog = inject(MatDialog);
+
+  datalist: iTurno[] = [];
+  constructor(
+    private turnoService : ShiftsService,
+    private alertasService : AlertServiceService,
+    private informationService : InformationService
+  ){
+    this.getAll();  
+  }
+  getAll(){
+    this.turnoService.getAll(this.informationService.idSucursal).subscribe((data : ServiceResponse)=>{
+      if(data.status){
+        this.datalist = data.data;
+      }
+    })
+  }
+
+  openModalCloseShift(){
+    const dialogRef = this.dialog.open(CloseShiftComponent);
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 }

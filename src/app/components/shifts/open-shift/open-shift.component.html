@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="header">
+     
+        <mat-dialog-content class="mat-typography">
+            <h3>Abrir turno</h3>
+            <p>Con los turnos vas a tener una mejor gestión del efectivo en tu punto de venta</p>
+            <form action="" [formGroup]="miFormulario">
+
+                
+                <mat-form-field>
+                    <mat-label>Banco base  </mat-label>
+                    <mat-select>
+                      @for (banco of datalistBancos; track banco) {
+                        <mat-option [value]="banco.idBanco">{{banco.nombreCuenta}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                <mat-form-field >
+                    <mat-label> Base inicial</mat-label>
+                    <input type="number" value="0" formControlName="baseInicial" matInput placeholder="Indica el dinero en efectivo con el que inicias el turno">
+                </mat-form-field>
+                <br>
+                
+        
+        
+            </form>
+          </mat-dialog-content>
+          <mat-dialog-actions align="end">
+            <button class="btncancelar" mat-button mat-dialog-close>Cancel</button>
+            <button (click)="create()"  mat-button [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+          </mat-dialog-actions>
+          
+      
+    </div>
+</div>
+
+

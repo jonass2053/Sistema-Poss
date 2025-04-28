@@ -246,3 +246,26 @@ body.p-overflow-hidden {
   height:500px ;
   max-height: 500px;
 }
+.btn{
+  min-width: 100px !important;
+  height: 40px !important;
+  width: auto !important;
+  padding: 5px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  
+}
+.btn  :hover{
+ background-color: silver !important;
+ cursor: pointer;
+}
+
+.space
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, catchError } from 'rxjs';
@@ -15,7 +15,7 @@ export class RolesService {
 // private headers : HttpHeaders;
 // private header : { headers : HttpHeaders }
 //this.headers =  new HttpHeaders({'Authotization' : `Bearer${}`})
-url : string = `${baseUrl}/User/role`;
+url : string = `${baseUrl}/Turno/`;
 constructor(
     private http : HttpClient,
     private fb : FormBuilder,

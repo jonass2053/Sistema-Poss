@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -7,12 +7,15 @@ import { FacturaService } from 'src/app/services/factura.service';
 import { InformationService } from 'src/app/services/information.service';
 import { Router } from '@angular/router';
 import { Link } from 'angular-feather/icons';
+import { MatDialog } from '@angular/material/dialog';
+import { OpenShiftComponent } from 'src/app/components/shifts/open-shift/open-shift.component';
+import { CloseShiftComponent } from 'src/app/components/shifts/close-shift/close-shift.component';
 
 interface sidebarMenu {
   link: string;
   icon: string;
   menu: string;
-  chield :  sidebarMenuChild[]
+  chield: sidebarMenuChild[]
 }
 
 interface sidebarMenuChild {
@@ -30,6 +33,8 @@ interface sidebarMenuChild {
 export class FullComponent {
 
   search: boolean = false;
+  readonly dialog = inject(MatDialog);
+
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -39,28 +44,40 @@ export class FullComponent {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private facturaService : FacturaService, 
-    private information : InformationService,
-    private router : Router) { }
+    private facturaService: FacturaService,
+    private information: InformationService,
+    private router: Router) { }
 
   routerActive: string = "activelink";
-  listIngresos : boolean =false;
-  listInventario : boolean =false;
-  rowIcon : boolean = false;
+  listIngresos: boolean = false;
+  listInventario: boolean = false;
+  rowIcon: boolean = false;
 
-  showListVentas(){
-    this.listIngresos==false? this.listIngresos=true : this.listIngresos=false;
-    this.rowIcon==false?   this.rowIcon=true :   this.rowIcon=false;
+  
+
+  showListVentas() {
+    this.listIngresos == false ? this.listIngresos = true : this.listIngresos = false;
+    this.rowIcon == false ? this.rowIcon = true : this.rowIcon = false;
   }
-  showInvetario(){
-    this.listInventario==false? this.listInventario=true : this.listInventario=false;
+  showInvetario() {
+    this.listInventario == false ? this.listInventario = true : this.listInventario = false;
   }
+
+  openShift(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(OpenShiftComponent, {
+      width: '500px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+
   sidebarMenu: sidebarMenu[] = [
     {
       link: "/sales",
       icon: "shopping-cart",
       menu: "Ventas",
-      chield :  [
+      chield: [
         {
           link: "/invoice",
           icon: "shopping-cart",
@@ -84,20 +101,26 @@ export class FullComponent {
       link: "/contacts",
       icon: "users",
       menu: "Contactos",
-      chield : []
+      chield: []
 
-    },{
+    }, 
+    {
       link: "/inventary",
       icon: "package",
       menu: "Inventario",
-      chield : []
-
+      chield: []
+    },
+    {
+      link: "/shifts",
+      icon: "Clipboard",
+      menu: "Gestión de turnos",
+      chield: []
     },
     {
       link: "/settings",
       icon: "settings",
       menu: "Configuraciones",
-      chield : []
+      chield: []
 
     },
     // {
@@ -221,16 +244,23 @@ export class FullComponent {
     // },
   ];
 
-  selectDocument(tipoDocument : string){
+  selectDocument(tipoDocument: string) {
     this.facturaService.document = tipoDocument;
     this.information.tipoDocumento = tipoDocument;
     localStorage.setItem("tipoDocumento", tipoDocument);
-  if(tipoDocument==="Cotización"){
-    this.router.navigate(['sales/pricelist']); 
+    if (tipoDocument === "Cotización") {
+      this.router.navigate(['sales/pricelist']);
+    }
+    else {
+      this.router.navigate(['sales/salelist']);
+    }
   }
-  else {
-    this.router.navigate(['sales/salelist']); 
-  }
-}
+
+    openModalCloseShift(){
+      const dialogRef = this.dialog.open(CloseShiftComponent);
+      dialogRef.afterClosed().subscribe(result => {
+      });
+    }
+
 
 }

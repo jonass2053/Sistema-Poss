@@ -72,32 +72,36 @@ export class ProductoService {
     return this.http.get<ServiceResponse>(`${this.url}/filter-for-document/${valor}`)
   }
 
-  insertAjusteInventario(formulario : any) : Observable<ServiceResponse>{
+  insertAjusteInventario(formulario: any): Observable<ServiceResponse> {
     return this.http.post<ServiceResponse>(`${this.url}/ajuste_inventario`, formulario)
   }
 
-  updateAjusteInventario(formulario : any) : Observable<ServiceResponse>{
+  updateAjusteInventario(formulario: any): Observable<ServiceResponse> {
     return this.http.put<ServiceResponse>(`${this.url}/ajuste_inventario`, formulario)
   }
 
-  deleteAjusteInventario(idAjuste : number) : Observable<ServiceResponse>{
+  deleteAjusteInventario(idAjuste: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/ajuste_inventario?id=${idAjuste}`)
   }
-  
-  GetAjusteInventario(pageNumber : number, pageSize : number, idSucursal : number) : Observable<ServiceResponse>{
+
+  GetAjusteInventario(pageNumber: number, pageSize: number, idSucursal: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/ajuste_inventario/${pageNumber}/${pageSize}/${idSucursal}`)
   }
 
-  GetAllMovimientoProductos(pageNumber : number, pageSize : number, idSucursal : number) : Observable<ServiceResponse>{
+  GetAllMovimientoProductos(pageNumber: number, pageSize: number, idSucursal: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/movimientos/${pageNumber}/${pageSize}/${idSucursal}`)
   }
 
-  getAllFilterMovimientos(valor: string, desde? : Date, hasta? : Date): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}?desde=${desde}&hasta=${hasta}`)
+  getAllFilterMovimientos(valor: string, desde?: Date, hasta?: Date): Observable<ServiceResponse> {
+    if (desde != null)
+      return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}?desde=${desde}&hasta=${hasta}`)
+    return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}`)
   }
 
-  getAllFilterAjustes(valor: string, desde? : Date, hasta? : Date): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}?desde=${desde}&hasta=${hasta}`)
+  getAllFilterAjustes(valor: string, desde?: Date, hasta?: Date): Observable<ServiceResponse> {
+    if (desde != null)
+      return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}?desde=${desde}&hasta=${hasta}`)
+    return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}`)
   }
 
 
