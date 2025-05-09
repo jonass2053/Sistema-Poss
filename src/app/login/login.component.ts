@@ -53,6 +53,9 @@ export class LoginComponent {
             this.usuario.usuarioLogueado = data;  
             this.information.idEmpresa =data.data.sucursal.idEmpresa; 
             this.information.idSucursal = data.data.sucursal.idSucursal;
+            this.information.idTurno = data.data.idTurno;
+            console.log(data.data.idTurno)
+
             localStorage.setItem('user', JSON.stringify(data))
             document.defaultView?.localStorage.setItem('token', JSON.stringify(data.token))
             this.routess.navigate(['/home'])

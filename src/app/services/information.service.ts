@@ -10,5 +10,6 @@ export class InformationService {
   idSucursal : number=0;
   tipoDocumento : string="";
   idUsuario! : number;
+  idTurno! : number;
 
 }

@@ -1,1 +1,254 @@
-<p>close-shift works!</p>
+<div class="headerTitle">
+    <div>
+        <h2 *ngIf="turnoService.isOpen!=undefined">Cierre de Turno</h2>
+        <h2 class="headerTitle" *ngIf="turnoService.isOpen==undefined">Apertura de turno</h2>
+          <div class="headerSubTitle" *ngIf="turnoService!==undefined">
+            Fecha de apertura del turno : {{dateNow | date : 'dd/MM/yyyy hh:mm:ss'}}
+        </div>
+        <!-- <div class="headerSubTitle" *ngIf="turnoService!==undefined">
+            Fecha de apertura del turno : {{turnoOpen.fechaApertura | date : 'dd/MM/yyyy hh:mm:ss'}}
+        </div> -->
+    </div>
+    <!-- <div *ngIf="turnoService!=undefined">
+        {{turnoOpen.descripcion}}
+    </div> -->
+
+</div> 
+<form action="" [formGroup]="miFormulario">
+    <mat-dialog-content>
+        <div class="container">
+            <div class="row">
+                <div [ngClass]="turnoOpen==undefined ? 'col-12' : 'col-4'">
+                    <mat-card appearance="outlined">
+                        <mat-card-content>
+                            <h3 class="flex"><mat-icon>calculate</mat-icon>Consolidado de Efectivo </h3>
+                            <div class="carddetallereconteo">
+                                <div class="header">
+                                    <div matTooltip="Billetes y monedas">
+                                        B/M <br>
+                                    </div>
+                                    <div>
+                                        Cantidad
+                                    </div>
+                                    <div>
+                                        Resultado
+                                    </div>
+                                </div>
+                                <ul>
+                                    @for (billete of dataListBilletesMonedas; track $index) {
+
+                                    <li>
+                                        <section><b>{{billete.Monto}}</b> </section>
+                                        <div> <input type="number" class="txt"
+                                                (input)="calcularBillete($index, billete.Monto, $event)" tabindex="1"
+                                                value="{{billete.Cantidad}}">
+                                            <input style="text-align: right;" class="txt" type="number" readonly="true"
+                                                value="{{billete.Resultado}}">
+                                        </div>
+
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    }
+                                </ul>
+
+                                <div class="footer header">
+                                    <h3>T.M. en efectivo</h3>
+                                    <div><b>RD$ {{resultadoMontoConteoBilletes | number:'1.2-2' }}</b></div>
+
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+
+                </div>
+                <div class="col-4" *ngIf="turnoOpen!=undefined">
+                    <mat-card appearance="outlined">
+                        <mat-card-content>
+                            <h3 class="flex"><mat-icon>local_activity</mat-icon>Consolidado de Tickets </h3>
+                            <div class="carddetallereconteo">
+                                <div class="header">
+                                    <div>
+                                        Referencia <br>
+                                    </div>
+
+                                    <div>
+                                        Monto
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </div>
+
+                                <ul>
+                                    <li>
+                                        <div class='restickets'>
+                                            <input #miInput maxlength="20" formControlName="numeroComprobante"
+                                                placeholder="No. ticket" type="text" class="txt" tabindex="1">
+                                            <input formControlName="montoComprobante" type="number" class="txt"
+                                                tabindex="1">
+                                            <button (click)="addComprobante()"
+                                                class="btnadd"><mat-icon>add</mat-icon></button>
+                                        </div>
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    <li class="restickets"
+                                        *ngFor="let comprobante of dataListComprobantes; let i=index">
+                                        <div>
+                                            {{comprobante.numeracion}}
+                                        </div>
+                                        <div>
+                                            {{comprobante.monto | number:'1.2-2'}}
+                                        </div>
+                                        <mat-icon (click)="removeTicket(i, comprobante.monto)">close</mat-icon>
+                                    </li>
+
+                                </ul>
+
+
+                                <div class="footer header">
+                                    <div class="resumenMonto">
+                                        <div>
+                                            <h4>Total</h4>
+                                        </div>
+                                        <div><b>{{totalMontoTickets | number:'1.2-2'
+                                                }}</b></div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                
+                    <div class="col-4" *ngIf="turnoOpen!==undefined">
+                        <mat-card appearance="outlined">
+                            <mat-card-content>
+                                <h3 class="flex"><mat-icon>calculate</mat-icon>Resumen de ventas </h3>
+                                <div class="carddetallereconteo">
+                                    <div class="header">
+                                        <div>
+                                            Descripción <br>
+                                        </div>
+
+                                        <div>
+                                            Resultado
+                                        </div>
+                                    </div>
+
+                                    <ul>
+                                        <li>Base inicial <section>{{turnoOpen.baseInicial | number:'1.2-2'}}</section>
+                                        </li>
+                                        <mat-divider></mat-divider>
+                                        <li>Ventas en efectivo <section>{{turnoOpen.resumen.vefec | number:'1.2-2'}}
+                                            </section>
+                                        </li>
+                                        <mat-divider></mat-divider>
+                                        <li>Ventas con tarjeta <section>{{turnoOpen.resumen.vt | number:'1.2-2' }}
+                                            </section>
+                                        </li>
+                                        <mat-divider></mat-divider>
+                                        <li>Ventas con trasferencia <section>{{turnoOpen.resumen.vtransf |
+                                                number:'1.2-2' }}</section>
+                                        </li>
+                                        <mat-divider></mat-divider>
+                                        <li>Total de venta en el sistema <section><b> {{turnoOpen.baseInicial +
+                                                    turnoOpen.resumen.vefec + turnoOpen.resumen.vt +
+                                                    turnoOpen.resumen.vtransf | number:'1.2-2'}}</b></section>
+                                        </li>
+                                        <mat-divider></mat-divider>
+                                    </ul>
+
+
+                                    <div class="footer header">
+                                        <div class="resumenMonto">
+                                            <div>
+                                                <h4>Total de efectivo esperado</h4>
+                                            </div>
+                                            <div><b>{{turnoOpen.baseInicial + turnoOpen.resumen.vefec | number:'1.2-2'
+                                                    }}</b></div>
+                                        </div>
+                                    </div>
+                                    <div class="footer header">
+                                        <div class="resumenMonto">
+                                            <div>
+                                                <h4>
+                                                    Total de efectivo fisico en la caja
+                                                </h4>
+                                            </div>
+                                            <div><b>{{ resultadoMontoConteoBilletes | number:'1.2-2' }}</b></div>
+                                        </div>
+
+                                    </div>
+
+                                    <mat-divider></mat-divider>
+
+                                    <div class="footer header">
+                                        <div class="resumenMonto">
+                                            <div>
+                                                <h4>
+                                                    Total de V.Tickets en el sistema
+                                                </h4>
+                                            </div>
+                                            <div><b> {{turnoOpen.resumen.vtransf + turnoOpen.resumen.vt |
+                                                    number:'1.2-2' }}</b></div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="footer header">
+                                        <div class="resumenMonto">
+                                            <div>
+                                                <h4>
+                                                    Total V.Tickets fisico
+                                                </h4>
+                                            </div>
+                                            <div><b> {{totalMontoTickets |
+                                                    number:'1.2-2' }}</b></div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="footer header">
+                                        <div class="resumenMonto">
+                                            <div>
+                                                <h4>
+                                                    Monto faltante en caja
+                                                </h4>
+                                            </div>
+                                            <div><b>{{ montoFaltante | number:'1.2-2' }}</b></div>
+                                        </div>
+
+                                    </div>
+
+                                    <mat-divider></mat-divider>
+                                    <br>
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Comentario</mat-label>
+                                        <textarea formControlName="comentario" rows="2" matInput
+                                            placeholder="Agrega un comentario si la caja no cuadra"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+               
+            </div>
+
+
+        </div>
+
+    </mat-dialog-content>
+</form>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close><mat-icon>cancel</mat-icon> Cancelar</button>
+    <button mat-button cdkFocusInitial (click)="create()"><mat-icon>save</mat-icon> Guardar</button>
+</mat-dialog-actions>

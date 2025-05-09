@@ -6,6 +6,8 @@ import { baseUrl } from '../Core/utilities/enviroment.';
 import { ServiceResponse } from '../interfaces/service-response-login';
 import { catchError, Observable } from 'rxjs';
 import { Numberish } from 'primeng/ts-helpers';
+import { iTurno } from '../interfaces/iTermino';
+import { InformationService } from './information.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +15,15 @@ import { Numberish } from 'primeng/ts-helpers';
 export class ShiftsService {
 
   url: string = `${baseUrl}/Turno`;
+  
+  isOpen!: iTurno | undefined;
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
-    private alertas: AlertServiceService
+    private alertas: AlertServiceService,
+    private informartionService : InformationService
   ) { }
-
+  userLocal : any | undefined;
 
 
   insert(formulario: any): any {
@@ -29,13 +34,37 @@ export class ShiftsService {
     })
     )
   }
-  update(formualrio: any): Observable<ServiceResponse> {
-    return this.http.put<ServiceResponse>(`${this.url}`, formualrio)
+  update(formualrio: any): any {
+    return this.http.put<ServiceResponse>(`${this.url}/close_turno`, formualrio).pipe(catchError((error) => {
+      console.log(error);
+      this.alertas.errorAlert(error);
+      return error()
+    })
+    )
   }
   delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`)
   }
-  getAll(idSucursal : number): Observable<ServiceResponse> {
+  getAll(idSucursal: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/get_by_idsucursal/${idSucursal}`)
+  }
+  getById(idTurno: number, idUsuario: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/${idTurno}?idUsuario=${idUsuario}`)
+  }
+  getTurnoActual(idUsuario: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}`)
+  }
+
+  getTurnoOpen(){
+    this.alertas.ShowLoading();
+    this.getById(this.informartionService.idTurno, this.informartionService.idUsuario).subscribe((data: ServiceResponse) => {
+      if (data.statusCode == 200) {
+        this.isOpen =data.data.isOpen==false? undefined :data.data;
+        this.alertas.hideLoading();
+      } else {
+        this.alertas.hideLoading();
+        this.isOpen=undefined;
+      }
+    })
   }
 }

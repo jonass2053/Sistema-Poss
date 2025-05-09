@@ -8,6 +8,9 @@ import { InformationService } from 'src/app/services/information.service';
 import { ShiftsService } from 'src/app/services/shifts.service';
 import { CloseShiftComponent } from './close-shift/close-shift.component';
 
+
+
+
 @Component({
   selector: 'app-shifts',
   standalone: true,
@@ -19,23 +22,25 @@ export class ShiftsComponent {
   readonly dialog = inject(MatDialog);
 
   datalist: iTurno[] = [];
+
+
   constructor(
-    private turnoService : ShiftsService,
-    private alertasService : AlertServiceService,
-    private informationService : InformationService
-  ){
-    this.getAll();  
+    private turnoService: ShiftsService,
+    private alertasService: AlertServiceService,
+    private informationService: InformationService
+  ) {
+    this.getAll();
   }
-  getAll(){
-    this.turnoService.getAll(this.informationService.idSucursal).subscribe((data : ServiceResponse)=>{
-      if(data.status){
+  getAll() {
+    this.turnoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
+      if (data.status) {
         this.datalist = data.data;
       }
     })
   }
 
-  openModalCloseShift(){
-    const dialogRef = this.dialog.open(CloseShiftComponent);
+  openModalCloseShift() {
+    const dialogRef = this.dialog.open(CloseShiftComponent, {width : '1600px'});
     dialogRef.afterClosed().subscribe(result => {
     });
   }

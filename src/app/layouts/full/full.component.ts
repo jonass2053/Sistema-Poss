@@ -10,6 +10,7 @@ import { Link } from 'angular-feather/icons';
 import { MatDialog } from '@angular/material/dialog';
 import { OpenShiftComponent } from 'src/app/components/shifts/open-shift/open-shift.component';
 import { CloseShiftComponent } from 'src/app/components/shifts/close-shift/close-shift.component';
+import { ShiftsService } from 'src/app/services/shifts.service';
 
 interface sidebarMenu {
   link: string;
@@ -46,7 +47,11 @@ export class FullComponent {
     private breakpointObserver: BreakpointObserver,
     private facturaService: FacturaService,
     private information: InformationService,
-    private router: Router) { }
+    public turnoService : ShiftsService,
+    private router: Router) {
+      turnoService.getTurnoOpen();
+      console.log(this.turnoService.isOpen)
+     }
 
   routerActive: string = "activelink";
   listIngresos: boolean = false;
@@ -63,12 +68,10 @@ export class FullComponent {
     this.listInventario == false ? this.listInventario = true : this.listInventario = false;
   }
 
-  openShift(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.dialog.open(OpenShiftComponent, {
+  openShift(): void {
+    this.dialog.open(CloseShiftComponent, {
       width: '500px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
+    })
   }
 
 
@@ -123,6 +126,7 @@ export class FullComponent {
       chield: []
 
     },
+   
     // {
     //   link: "/home",
     //   icon: "home",
@@ -257,9 +261,7 @@ export class FullComponent {
   }
 
     openModalCloseShift(){
-      const dialogRef = this.dialog.open(CloseShiftComponent);
-      dialogRef.afterClosed().subscribe(result => {
-      });
+      const dialogRef = this.dialog.open(CloseShiftComponent, {width: '1600px'});
     }
 
 

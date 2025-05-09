@@ -1,0 +1,174 @@
+.example-container {
+    width: auto;
+    height: 550px;
+    margin: 10px;
+    // border: 1px solid #555;
+    /* The background property is added to clearly distinguish the borders between drawer and main
+       content */
+    background:  #eee;
+    border: 1px solid silver;
+    border-radius: 5px;
+}
+
+.example-container mat-drawer {
+    width: 250px;
+
+}
+
+.example-container mat-drawer mat-card {
+    width: 95%;
+    margin: 1px !important;
+
+}
+
+.item {
+ 
+    display: flex !important;
+    justify-content: space-between;
+    padding: 10px;
+    color: rgb(116, 115, 115);
+}
+.item :hover
+{
+    cursor: pointer;
+    color: silver;
+}
+.item .estadoClosed {
+    color: white;
+    background-color: red;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 20px; 
+}
+
+.item .estadoOpen {
+    color: white;
+    background-color: green;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 20px; 
+}
+
+
+
+
+.headerTitle
+{
+    padding-left: 20px;
+    padding-right   : 20px;
+    padding-top:5px ;
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+mat-list-item .estado
+{
+    color: white;
+    background-color: red;
+    width: auto;
+}
+.carddetalle
+{
+    margin: p55x;
+    padding: 5px;
+    background-color: white;
+}
+
+.carddetalle .header
+{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    background-color: rgb(242, 242, 242) !important;
+}
+
+.carddetallereconteo .header
+{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    background-color: rgb(242, 242, 242) !important;
+}
+
+.carddetallereconteo ul li{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px;
+}
+
+
+
+.carddetalle ul li
+{
+   display: flex;
+   justify-content: space-between;
+   padding: 13px;
+
+}
+.carddetalle .footer
+{
+   height: 50px;
+   display: flex;
+   align-items: center;
+}
+.headerSubTitle
+{
+    margin-left: 23px;
+    margin-bottom: 15px;
+    font-size: small;    
+}
+.flex{
+    display: flex;
+    align-items: center;
+}
+.carddetallereconteo ul li{
+    display: flex;
+    justify-content: space-between;
+}
+.footer .header
+{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+}
+mat-dialog-actions
+{
+    display: flex;
+    justify-content: end;
+}
+.resumenMonto{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 200%;
+}
+
+.btnadd
+{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 25px;
+   height: 25px;
+}
+.btnadd mat-icon
+{
+   font-size: 20px;
+}
+.restickets
+{
+    display: flex;
+    justify-content: space-between;
+}

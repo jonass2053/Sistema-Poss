@@ -20,25 +20,25 @@
     <mat-drawer mode="side" opened>
         <mat-list>
             @for(turno of datalist; track turno){
-                <div class="item">
-                    <div>
-                        {{turno.descripcion}}<br>
-                        <small>{{turno.fechaApertura |  date:'dd/MM/yyyy HH:mm'}}</small>
-                    </div>
-                    <div class="estadoClosed" *ngIf="turno.isOpen!=true">
-                        <div >CERRADO</div>
-                    </div>
-
-                    <div class="estadoOpen" *ngIf="turno.isOpen==true">
-                        <div >ABIERTO</div>
-                    </div>
-
-
+            <div class="item">
+                <div>
+                    {{turno.descripcion}}<br>
+                    <small>{{turno.fechaApertura | date:'dd/MM/yyyy HH:mm'}}</small>
                 </div>
+                <div class="estadoClosed" *ngIf="turno.isOpen!=true">
+                    <div>CERRADO</div>
+                </div>
+
+                <div class="estadoOpen" *ngIf="turno.isOpen==true">
+                    <div>ABIERTO</div>
+                </div>
+
+
+            </div>
             }
-            
+
             <mat-divider></mat-divider>
-          
+
         </mat-list>
 
 
@@ -46,7 +46,6 @@
     <mat-drawer-content>
 
         <div class="carddetalle">
-
             <div class="header">
                 <div>
                     Fecha inicio <br>
@@ -80,16 +79,16 @@
                 </li>
                 <mat-divider></mat-divider>
             </ul>
-            
+
             <div class="footer header">
-               <h3>Total de movimiento del turno</h3> 
+                <h3>Total de movimiento del turno</h3>
                 <div><b>RD$0.00</b></div>
 
             </div>
         </div>
 
         <div class="carddetalle space">
-          
+
             <div>
                 <h4>Dinero esperado en caja</h4>
                 <small>Base inicial más las ventas e ingresos en efectivo, menos las devoluciones y retiros.
@@ -97,7 +96,7 @@
             </div>
             <div><b>RD$0.00</b></div>
 
-          
+
         </div>
 
 

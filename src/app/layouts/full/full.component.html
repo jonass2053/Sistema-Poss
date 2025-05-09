@@ -38,6 +38,8 @@
                 <a  (click)="selectDocument('Factura')">  <span class="centerall"> Facturas</span></a>
                 <a  (click)="selectDocument('Cotización')"><span class="centerall"> Cotización</span></a>
                 <a  [routerLink]="['sales/payment']"><span class="centerall"> Pagos recibidos</span></a>
+                <a  [routerLink]="['sales/payment']"><span class="centerall"> Notas de credito</span></a>
+
               </div>
             </div>
 
@@ -78,8 +80,8 @@
       <button mat-icon-button class="ms-4 me-4" (click)="search=!search">
         <i-feather name="search" class="mt-n3 text-light-muted feather-base text-dark"></i-feather>
       </button>
-      <button (click)="openShift('0ms', '0ms')" mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
-      <button (click)="openModalCloseShift()" mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+      <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()" mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
+      <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()" mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
 
 
       <div class="ms-auto">
