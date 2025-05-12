@@ -267,6 +267,18 @@ export interface iDetalleFactura {
   impuestoObj?: iiMpuesto
 }
 
+export interface iSucursal{
+
+    idSucursal: number,
+    idEmpresa: number,
+    empresa?: iEmpresa,
+    nombre?: string,
+    direccion?: string,
+    telefono1?: string,
+    telefono2?: string,
+  
+}
+
 export interface iTiopCuentaBanck {
   idTipoCuenta: number;
   nombre: string;
@@ -371,9 +383,11 @@ export interface iTurno {
   dineroRealEnCaja: number
   isOpen: true
   idUsuario: number
+  usuarioObj : IUsuario
   idSucursal: number
   descripcion: string
-  Comentarion: string
+  comentarion: string
+  faltante : number
   denominacion : iDenominacion,
   resumen: {
     baseInicial : number,

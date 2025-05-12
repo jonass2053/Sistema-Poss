@@ -19,7 +19,8 @@ export class AppComponent {
       information.idSucursal = usuario.usuarioLogueado.data.sucursal.idSucursal;
       information.idUsuario = usuario.usuarioLogueado.data.idUsuario;
       information.idTurno = usuario.usuarioLogueado.data.idTurno;
-      information.tipoDocumento  = localStorage.getItem('tipoDocumento')!;    
+      information.tipoDocumento  = localStorage.getItem('tipoDocumento')!;  
+      information.mySucursal = usuario.usuarioLogueado.data.sucursal;  
      }
   
   }

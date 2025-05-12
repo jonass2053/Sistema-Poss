@@ -1,109 +1,254 @@
 <div class="container">
     <div class="row">
         <div class="col ml-3 header">
-            <div>
-                <h3>Detalles del turno en curso</h3>
-                <p>Conoce los movimientos de efectivo en tu turno de caja actual.</p>
-            </div>
-            <button (click)="openModalCloseShift()" type="button" class="btn btn-primary">Cerra turno</button>
+            <div class="flex">
+                <div *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado.isOpen==true">
+                    <h2 class="mp">Detalles del turno</h2>
+                    <p>Conoce los movimientos de efectivo en tu turno de caja actual.</p>
+                    <div class="estadoOpen">
+                        <div>ABIERTO</div>
+                    </div>
+                </div>
+                <div *ngIf="turnoSeleccionado==undefined">
+                   <h2>No hay ningun turno abierto.</h2>
+                </div>
 
+              
+            </div>
+            <div *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado!.isOpen!=true">
+                <h2>{{turnoSeleccionado!.descripcion}}</h2>
+                <div class="estadoClosed" *ngIf="turnoSeleccionado!.isOpen!=true">
+                    <div>CERRADO</div>
+                </div>
+
+            </div>
+
+            <div style="display: flex;">
+                <button *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado.isOpen!=true" (click)="printMe()" type="button"
+                    class="btn btn-primary"><mat-icon>print</mat-icon>Imprimir</button>
+                <button *ngIf="turnoService.isOpen!=undefined" (click)="openModalCloseShift()" type="button"
+                    class="btn btn-primary"><mat-icon>logout</mat-icon> Cerra turno</button>
+                <button *ngIf="turnoService.isOpen==undefined" (click)="openShift()" type="button"
+                    class="btn btn-primary"><mat-icon>menu_open</mat-icon> Abrir turno</button>
+            </div>
         </div>
     </div>
 
 </div>
 
 
-
-
-
-<mat-drawer-container class="example-container">
+<mat-drawer-container class="example-container" >
     <mat-drawer mode="side" opened>
         <mat-list>
+           <app-loader *ngIf="loader1"></app-loader>
+
             @for(turno of datalist; track turno){
-            <div class="item">
+            <div class="item" (click)="getTurnoById(turno.idTurno)">
                 <div>
                     {{turno.descripcion}}<br>
-                    <small>{{turno.fechaApertura | date:'dd/MM/yyyy HH:mm'}}</small>
+                    <small>{{turno.fechaApertura | date:'dd/MM/yyyy HH:mm'}}</small> <br>
+                    <small>Resp.: {{turno.usuarioObj.nombre + " " + turno.usuarioObj.apellidos}}</small>
+
+
                 </div>
                 <div class="estadoClosed" *ngIf="turno.isOpen!=true">
                     <div>CERRADO</div>
                 </div>
-
                 <div class="estadoOpen" *ngIf="turno.isOpen==true">
                     <div>ABIERTO</div>
                 </div>
-
-
             </div>
-            }
-
             <mat-divider></mat-divider>
+            }
 
         </mat-list>
 
 
     </mat-drawer>
-    <mat-drawer-content>
+    <app-nodata mensaje="No se ha encontrado turno abierto."></app-nodata>
 
-        <div class="carddetalle">
-            <div class="header">
-                <div>
-                    Fecha inicio <br>
-                    25/04/2025 2:23 pm
-                </div>
-                <div>
-                    Total de ventas <br>
-                    RD$ 0.00
-                </div>
+    <mat-drawer-content class="masterDetail" *ngIf="turnoSeleccionado!=undefined">
+        <div class="detalle">
+            <div class="carddetalle">
+                <div class="header">
+                    <div *ngIf="turnoSeleccionado!.fechaApertura!==undefined">
+                        Fecha inicio <br>
+                        {{ turnoSeleccionado!.fechaApertura | date : 'dd/MM/YYYY HH:MM:SS'}}
 
+                    </div>
+                    <div style="text-align: right;">
+                        Total de ventas <br>
+                        {{totalMovimientoTurno | number:'1.2-2'}}
+                    </div>
+
+                </div>
+                <ul>
+                    <li>
+                        Base inicial <div> {{turnoService.isOpen?.baseInicial | number:'1.2-2'}}</div>
+                    </li>
+                    <mat-divider></mat-divider>
+                    <li>
+                        Ventas en efectivo <div>{{turnoService.isOpen?.resumen?.vefec| number:'1.2-2'}}</div>
+                    </li>
+                    <mat-divider></mat-divider>
+                    <li>
+                        Ventas por tarjeta<div>{{turnoService.isOpen?.resumen?.vt| number:'1.2-2'}}</div>
+                    </li>
+                    <mat-divider></mat-divider>
+                    <li>
+                        Ventas por trasferencia<div>{{turnoService.isOpen?.resumen?.vtransf | number:'1.2-2'}}</div>
+                    </li>
+                    <mat-divider></mat-divider>
+
+                </ul>
+
+                <div class="footer header">
+                    <h3>Total de movimiento del turno</h3>
+                    <div style="font-size: 25px;"><b> {{totalMovimientoTurno | number:'1.2-2'}} </b></div>
+
+                </div>
             </div>
-            <ul>
-                <li>
-                    Base inicial <div>RD$ 0.00</div>
-                </li>
-                <mat-divider></mat-divider>
-                <li>
-                    Ventas en efectivo <div>RD$ 0.00</div>
-                </li>
-                <mat-divider></mat-divider>
-                <li>
-                    Ventas por tarjeta de debito <div>RD$ 0.00</div>
-                </li>
-                <mat-divider></mat-divider>
-                <li>
-                    Ventas por tarjeta de credito <div>RD$ 0.00</div>
-                </li>
-                <mat-divider></mat-divider>
-                <li>
-                    Ingresos en efectivo <div>RD$ 0.00</div>
-                </li>
-                <mat-divider></mat-divider>
-            </ul>
 
-            <div class="footer header">
-                <h3>Total de movimiento del turno</h3>
-                <div><b>RD$0.00</b></div>
+            <div class="carddetalle space">
 
+                <div>
+                    <h4>Dinero esperado en caja</h4>
+                    <small>Base inicial más las ventas e ingresos en efectivo, menos las devoluciones y retiros.
+                    </small>
+                </div>
+                <div style="font-size: 25px; margin-right: 20px;"><b>{{dineroEsperadoEnCaja | number:'1.2-2'}}</b></div>
             </div>
         </div>
+        <div class="reporte" id="reporte" *ngIf="informationService.mySucursal!=undefined">
+            <div class="body">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="space-y-1">
+                            <h1>{{informationService.mySucursal.empresa?.nombreComercial?.toUpperCase()}} </h1>
+                            <p class="text-muted">{{informationService.mySucursal.direccion}}</p>
+                            <p class="text-muted">RNC: {{informationService.mySucursal.empresa?.rnc}}</p>
+                        </div>
+                    </div>
 
-        <div class="carddetalle space">
+                    <div class="card-content">
+                        <div class>
+                            <h2>CIERRE DE CAJA {{turnoSeleccionado!.idTurno}}</h2>
+                            <div class="text-right">
+                                <p class="text-sm">Fecha apertura: <br> {{turnoSeleccionado!.fechaApertura | date :
+                                    'dd/MM/YYYY'}}</p>
+                                <p *ngIf="turnoSeleccionado!.fechaCierre!=undefined" class="text-sm"> Fecha cierre: <br>
+                                    {{turnoSeleccionado!.fechaCierre| date : 'dd/MM/YYYY'}}</p>
+                                <p class="text-sm">Hora: {{turnoSeleccionado!.fechaCierre | date : "hh:mm:ss"}} </p>
+                            </div>
+                        </div>
 
-            <div>
-                <h4>Dinero esperado en caja</h4>
-                <small>Base inicial más las ventas e ingresos en efectivo, menos las devoluciones y retiros.
-                </small>
+                        <div class="separator"></div>
+
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium">Cajero: {{turnoSeleccionado!.usuarioObj.nombre + ' '+
+                                turnoSeleccionado!.usuarioObj.apellidos}}</p>
+                            <!-- <p class="text-sm font-medium">Caja #: 003</p>
+                  <p class="text-sm font-medium">Turno: Tarde</p> -->
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="space-y-3">
+                            <h3>RESUMEN DE VENTAS</h3>
+
+                            <div class="grid grid-cols-2">
+                                <span class="text-sm">Efectivo inicial:</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.baseInicial |
+                                    number:'1.2-2'}}</span>
+
+                                <span class="text-sm">Ventas en efectivo:</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.resumen.vefec |
+                                    number:'1.2-2'}}</span>
+
+                                <!-- <span class="text-sm">- Retiradas:</span>
+                    <span class="text-sm text-right">€100,00</span> -->
+
+                                <span class="text-sm font-medium">Efectivo final (teórico):</span>
+                                <span class="text-sm text-right font-medium">{{turnoSeleccionado!.baseInicial +
+                                    turnoSeleccionado!.resumen.vefec | number:'1.2-2'}}</span>
+
+                                <span class="text-sm">Efectivo final (real):</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.dineroRealEnCaja |
+                                    number:'1.2-2'}}</span>
+
+                                <span class="text-sm">Diferencia:</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.faltante | number:'1.2-2'}}</span>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="space-y-3">
+                            <h3>DESGLOSE POR FORMA DE PAGO</h3>
+
+                            <div class="grid grid-cols-2">
+                                <span class="text-sm">Efectivo:</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.resumen.vefec|
+                                    number:'1.2-2'}}</span>
+
+                                <span class="text-sm">Tarjeta:</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.resumen.vt| number:'1.2-2'}}</span>
+
+                                <!-- <span class="text-sm">Tarjeta crédito:</span>
+                    <span class="text-sm text-right">€412,80</span>
+                     -->
+                                <span class="text-sm">Transferencia:</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.resumen.vtransf|
+                                    number:'1.2-2'}}</span>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="space-y-1">
+                            <div class="flex justify-between">
+                                <span class="font-medium">TOTAL VENTAS:</span>
+                                <span class="font-medium">{{totalMovimientoTurno | number:'1.2-2'}}</span>
+                            </div>
+
+                            <!-- <div class="flex justify-between">
+                    <span class="text-sm">Total transacciones:</span>
+                    <span class="text-sm">87</span>
+                  </div> -->
+
+                            <!-- <div class="flex justify-between">
+                    <span class="text-sm">Ticket medio:</span>
+                    <span class="text-sm">€22,68</span>
+                  </div> -->
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="grid grid-cols-2 gap-8" style="margin-top: 1.5rem;">
+                            <div class="signature-line">
+                                <div class="separator"></div>
+                                <p class="text-xs text-center" style="margin-top: 0.5rem;">Firma Cajero</p>
+                            </div>
+
+                            <div class="signature-line">
+                                <div class="separator"></div>
+                                <p class="text-xs text-center" style="margin-top: 0.5rem;">Firma Supervisor</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+
+                    </div>
+                </div>
             </div>
-            <div><b>RD$0.00</b></div>
-
 
         </div>
-
-
-
-
-
-
 
     </mat-drawer-content>
+
+
+
+
+
 </mat-drawer-container>

@@ -49,8 +49,7 @@ export class FullComponent {
     private information: InformationService,
     public turnoService : ShiftsService,
     private router: Router) {
-      turnoService.getTurnoOpen();
-      console.log(this.turnoService.isOpen)
+      turnoService.getTurnoActual(information.idUsuario);
      }
 
   routerActive: string = "activelink";
@@ -102,31 +101,39 @@ export class FullComponent {
     },
     {
       link: "/contacts",
-      icon: "users",
+      icon: "account_circle",
       menu: "Contactos",
       chield: []
 
     }, 
     {
       link: "/inventary",
-      icon: "package",
+      icon: "inventory",
       menu: "Inventario",
       chield: []
     },
     {
       link: "/shifts",
-      icon: "Clipboard",
+      icon: "format_indent_increase",
       menu: "Gestión de turnos",
       chield: []
     },
+    {
+      link: "/cash-management",
+      icon: "paid",
+      menu: "Manejo de efectivo",
+      chield: []
+
+    },
+   
     {
       link: "/settings",
       icon: "settings",
       menu: "Configuraciones",
       chield: []
 
-    },
-   
+    }
+  
     // {
     //   link: "/home",
     //   icon: "home",

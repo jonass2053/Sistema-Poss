@@ -22,6 +22,7 @@ import { TooltipsComponent } from './tooltips/tooltips.component'
 import { SettingsComponent } from './settings/settings.component';
 import { MatCardModule } from '@angular/material/card';
 import { CompanyComponent } from './settings/components/company/company.component';
+import { LoaderComponent } from './loader/loader.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { CompanyComponent } from './settings/components/company/company.componen
     TooltipsComponent,
     FormsModule,
     CompanyComponent,
-    MatCardModule
+    MatCardModule,
+    LoaderComponent
   ],
   exports: [
     AlertsComponent,
@@ -63,6 +65,7 @@ import { CompanyComponent } from './settings/components/company/company.componen
     SliderComponent,
     SlideToggleComponent,
     ButtonsComponent,
+    
     
   ]
 })

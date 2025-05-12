@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UsuarioService } from './usuario.service';
+import { iEmpresa, iSucursal } from '../interfaces/iTermino';
 
 @Injectable({
   providedIn: 'root'
@@ -11,5 +12,6 @@ export class InformationService {
   tipoDocumento : string="";
   idUsuario! : number;
   idTurno! : number;
-
+  mySucursal! : iSucursal;
+  
 }

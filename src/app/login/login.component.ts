@@ -54,8 +54,8 @@ export class LoginComponent {
             this.information.idEmpresa =data.data.sucursal.idEmpresa; 
             this.information.idSucursal = data.data.sucursal.idSucursal;
             this.information.idTurno = data.data.idTurno;
+            this.information.mySucursal = data.data.sucursal;
             console.log(data.data.idTurno)
-
             localStorage.setItem('user', JSON.stringify(data))
             document.defaultView?.localStorage.setItem('token', JSON.stringify(data.token))
             this.routess.navigate(['/home'])
@@ -66,7 +66,6 @@ export class LoginComponent {
             // this.alertasService.hideLoading();
             this.mensaje = data.message; 
             this.alerta = false;
-           console.log("en el else")
           }
         
       })

@@ -48,23 +48,23 @@ export class ShiftsService {
   getAll(idSucursal: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/get_by_idsucursal/${idSucursal}`)
   }
-  getById(idTurno: number, idUsuario: number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/${idTurno}?idUsuario=${idUsuario}`)
+  getById(idTurno: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/${idTurno}`)
   }
   getTurnoActual(idUsuario: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}`)
   }
 
-  getTurnoOpen(){
-    this.alertas.ShowLoading();
-    this.getById(this.informartionService.idTurno, this.informartionService.idUsuario).subscribe((data: ServiceResponse) => {
-      if (data.statusCode == 200) {
-        this.isOpen =data.data.isOpen==false? undefined :data.data;
-        this.alertas.hideLoading();
-      } else {
-        this.alertas.hideLoading();
-        this.isOpen=undefined;
-      }
-    })
-  }
+  // getTurnoOpen(){
+  //   this.alertas.ShowLoading();
+  //   this.getById(this.informartionService.idTurno, this.informartionService.idUsuario).subscribe((data: ServiceResponse) => {
+  //     if (data.statusCode == 200) {
+  //       this.isOpen =data.data.isOpen==false? undefined :data.data;
+  //       this.alertas.hideLoading();
+  //     } else {
+  //       this.alertas.hideLoading();
+  //       this.isOpen=undefined;
+  //     }
+  //   })
+  // }
 }

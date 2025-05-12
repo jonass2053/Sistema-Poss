@@ -54,7 +54,10 @@ hideLoading = ()=>{
   {
     Swal.fire({
       text: msj,
-      icon: "warning"
+      icon: "warning",
+      confirmButtonColor: "#3085d6",
+      timer: 10000
+
     });
   }
 

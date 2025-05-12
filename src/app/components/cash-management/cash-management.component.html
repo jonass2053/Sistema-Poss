@@ -1,0 +1,152 @@
+<div class="body">
+    <div class="container">
+        <h1>Gestión de Efectivo</h1>
+
+        <!-- Balance de Caja -->
+        <div class="card">
+            <div class="card-header flex items-center justify-between">
+                <h2>Balance de Caja</h2>
+                <span class="icon text-green">$</span>
+            </div>
+            <div class="card-content">
+                <div class="balance" id="balance">$0.00</div>
+                <p class="text-xs text-muted" id="last-updated">Actualizado: --</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div  class="tabs">
+            <mat-button-toggle-group appearance="standard" name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle [checked]="true" (click)="selectView(1)" value="bold">Operaciones</mat-button-toggle>
+                <mat-button-toggle (click)="selectView(2)" value="italic">Historial</mat-button-toggle>
+                <mat-button-toggle (click)="selectView(3)" value="underline">Resumen Diario</mat-button-toggle>
+              </mat-button-toggle-group>
+        </div>
+
+        <!-- Tab Content: Operaciones -->
+        <div class="tab-content active" id="operations" *ngIf="operaciones">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Registrar Movimiento de Efectivo</h2>
+                    <p class="text-muted">Ingrese los detalles para registrar una entrada o salida de efectivo</p>
+                </div>
+                <div class="card-content">
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label>Tipo de Operación</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="type" id="deposit" value="deposit" checked>
+                                    <label for="deposit" class="flex items-center">
+                                        <span class="icon text-green">↓</span> Entrada
+                                    </label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="type" id="withdrawal" value="withdrawal">
+                                    <label for="withdrawal" class="flex items-center">
+                                        <span class="icon text-red">↑</span> Salida
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Monto ($)</label>
+                            <input type="number" id="amount" step="0.01" min="0.01" placeholder="0.00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción</label>
+                            <textarea id="description" placeholder="Detalle del movimiento" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-block" id="submit-btn">Registrar Entrada</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Historial -->
+        <div class="tab-content" id="history" *ngIf="historial">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Historial de Transacciones</h2>
+                    <p class="text-muted">Registro de todas las entradas y salidas de efectivo</p>
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="search" class="search-input" placeholder="Buscar por descripción...">
+                    </div>
+                </div>
+                <div class="card-content">
+                    <table id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th class="text-right">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Las transacciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <div class="empty-message" id="no-transactions">No hay transacciones registradas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Resumen Diario -->
+        <div class="tab-content" id="summary" *ngIf="resumen">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="flex items-center">
+                        <span class="icon">📊</span> Resumen del Día
+                    </h2>
+                    <p class="text-muted" id="today-date">-- - Resumen de operaciones de efectivo</p>
+                </div>
+                <div class="card-content">
+                    <div class="grid grid-cols-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="flex items-center">
+                                    <span class="icon text-green">↓</span> Total Entradas
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-green" style="font-size: 24px; font-weight: bold;" id="total-deposits">$0.00</div>
+                                <p class="text-xs text-muted" id="deposit-count">0 transacciones</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="flex items-center">
+                                    <span class="icon text-red">↑</span> Total Salidas
+                                </h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="text-red" style="font-size: 24px; font-weight: bold;" id="total-withdrawals">$0.00</div>
+                                <p class="text-xs text-muted" id="withdrawal-count">0 transacciones</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Balance Neto del Día</h3>
+                            </div>
+                            <div class="card-content">
+                                <div style="font-size: 24px; font-weight: bold;" id="net-change">$0.00</div>
+                                <p class="text-xs text-muted" id="total-count">0 transacciones totales</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="empty-message" id="no-today-transactions">No hay transacciones registradas hoy</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+</div>

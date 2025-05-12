@@ -136,17 +136,15 @@ export class CloseShiftComponent {
             this.userLocal = JSON.parse(userLocal);
             this.userLocal.data.idTurno = data.data.idTurno;
             localStorage.removeItem('user');
-            localStorage.setItem('user', JSON.stringify(this.userLocal))
+            localStorage.setItem('user', JSON.stringify(this.userLocal))            
           }
-
-
           this.closeModal();
         } else {
           this.alertaService.errorAlert(data.message);
         }
       });
 
-    } else {
+    } else if(this.validate()) {
       //Cerrar turno
       this.miFormulario.patchValue({
         idSucursal: this.informationService.idSucursal,
@@ -251,5 +249,22 @@ export class CloseShiftComponent {
 
   closeModal() {
     this.dialogRef.close();
+  }
+
+  validate() : boolean{
+    if(this.turnoOpen?.resumen.vt!=0){
+      if(this.totalMontoTickets==0){
+        this.alertaService.warnigAlert("No se puede cerra el turno, debe insertar los tickets o bauches de las ventas con tarjetas o trasferencias.")
+        return false;
+      }
+    }
+    if(this.turnoOpen?.resumen.vefec! + this.turnoOpen?.baseInicial!!==0){
+      if(this.resultadoMontoConteoBilletes==0){
+        this.alertaService.warnigAlert("No se puede cerra el turno, primero debe consolidar el efectivo existente en caja.")
+        return false;
+      }
+    }
+   
+    return true ;
   }
 }

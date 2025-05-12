@@ -43,6 +43,7 @@ import { PaymentComponent } from './components/payment/payment.component';
 import { NewPayComponent } from './components/payment/new-pay/new-pay.component';
 import { InventaryAdjustmentComponent } from './components/inventary/components/inventary-adjustment/inventary-adjustment.component';
 import { ShiftsComponent } from './components/shifts/shifts.component';
+import { CashManagementComponent } from './components/cash-management/cash-management.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -80,6 +81,8 @@ const routes: Routes = [
       {path:"sales/newprice/view/:id", component : ViewSalesComponent},
       {path:"sales/payment", component : PaymentComponent},
       {path:"payment/newpay", component : NewPayComponent},
+      {path:"cash-management", component : CashManagementComponent},
+
       {path:"alerts", component:AlertsComponent},
       {path:"forms", component:FormsComponent},
       {path:"table", component:ProductComponent},

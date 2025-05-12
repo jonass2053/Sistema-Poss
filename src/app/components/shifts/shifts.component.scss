@@ -33,9 +33,27 @@
     cursor: pointer;
     color: silver;
 }
+.estadoClosed {
+    color: white;
+    background-color: red;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 20px; 
+}
 .item .estadoClosed {
     color: white;
     background-color: red;
+    font-size: 10px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 20px; 
+}
+.estadoOpen {
+    color: white;
+    background-color: green;
     font-size: 10px;
     padding: 5px;
     text-align: center;
@@ -104,3 +122,337 @@ mat-list-item .estado
    display: flex;
    align-items: center;
 }
+.btn{
+    margin: 0 5px 0 5px;
+}
+.masterDetail{
+    display: flex;
+}
+.masterDetail .detalle{
+    width: 60%;
+}
+
+.body {
+    background-color: #f9fafb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  
+  /* Card styles */
+  .card {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .card-header {
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem 1.5rem 1rem;
+  }
+  
+  .card-content {
+    padding: 1.5rem;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  /* Typography */
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  
+  h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+  
+  .text-muted {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .text-xs {
+    font-size: 0.75rem;
+  }
+  
+  .font-medium {
+    font-weight: 500;
+  }
+  
+  /* Layout utilities */
+  .space-y-1 > * + * {
+    margin-top: 0.25rem;
+  }
+  
+  .space-y-2 > * + * {
+    margin-top: 0.5rem;
+  }
+  
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .justify-between {
+    justify-content: space-between;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Grid layout */
+  .grid {
+    display: grid;
+    gap: 0.25rem;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .gap-8 {
+    gap: 2rem;
+  }
+  
+  /* Separator */
+  .separator {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 1rem 0;
+  }
+  
+  /* Button */
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .button:hover {
+    background-color: #f9fafb;
+  }
+  
+  /* Print icon */
+  .print-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Signature lines */
+  .signature-line {
+    margin-top: 1rem;
+  }
+  
+  @media print {
+    .body {
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 0.2rem;
+
+        }
+        
+        /* Card styles */
+        .card {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        }
+        
+        .card-header {
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 1.5rem 1.5rem 1rem;
+        }
+        
+        .card-content {
+        padding: 1.5rem;
+        }
+        
+        .card-footer {
+        display: flex;
+        justify-content: center;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        }
+        
+        /* Typography */
+        h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        }
+        
+        h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        }
+        
+        h3 {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+        }
+        
+        .text-muted {
+        color: #6b7280;
+        font-size: 0.875rem;
+        }
+        
+        .text-sm {
+        font-size: 0.875rem;
+        }
+        
+        .text-xs {
+        font-size: 0.75rem;
+        }
+        
+        .font-medium {
+        font-weight: 500;
+        }
+        
+        /* Layout utilities */
+        .space-y-1 > * + * {
+        margin-top: 0.25rem;
+        }
+        
+        .space-y-2 > * + * {
+        margin-top: 0.5rem;
+        }
+        
+        .space-y-3 > * + * {
+        margin-top: 0.75rem;
+        }
+        
+        .space-y-4 > * + * {
+        margin-top: 1rem;
+        }
+        
+        .flex {
+        display: flex;
+        }
+        
+        .justify-between {
+        justify-content: space-between;
+        }
+        
+        .text-right {
+        text-align: right;
+        }
+        
+        .text-center {
+        text-align: center;
+        }
+        
+        /* Grid layout */
+        .grid {
+        display: grid;
+        gap: 0.25rem;
+        }
+        
+        .grid-cols-2 {
+        grid-template-columns: 1fr 1fr;
+        }
+        
+        .gap-8 {
+        gap: 2rem;
+        }
+        
+        /* Separator */
+        .separator {
+        height: 1px;
+        background-color: #e5e7eb;
+        margin: 1rem 0;
+        }
+        
+        /* Button */
+        .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #111827;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        }
+        
+        .button:hover {
+        background-color: #f9fafb;
+        }
+        
+        /* Print icon */
+        .print-icon {
+        width: 16px;
+        height: 16px;
+        }
+        
+        /* Signature lines */
+        .signature-line {
+        margin-top: 1rem;
+        }
+
+        .fechas{
+            display: flex !important;
+        }
+  }

@@ -99,7 +99,8 @@ export const  importaciones : any =[
   InputTextModule, 
   AvatarModule,
   DatePicker,
-  MatSidenavModule
+  MatSidenavModule,
+  NgxPrintModule
   
 
 
@@ -110,6 +111,7 @@ import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialo
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { NgxPrintModule } from 'ngx-print';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
   parse: {

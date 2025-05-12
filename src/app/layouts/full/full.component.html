@@ -18,14 +18,14 @@
 
             <a *ngIf="sidenav.menu!=='Ventas'" matRipple [matRippleColor]="'#f7f8f443'" routerLink="{{ sidenav.link }}"
               class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-              <i-feather name="{{ sidenav.icon }}" class="feather-base me-12"></i-feather> <span class="ps-4">{{
+              <mat-icon>{{sidenav.icon}}</mat-icon>  <span class="ps-4">{{
                 sidenav.menu }}</span>
             </a>
 
             <div *ngIf="sidenav.menu==='Ventas'" style="display: flex; flex-direction: column; width: 100%;">
               <a routerLink="{{ sidenav.link }}" matRipple [matRippleColor]="'#f7f8f443'" (click)="showListVentas()"
                 class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-                <i-feather name="{{ sidenav.icon }}" class="feather-base me-12"></i-feather> <span class="ps-4" >{{
+                <i-feather name="{{ sidenav.icon }}" class="feather-base me-12"></i-feather> <span class="ps-4">{{
                   sidenav.menu }}
                 </span>
                 <div style="margin-left: 80px">
@@ -35,10 +35,10 @@
               </a>
 
               <div class="contItem" [class.show]="listIngresos" *ngIf="sidenav.menu=='Ventas'">
-                <a  (click)="selectDocument('Factura')">  <span class="centerall"> Facturas</span></a>
-                <a  (click)="selectDocument('Cotización')"><span class="centerall"> Cotización</span></a>
-                <a  [routerLink]="['sales/payment']"><span class="centerall"> Pagos recibidos</span></a>
-                <a  [routerLink]="['sales/payment']"><span class="centerall"> Notas de credito</span></a>
+                <a (click)="selectDocument('Factura')"> <span class="centerall"> Facturas</span></a>
+                <a (click)="selectDocument('Cotización')"><span class="centerall"> Cotización</span></a>
+                <a [routerLink]="['sales/payment']"><span class="centerall"> Pagos recibidos</span></a>
+                <a [routerLink]="['sales/payment']"><span class="centerall"> Notas de credito</span></a>
 
               </div>
             </div>
@@ -76,12 +76,14 @@
 
     <!-- Header -->
     <mat-toolbar class="header ps-24 pe-24">
-     
+
       <button mat-icon-button class="ms-4 me-4" (click)="search=!search">
         <i-feather name="search" class="mt-n3 text-light-muted feather-base text-dark"></i-feather>
       </button>
-      <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()" mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
-      <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()" mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+      <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
+        mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
+      <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
+        mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
 
 
       <div class="ms-auto">
