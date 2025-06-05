@@ -1,22 +1,43 @@
-<div class="headerTitle">
-    <div>
-        <h2 *ngIf="turnoService.isOpen!=undefined">Cierre de Turno</h2>
-        <h2 class="headerTitle" *ngIf="turnoService.isOpen==undefined">Apertura de turno</h2>
-          <div class="headerSubTitle" *ngIf="turnoService!==undefined">
-            Fecha de apertura del turno : {{dateNow | date : 'dd/MM/yyyy hh:mm:ss'}}
+<div class="header">
+    <div class="header-left">
+        <h1 *ngIf="turnoService.isOpen!=undefined">Cierre de turno</h1>
+        <h1 *ngIf="turnoService.isOpen==undefined">Apertura de turno</h1>
+
+        <div class="date">Fecha de apertura del turno: {{dateNow | date : 'dd/MM/yyyy hh:mm:ss'}}</div>
+    </div>
+    <div class="header-right" *ngIf="turnoOpen!==undefined">
+
+        <div class="total-amount">
+            <span class="currency">$</span>
+            &nbsp;
+            <span class="amount"> Base Inicial {{turnoOpen!.baseInicial | number:'1.2-2'}}</span> <br>
+
         </div>
-        <!-- <div class="headerSubTitle" *ngIf="turnoService!==undefined">
+
+        <div class="total-amount">
+            <span class="currency">$</span>
+            <span class="amount"> Total del movimiento: {{(turnoOpen!.baseInicial +
+                turnoOpen!.resumen.vefec + turnoOpen!.resumen.vt +
+                turnoOpen!.resumen.vtransf + turnoOpen!.resumen.entradaCaja) -
+                turnoOpen!.resumen.salidaCaja | number:'1.2-2'}}</span> <br>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- <div class="headerSubTitle" *ngIf="turnoService!==undefined">
             Fecha de apertura del turno : {{turnoOpen.fechaApertura | date : 'dd/MM/yyyy hh:mm:ss'}}
         </div> -->
-    </div>
-    <!-- <div *ngIf="turnoService!=undefined">
+
+<!-- <div *ngIf="turnoService!=undefined">
         {{turnoOpen.descripcion}}
     </div> -->
 
-</div> 
-<form action="" [formGroup]="miFormulario">
-    <mat-dialog-content>
-        <div class="container">
+
+
+<!-- <mat-dialog-content>
+        <div class="container-fluit">
             <div class="row">
                 <div [ngClass]="turnoOpen==undefined ? 'col-12' : 'col-4'">
                     <mat-card appearance="outlined">
@@ -36,7 +57,6 @@
                                 </div>
                                 <ul>
                                     @for (billete of dataListBilletesMonedas; track $index) {
-
                                     <li>
                                         <section><b>{{billete.Monto}}</b> </section>
                                         <div> <input type="number" class="txt"
@@ -45,7 +65,6 @@
                                             <input style="text-align: right;" class="txt" type="number" readonly="true"
                                                 value="{{billete.Resultado}}">
                                         </div>
-
                                     </li>
                                     <mat-divider></mat-divider>
                                     }
@@ -62,7 +81,8 @@
 
 
                 </div>
-                <div class="col-4" *ngIf="turnoOpen!=undefined && turnoOpen.resumen.vt!=0">
+                <div class="col-4"
+                    *ngIf="turnoOpen!=undefined && turnoOpen.resumen.vt!=0 || turnoOpen?.resumen?.vtransf!=0">
                     <mat-card appearance="outlined">
                         <mat-card-content>
                             <h3 class="flex"><mat-icon>local_activity</mat-icon>Consolidado de Tickets </h3>
@@ -125,128 +145,281 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                
-                    <div class="col-4" *ngIf="turnoOpen!==undefined">
-                        <mat-card appearance="outlined">
-                            <mat-card-content>
-                                <h3 class="flex"><mat-icon>calculate</mat-icon>Resumen de ventas </h3>
-                                <div class="carddetallereconteo">
-                                    <div class="header">
-                                        <div>
-                                            Descripción <br>
-                                        </div>
 
-                                        <div>
-                                            Resultado
-                                        </div>
+                <div class="col-4" *ngIf="turnoOpen!==undefined">
+                    <mat-card appearance="outlined">
+                        <mat-card-content>
+                            <h3 class="flex"><mat-icon>calculate</mat-icon>Resumen de ventas </h3>
+                            <div class="carddetallereconteo">
+                                <div class="header">
+                                    <div>
+                                        Descripción <br>
                                     </div>
 
-                                    <ul>
-                                        <li>Base inicial <section>{{turnoOpen.baseInicial | number:'1.2-2'}}</section>
-                                        </li>
-                                        <mat-divider></mat-divider>
-                                        <li>Ventas en efectivo <section>{{turnoOpen.resumen.vefec | number:'1.2-2'}}
-                                            </section>
-                                        </li>
-                                        <mat-divider></mat-divider>
-                                        <li>Ventas con tarjeta <section>{{turnoOpen.resumen.vt | number:'1.2-2' }}
-                                            </section>
-                                        </li>
-                                        <mat-divider></mat-divider>
-                                        <li>Ventas con trasferencia <section>{{turnoOpen.resumen.vtransf |
-                                                number:'1.2-2' }}</section>
-                                        </li>
-                                        <mat-divider></mat-divider>
-                                        <li>Total de venta en el sistema <section><b> {{turnoOpen.baseInicial +
-                                                    turnoOpen.resumen.vefec + turnoOpen.resumen.vt +
-                                                    turnoOpen.resumen.vtransf | number:'1.2-2'}}</b></section>
-                                        </li>
-                                        <mat-divider></mat-divider>
-                                    </ul>
-
-
-                                    <div class="footer header">
-                                        <div class="resumenMonto">
-                                            <div>
-                                                <h4>Total de efectivo esperado</h4>
-                                            </div>
-                                            <div><b>{{turnoOpen.baseInicial + turnoOpen.resumen.vefec | number:'1.2-2'
-                                                    }}</b></div>
-                                        </div>
+                                    <div>
+                                        Resultado
                                     </div>
-                                    <div class="footer header">
-                                        <div class="resumenMonto">
-                                            <div>
-                                                <h4>
-                                                    Total de efectivo fisico en la caja
-                                                </h4>
-                                            </div>
-                                            <div><b>{{ resultadoMontoConteoBilletes | number:'1.2-2' }}</b></div>
-                                        </div>
-
-                                    </div>
-
-                                    <mat-divider></mat-divider>
-
-                                    <div class="footer header">
-                                        <div class="resumenMonto">
-                                            <div>
-                                                <h4>
-                                                    Total de V.Tickets en el sistema
-                                                </h4>
-                                            </div>
-                                            <div><b> {{turnoOpen.resumen.vtransf + turnoOpen.resumen.vt |
-                                                    number:'1.2-2' }}</b></div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="footer header">
-                                        <div class="resumenMonto">
-                                            <div>
-                                                <h4>
-                                                    Total V.Tickets fisico
-                                                </h4>
-                                            </div>
-                                            <div><b> {{totalMontoTickets |
-                                                    number:'1.2-2' }}</b></div>
-                                        </div>
-
-                                    </div>
-
-
-
-                                    <div class="footer header">
-                                        <div class="resumenMonto">
-                                            <div>
-                                                <h4>
-                                                    Monto faltante en caja
-                                                </h4>
-                                            </div>
-                                            <div><b>{{ montoFaltante | number:'1.2-2' }}</b></div>
-                                        </div>
-
-                                    </div>
-
-                                    <mat-divider></mat-divider>
-                                    <br>
-                                    <mat-form-field class="example-full-width">
-                                        <mat-label>Comentario</mat-label>
-                                        <textarea formControlName="comentario" rows="2" matInput
-                                            placeholder="Agrega un comentario si la caja no cuadra"></textarea>
-                                    </mat-form-field>
                                 </div>
 
-                            </mat-card-content>
-                        </mat-card>
-                    </div>
-               
+                                <ul>
+                                    <li>Base inicial <section>{{turnoOpen.baseInicial | number:'1.2-2'}}</section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    <li>Ventas en efectivo <section>{{turnoOpen.resumen.vefec | number:'1.2-2'}}
+                                        </section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    <li>Ventas con tarjeta <section>{{turnoOpen.resumen.vt | number:'1.2-2' }}
+                                        </section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    <li>Ventas con trasferencia <section>{{turnoOpen.resumen.vtransf |
+                                            number:'1.2-2' }}</section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    <li>Ingreso de efectivo <section>{{turnoOpen.resumen.entradaCaja|
+                                            number:'1.2-2' }}</section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+
+                                    <li>Egreso de efectivo <section> <span
+                                                *ngIf="turnoOpen.resumen.salidaCaja!=0">-</span>{{turnoOpen.resumen.salidaCaja|
+                                            number:'1.2-2' }}</section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+                                    <li>Total de movimiento en el turno <section><b> {{(turnoOpen.baseInicial +
+                                                turnoOpen.resumen.vefec + turnoOpen.resumen.vt +
+                                                turnoOpen.resumen.vtransf + turnoOpen.resumen.entradaCaja) -
+                                                turnoOpen.resumen.salidaCaja | number:'1.2-2'}}</b></section>
+                                    </li>
+                                    <mat-divider></mat-divider>
+
+                                </ul>
+
+
+                                <div class="footer header">
+                                    <div class="resumenMonto">
+                                        <div>
+                                            <h4>Total de efectivo esperado</h4>
+                                        </div>
+                                        <div><b>{{ (turnoOpen.baseInicial + turnoOpen.resumen.vefec +
+                                                turnoOpen.resumen.entradaCaja) - turnoOpen.resumen.salidaCaja|
+                                                number:'1.2-2'
+                                                }}</b></div>
+                                    </div>
+                                </div>
+                                <div class="footer header">
+                                    <div class="resumenMonto">
+                                        <div>
+                                            <h4>
+                                                Total de efectivo fisico en la caja
+                                            </h4>
+                                        </div>
+                                        <div><b>{{ resultadoMontoConteoBilletes | number:'1.2-2' }}</b></div>
+                                    </div>
+
+                                </div>
+
+                                <mat-divider></mat-divider>
+
+                                <div class="footer header">
+                                    <div class="resumenMonto">
+                                        <div>
+                                            <h4>
+                                                Total de V.Tickets en el sistema
+                                            </h4>
+                                        </div>
+                                        <div><b> {{turnoOpen.resumen.vtransf + turnoOpen.resumen.vt |
+                                                number:'1.2-2' }}</b></div>
+                                    </div>
+
+                                </div>
+
+                                <div class="footer header">
+                                    <div class="resumenMonto">
+                                        <div>
+                                            <h4>
+                                                Total V.Tickets fisico
+                                            </h4>
+                                        </div>
+                                        <div><b> {{totalMontoTickets |
+                                                number:'1.2-2' }}</b></div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="footer header">
+                                    <div class="resumenMonto">
+                                        <div>
+                                            <h4>
+                                                Monto faltante en caja
+                                            </h4>
+                                        </div>
+                                        <div><b>{{ montoFaltante | number:'1.2-2' }}</b></div>
+                                    </div>
+
+                                </div>
+
+                                <mat-divider></mat-divider>
+                                <br>
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Comentario</mat-label>
+                                    <textarea formControlName="comentario" rows="2" matInput
+                                        placeholder="Agrega un comentario si la caja no cuadra"></textarea>
+                                </mat-form-field>
+                            </div>
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
             </div>
 
 
         </div>
 
-    </mat-dialog-content>
+    </mat-dialog-content> -->
+<form action="" [formGroup]="miFormulario">
+    <div class="container">
+        <div class="summary-grid" *ngIf="turnoOpen!==undefined">
+            <div class="summary-card">
+                <div class="header-card">
+                    <div class="icon">$</div>
+                    <div class="title">V.Efectivo</div>
+                </div>
+                <div class="amount">{{turnoOpen?.resumen?.vefec | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+
+            <div class="summary-card">
+                <div class="header-card">
+                    <div class="icon">$</div>
+                    <div matTooltip="Venta con tarjeta" class="title">V.Tarjeta</div>
+                </div>
+                <div class="amount">{{turnoOpen?.resumen?.vt| number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+
+            <div class="summary-card">
+                <div class="header-card">
+                    <div class="icon">$</div>
+                    <div matTooltip="Venta con trasferencia" class="title">V.Trasf.</div>
+                </div>
+                <div class="amount">{{turnoOpen?.resumen?.vtransf| number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+
+            <div class="summary-card">
+                <div class="header-card">
+                    <div class="icon">$</div>
+                    <div class="title">Ingreso</div>
+                </div>
+                <div class="amount">{{turnoOpen?.resumen?.entradaCaja | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+
+            <div class="summary-card">
+                <div class="header-card">
+                    <div class="icon">$</div>
+                    <div class="title">Egreso</div>
+                </div>
+                <div class="amount">{{turnoOpen?.resumen?.salidaCaja | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section" >
+                <div class="section-header">
+                    <div class="icon">$</div>
+                    <h3>Consolidado de efectivo</h3>
+                </div>
+                <div class="cash-table">
+                    @for (billete of dataListBilletesMonedas; track $index)
+                    {
+                    <div class="cash-row">
+                        <div class="denomination">{{billete.Monto}}</div>
+                        <input type="number" placeholder="Cantidad"
+                            (input)="calcularBillete($index, billete.Monto, $event)" tabindex="1"
+                            value="{{billete.Cantidad}}">
+                        <input type="number" style="text-align: right;" class="txt" type="number" readonly="true"
+                            value="{{billete.Resultado}}" placeholder="Total">
+                    </div>
+                    }
+                </div>
+            </div>
+
+
+            <div class="section" *ngIf="turnoOpen!==undefined">
+                <div class="section-header">
+                    <div class="icon">$</div>
+                    <h3>Consolidado de comprobantes</h3>
+                </div>
+                <app-nodata style="width: 50px;" *ngIf="turnoOpen?.resumen?.vtransf==0 && turnoOpen?.resumen?.vt==0" [mensaje]="'No se ha encontrado ninguna transacción'"></app-nodata>
+                <ul *ngIf="turnoOpen?.resumen?.vtransf!==0 || turnoOpen?.resumen?.vt!==0">
+                    <li class="voucher-form">
+                        <input #miInput type="text" maxlength="10"  placeholder="Referencia"
+                            formControlName="numeroComprobante" placeholder="No. ticket" type="text" class="txt"
+                            tabindex="1">
+                        <input type="number" placeholder="Monto" formControlName="montoComprobante">
+                        <button  (click)="addComprobante()" type="number" class="txt" tabindex="1"
+                            class="add-btn">+</button>
+                    </li>
+                    <li class="restickets" *ngFor="let comprobante of dataListComprobantes; let i=index">
+                        <div>
+                            {{comprobante.numeracion}}
+                        </div>
+                        <div>
+                            {{comprobante.monto | number:'1.2-2'}}
+                        </div>
+                        <div class="text-right">
+                        <mat-icon (click)="removeTicket(i, comprobante.monto)" >close</mat-icon>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+
+            <div class="section" *ngIf="turnoOpen!==undefined">
+                <div class="summary-panel">
+                    <h4>Total de efectivo esperado {{ (turnoOpen.baseInicial + turnoOpen.resumen.vefec +
+                                                turnoOpen.resumen.entradaCaja) - turnoOpen.resumen.salidaCaja|
+                                                number:'1.2-2'
+                                                }}</h4>
+                    <div class="summary-line">
+                        <span class="label">Total de efectivo físico en la caja</span>
+                        <span class="value">{{ (turnoOpen!.baseInicial + turnoOpen!.resumen.vefec +
+                            turnoOpen!.resumen.entradaCaja) - turnoOpen!.resumen.salidaCaja|
+                            number:'1.2-2'
+                            }}</span>
+                    </div>
+                    <div class="summary-line">
+                        <span class="label">Total de V.Tickets en el sistema</span>
+                        <span class="value"> {{turnoOpen!.resumen.vtransf + turnoOpen!.resumen.vt |
+                            number:'1.2-2' }}</span>
+                    </div>
+                    <div class="summary-line">
+                        <span class="label">Total V.Tickets físico</span>
+                        <span class="value">{{totalMontoTickets |
+                            number:'1.2-2' }}</span>
+                    </div>
+                    <div class="summary-line highlight">
+                        <span class="label">Monto faltante en caja</span>
+                        <span class="value">{{ montoFaltante | number:'1.2-2' }}</span>
+                    </div>
+                    <mat-form-field class="example-full-width">
+                                    <mat-label>Comentario</mat-label>
+                                    <textarea formControlName="comentario" rows="2" matInput
+                                        placeholder="Agrega un comentario si la caja no cuadra"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </form>
 <mat-dialog-actions>
     <button mat-button mat-dialog-close><mat-icon>cancel</mat-icon> Cancelar</button>

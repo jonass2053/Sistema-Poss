@@ -74,3 +74,26 @@
 .logorectangular{
   width: 50px;
 }
+
+.sidenav{
+  background-color: #111827;
+  color: #D1D5DB;
+
+}
+.headermenu{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.toolbar
+{
+  position: fixed;
+  z-index: 999;
+  background-color: #111827 !important;
+  color: #FFFFFF;
+
+}
+.sidenav-content{
+  background-color: #F3F4F6;
+}

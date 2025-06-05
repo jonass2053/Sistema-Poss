@@ -10,6 +10,7 @@ import { baseUrl } from '../Core/utilities/enviroment.';
   providedIn: 'root'
 })
 export class FacturaService {
+  isPos : boolean = false;
   facturaEdit!: any;
   pagosFactura: iPago[] = [];
   url: string = `${baseUrl}/Factura`;

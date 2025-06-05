@@ -9,6 +9,7 @@ import { MsjService } from 'src/app/Core/utilities/msj.service';
 import { iContactoPos, idNumeracion, idTipoContacto, iTermino, iVendedor } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { ContactosService } from 'src/app/services/contactos.service';
+import { InformationService } from 'src/app/services/information.service';
 import { NumeracionService } from 'src/app/services/numeracion.service';
 import { TerminosService } from 'src/app/services/terminos.service';
 import { VendedoresService } from 'src/app/services/vendedores.service';
@@ -31,6 +32,7 @@ export class ContactsComponent {
     private numeracionService: NumeracionService,
     private terminoService: TerminosService,
     private vendedorService: VendedoresService,
+    private informationService : InformationService,
     private router: Router
   ) {
 
@@ -139,7 +141,7 @@ export class ContactsComponent {
 
   getAll() {
     this.cargando = true;
-    this.contactoService.getAll().subscribe((data: any) => {
+    this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: any) => {
       this.dataList = data.data.filter((c: iContactoPos) => c.idTipoContacto == 1);
       this.dataListProveedores = data.data.filter((c: iContactoPos) => c.idTipoContacto == 2);
       if (this.dataList.length > 0) {
@@ -159,7 +161,7 @@ export class ContactsComponent {
       this.getAll();
     }
     else {
-      this.contactoService.getAllFilter(filtro).subscribe((data: any) => {
+      this.contactoService.getAllFilter(filtro, this.informationService.idEmpresa).subscribe((data: any) => {
         this.dataList = data.data.filter((c: iContactoPos) => c.idTipoContacto == 1);
         this.dataListProveedores = data.data.filter((c: iContactoPos) => c.idTipoContacto == 2);
         if (this.dataList.length > 0) {

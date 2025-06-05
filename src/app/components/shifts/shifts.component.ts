@@ -26,10 +26,14 @@ export class ShiftsComponent {
   readonly dialog = inject(MatDialog);
 
   datalist: iTurno[] = [];
-  totalMovimientoTurno : number = 0;
-  dineroEsperadoEnCaja : number =0;
-  turnoSeleccionado! : iTurno | undefined;
-  loader1 : boolean=false;
+  totalMovimientoTurno: number = 0;
+  dineroEsperadoEnCaja: number = 0;
+  efectivoIngresoCaja: number = 0;
+  efectivoEgresoCaja: number = 0;
+  turnoSeleccionado!: iTurno | undefined;
+  totalVenta : number = 0;
+
+  loader1: boolean = false;
   loader2: boolean = false;
 
   constructor(
@@ -41,11 +45,14 @@ export class ShiftsComponent {
   ) {
     this.getAll();
     this.getTurnoActual();
-    if(turnoService.isOpen!=undefined){
-      this.totalMovimientoTurno = turnoService.isOpen.baseInicial + turnoService.isOpen.resumen.vefec + turnoService.isOpen.resumen.vt + turnoService.isOpen.resumen.vtransf;
-      this.turnoSeleccionado = turnoService.isOpen;
+    this.turnoSeleccionado = turnoService.isOpen;
+    if (turnoService.isOpen != undefined && turnoService.isOpen.baseInicial != undefined && turnoService.isOpen.resumen.vefec != undefined && turnoService.isOpen.resumen.vt != undefined && turnoService.isOpen.resumen.vtransf != undefined) {
+      setTimeout(() => {
+        this.totalMovimientoTurno = (turnoService.isOpen!.baseInicial + turnoService.isOpen!.resumen.vefec + turnoService.isOpen!.resumen.vt + turnoService.isOpen!.resumen.vtransf + turnoService.isOpen!.resumen.entradaCaja) - turnoService.isOpen!.resumen.salidaCaja;
+        this.turnoSeleccionado = turnoService.isOpen;
+      }, 100);
+
     }
-    console.log(informationService.mySucursal)
   }
   getAll() {
     this.loaderTurnos();
@@ -60,37 +67,45 @@ export class ShiftsComponent {
   openShift(): void {
     this.dialog.open(CloseShiftComponent, {
       width: '500px',
-    }).afterClosed().subscribe(result=>{
+    }).afterClosed().subscribe(result => {
       this.getAll();
       this.getTurnoActual();
     })
   }
 
   openModalCloseShift() {
-    const dialogRef = this.dialog.open(CloseShiftComponent, {width : '1600px'});
+    const dialogRef = this.dialog.open(CloseShiftComponent, { width: '1600px' });
     dialogRef.afterClosed().subscribe(result => {
       this.getAll();
       this.getTurnoActual();
-      this.turnoSeleccionado=undefined;
+      this.turnoSeleccionado = undefined;
     });
   }
-  getTurnoActual(){
-    this.turnoService.getTurnoActual(this.informationService.idUsuario).subscribe((data: ServiceResponse)=>{
-      if(data.statusCode==200){
-        this.turnoService.isOpen =  data.data==null? undefined : data.data;
-        this.totalMovimientoTurno = this.turnoService.isOpen!.baseInicial + this.turnoService.isOpen!.resumen.vefec + this.turnoService.isOpen!.resumen.vt + this.turnoService.isOpen!.resumen.vtransf;
-        this.dineroEsperadoEnCaja = this.turnoService.isOpen!.baseInicial + this.turnoService.isOpen!.resumen!.vefec;
-        this.turnoSeleccionado =  this.turnoService.isOpen;
+  getTurnoActual() {
+    this.turnoService.getTurnoActual(this.informationService.idUsuario).subscribe((data: ServiceResponse) => {
+      if (data.statusCode == 200) {
+         this.efectivoIngresoCaja = data.data.resumen.entradaCaja;
+        this.efectivoEgresoCaja = data.data.resumen.salidaCaja;
+        this.totalMovimientoTurno = (this.turnoService.isOpen!.baseInicial + this.turnoService.isOpen!.resumen.vefec + this.turnoService.isOpen!.resumen.vt + this.turnoService.isOpen!.resumen.vtransf + this.turnoService.isOpen!.resumen.entradaCaja) - this.turnoService.isOpen!.resumen.salidaCaja;
+        this.dineroEsperadoEnCaja =(this.turnoService.isOpen!.baseInicial + this.turnoService.isOpen!.resumen.vefec + this.turnoService.isOpen!.resumen.entradaCaja) - this.turnoService.isOpen!.resumen.salidaCaja;
+        this.turnoSeleccionado = data.data;
       }
     })
   }
-  getTurnoById(id : number){
-    this.turnoService.getById(id).subscribe((data : ServiceResponse)=>{
-      if(data.status){
+  getTurnoById(id: number) {
+    this.alertasService.ShowLoading();
+    this.turnoService.getById(id).subscribe((data: ServiceResponse) => {
+      if (data.status) {
         this.turnoSeleccionado = data.data;
-        this.totalMovimientoTurno = this.turnoSeleccionado!.baseInicial + this.turnoSeleccionado!.resumen.vefec + this.turnoSeleccionado!.resumen.vt + this.turnoSeleccionado!.resumen.vtransf;
-        this.dineroEsperadoEnCaja = this.turnoSeleccionado!.baseInicial + this.turnoSeleccionado!.resumen!.vefec;
+        this.totalMovimientoTurno = (this.turnoSeleccionado!.baseInicial + this.turnoSeleccionado!.resumen.vefec + this.turnoSeleccionado!.resumen.vt + this.turnoSeleccionado!.resumen.vtransf + this.turnoSeleccionado!.resumen.entradaCaja) - this.turnoSeleccionado!.resumen.salidaCaja;
+        this.dineroEsperadoEnCaja = (this.turnoSeleccionado!.baseInicial + this.turnoSeleccionado!.resumen!.vefec + this.turnoSeleccionado!.resumen.entradaCaja) - this.turnoSeleccionado!.resumen.salidaCaja;
+        this.efectivoIngresoCaja = data.data.resumen.entradaCaja;
+        this.efectivoEgresoCaja = data.data.resumen.salidaCaja;
+        this.alertasService.hideLoading();
       }
+      this.alertasService.hideLoading();
+
+
 
     })
   }
@@ -116,17 +131,18 @@ export class ShiftsComponent {
       bodyClass: 'printable',
       openNewTab: true,
       previewOnly: false,
-      closeWindow : true
+      closeWindow: true,
+      
     });
     this.printService.print(customPrintOptions);
   }
 
-  loaderTurnos(){
-    this.loader1 = this.loader1==true? false: true;
+  loaderTurnos() {
+    this.loader1 = this.loader1 == true ? false : true;
   }
-  loaderTurno(){
-    this.loader2 = this.loader2==true? false: true;
+  loaderTurno() {
+    this.loader2 = this.loader2 == true ? false : true;
   }
-  
+
 }
 

@@ -4,21 +4,24 @@
             <!-- Card column -->
             <div class="col-12">
                 <div class="demo-tab-content">
-                    <div class="flex">
-                        <div class="headerNavCard col-9">
-                            <h4>Inventario de productos</h4>
-                            <a [routerLink]="['/settings']">
-                                <!-- <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div> -->
-                            </a>
+                   
+                       
+                        <div class="headerNavCard">
+                            <div class="titulo"> <mat-icon>list</mat-icon>Listado de los productos <span
+                                    style="margin-left: 10px;"></span>
+                                <!-- <a>
+                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+              </a> -->
+                           
                         </div>
-    
+
                         <div class="accionesprint">
                             <mat-icon>print_connect</mat-icon>
                             <mat-icon>share</mat-icon>
                             <mat-icon>download</mat-icon>
                         </div>
                     </div>
-                    
+
 
                     <div class="filterandbutton" style="margin-top: 5px;">
 
@@ -32,7 +35,7 @@
                         </div>
 
                         <div class="containerfuncionesheader input-parent">
-                            <mat-form-field appearance="outline">
+                            <mat-form-field appearance="fill" class="mini-input no-fill-background">
                                 <mat-label>Buscar</mat-label>
                                 <input matInput (keyup)="getAllFilter($event)" placeholder="buscar">
                                 <mat-icon matSuffix>search</mat-icon>

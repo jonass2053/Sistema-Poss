@@ -217,6 +217,7 @@ export interface iFactura {
   idContacto: number,
   contacto: iContactoPos,
   idTipoDocumento: number,
+  idBanco : number
   idSucursal: number,
   sucursalObj:
   {
@@ -381,6 +382,8 @@ export interface iTurno {
   totalTurno: number
   dineroEsperadoCaja: number
   dineroRealEnCaja: number
+  ticketsEsperadoCaja : number
+  ticketsRealCaja : number
   isOpen: true
   idUsuario: number
   usuarioObj : IUsuario
@@ -393,7 +396,9 @@ export interface iTurno {
     baseInicial : number,
     vefec : number,
     vt : number,
-    vtransf : number
+    vtransf : number,
+    entradaCaja : number,
+    salidaCaja : number
   }
 }
 
@@ -415,4 +420,26 @@ export interface iDenominacion{
 export interface iComprobante{
   numeracion : string,
   monto : number
+}
+
+export interface iCash{
+  id: number,
+  idTurno : number,
+  turnoObj : iTurno,
+  fecha : string,
+  ingreso : boolean,
+  monto : number,
+  descripcion : string,
+  referencia : string,
+  idUsuario : number,
+  usuarioObj : IUsuario
+
+}
+
+export interface iCashResumen{
+  cantEntradas: number,
+  montoTotalEntradas : number,
+  cantCantSalidas : number,
+  montoTotalSalidas : number,
+  balance : number
 }

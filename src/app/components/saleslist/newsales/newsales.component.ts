@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,9 +16,11 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { TerminosService } from 'src/app/services/terminos.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { VendedoresService } from 'src/app/services/vendedores.service';
-import { addDays } from 'date-fns';
+import { addDays, sub } from 'date-fns';
 import { MatTableDataSource } from '@angular/material/table';
 import { CdkStepperModule } from '@angular/cdk/stepper';
+import { MatDialog } from '@angular/material/dialog';
+import { PaymenSalesComponent } from '../paymen-sales/paymen-sales.component';
 
 declare var $: any;
 
@@ -40,6 +42,8 @@ declare var $: any;
 export class NewsalesComponent {
   @ViewChild('exampleModal') myModal!: ElementRef;
 
+  readonly dialog = inject(MatDialog);
+
 
 
   isEditable = false;
@@ -50,9 +54,10 @@ export class NewsalesComponent {
   btnPagar: number = 0;
   document: string = "";
   idNumeracion: number = 0;
-  displayedColumns: string[] = ['item', 'descripcion', 'cantidad', 'precio', 'subtotal', 'descuento', 'total', 'acciones'];
+  displayedColumns: string[] = ['item', 'descripcion', 'cantidad', 'precio', 'subtotal', 'descuento', 'itbis', 'total', 'acciones'];
   activePayment: boolean = false;
-  idFactura : any=0;
+  idFactura: any = 0;
+  desc: boolean = false;
 
 
   constructor(
@@ -65,7 +70,7 @@ export class NewsalesComponent {
     private datePipe: DatePipe,
     private vendedoresService: VendedoresService,
     private productoService: ProductoService,
-    private facturaServcie: FacturaService,
+    public facturaServcie: FacturaService,
     private bancoService: BancosService,
     private router: Router,
     private route: ActivatedRoute,
@@ -75,19 +80,18 @@ export class NewsalesComponent {
     if (this.usuarioService.usuarioLogueado != undefined) {
       this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
     }
-    this.miFormulario.patchValue({ fecha: new Date() })
+    this.miFormulario.patchValue({ fecha: new Date(), cantidad: 1 })
     this.getAllTerminos();
     this.getAllNumeracion();
     this.getAllVendedores();
     this.getTipoDocumentos();
     this.getAllBancos();
-
-    this.idFactura= this.route.snapshot.paramMap.get('id');
-    if (this.idFactura!=='0' &&  this.idFactura!==0 ) {
+    this.getAllProduct();
+    this.getAllContactos();
+    this.idFactura = this.route.snapshot.paramMap.get('id');
+    if (this.idFactura !== '0' && this.idFactura !== 0) {
       this.getById(this.idFactura);
     }
-   
-  
   }
 
 
@@ -132,7 +136,7 @@ export class NewsalesComponent {
 
   miFormulario: FormGroup = this.fb.group({
     idFactura: this.fb.control(null),
-    idNumeracion: this.fb.control( '',Validators.required),
+    idNumeracion: this.fb.control('', Validators.required),
     idContacto: this.fb.control("", Validators.required),
     idTipoDocumento: this.fb.control("", Validators.required),
     idSucursal: this.fb.control("", Validators.required),
@@ -146,10 +150,11 @@ export class NewsalesComponent {
     fecha: this.fb.control(""),
     descripcion: this.fb.control({ value: "", disabled: true }),
     precio: this.fb.control({ value: 0, disabled: false }),
-    cantidad: this.fb.control(1),
+    cantidad: this.fb.control(0),
     descuento: this.fb.control({ value: 0, disabled: false }),
     impuesto: this.fb.control(0),
     impuestos: this.fb.control(0),
+    idBanco: this.fb.control(null),
     producto: this.fb.control(''),
     impuestoObjet: this.fb.control(""),
     subTotalDetails: this.fb.control(0),
@@ -187,7 +192,7 @@ export class NewsalesComponent {
   identificacion: string = "jonas dia";
   telefono: string = "";
   efectivo: number = 0;
-  editDatils : boolean = false;
+  editDatils: boolean = false;
   dataListNumeracion: idNumeracion[] = [];
   dataListVendedores: iVendedor[] = [];
   dataListDetalleFactura: iDetalleFactura[] = [];
@@ -220,10 +225,11 @@ export class NewsalesComponent {
   descripcionPago: string = "POR PAGAR";
   dataListBancos: iBanco[] = [];
   dataSource = new MatTableDataSource<iDetalleFactura>(this.dataListDetalleFactura);
-  facturaForEdit!  : iFactura;
+  facturaForEdit!: iFactura;
 
 
   addDetails() {
+    //  this.cantidad = this.miFormulario.value.cantidad;
     let cantLocal = 0;
     if (this.idProducto == 0) {
       this.alertaService.warnigAlert("Debe seleccionar un item y llenar los campos para poder agregar.")
@@ -265,9 +271,9 @@ export class NewsalesComponent {
       }
       this.dataSource.data = this.dataListDetalleFactura;
       this.calculoGeneral();
-      this.resetDetails();
       this.editando = false;
-      console.log(this.miFormulario.value)
+      this.resetDetails();
+
     }
 
   }
@@ -277,8 +283,10 @@ export class NewsalesComponent {
     }
     else if (await this.alertaService.questionDelete()) {
       this.dataListDetalleFactura.splice(indice, 1);
+      this.dataSource.data = this.dataListDetalleFactura;
       this.resetDetails();
       this.calculoGeneral();
+      console.log(this.dataListDetalleFactura)
       this.dataListImpuestosDetails = this.dataListImpuestosDetails.filter(c => c.idProducto != detalle.idProducto);
     }
   }
@@ -286,11 +294,26 @@ export class NewsalesComponent {
   searchContacto(event: any) {
     let valor = (event.target as HTMLInputElement).value;
     if (valor.length > 0) {
-      this.contactoService.getAllFilter((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
+      this.contactoService.getAllFilter((event.target as HTMLInputElement).value, this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
         this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
-        console.log(this.dataListContactos)
       })
     }
+    else{
+      this.getAllContactos();
+    }
+  }
+
+  getAllContactos(){
+  this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse)=>{
+          this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      })
+  }
+  getAllProduct() {
+    this.productoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
+      if (data.status) {
+        this.dataListProductosSearch = data.data;
+      }
+    })
   }
 
   searchProducto(event: any) {
@@ -299,6 +322,8 @@ export class NewsalesComponent {
       this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
         this.dataListProductosSearch = data.data;
       })
+    } else {
+      this.getAllProduct();
     }
   }
   searchProductoEdit(valor: string, cant: number) {
@@ -349,26 +374,111 @@ export class NewsalesComponent {
         telefono: event.option.value.telefono1,
         idNumeracion: this.informationService.tipoDocumento === "Cotización" ? 11 : event.option.value.idTipoNumeracion,
         idContacto: event.option.value.idContacto,
+        nombreClienteCompleto: event.option.value
 
       })
     this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : event.option.value.idTipoNumeracion;
   }
 
-  selectProducto(event: any) {
-    this.idProducto = event.option.value.idProducto;
-    this.nombre = event.option.value.nombre;
-    this.prodcutoSeleccionado = event.option.value;
-    this.impuestoProduct = Math.round((event.option.value.precioFinal - event.option.value.precioBase) * 100) / 100;
+  selectProducto(event: any, accion: number, producto: any = undefined) {
+    if (accion == 1) {
+      this.idProducto = event.option.value.idProducto;
+      this.nombre = event.option.value.nombre;
+      this.prodcutoSeleccionado = event.option.value;
+      this.cantidad = this.miFormulario.value.cantidad;
+      this.precio = event.option.value.precioBase;
+      this.impuestos = event.option.value.precioFinal - event.option.value.precioBase;
+      this.impuestoProduct = this.impuestos;
+      this.descuento = event.option.value.descuento == undefined ? 0 : event.option.value.descuento;
+      this.subTotal = (this.cantidad * this.precio);
+      this.total = (this.subTotal + this.impuestos) - this.descuento;
+      this.miFormulario.patchValue(
+        {
+          cantidad: this.miFormulario.value.cantidad,
+          descripcion: event.option.value.descripcion,
+          precio: event.option.value.precioBase,
+          // impuesto: Math.round((event.option.value.precioFinal - event.option.value.precioBase) * 100) / 100,
+          impuesto: this.impuestos,
+          subTotalDetails: this.subTotal,
+          descuento: this.descuento,
+          total: this.total
+        })
+    } else if (accion == 2) {
+      this.cantidad = 1;
+      this.idProducto = producto.idProducto!;
+      this.nombre = producto.nombre;
+      this.prodcutoSeleccionado = producto;
+      this.precio = producto.precioBase;
+      this.subTotal = (this.cantidad * this.precio);
+      this.total = (this.subTotal + this.impuestos) - this.descuento;
+      this.impuestos = producto.precioFinal - producto.precioBase;
+      this.impuestoProduct = this.impuestos;
+      this.total = (this.subTotal + this.impuestos) - this.descuento;
 
-    this.miFormulario.patchValue(
-      {
-        cantidad: this.miFormulario.value.cantidad,
-        descripcion: event.option.value.descripcion,
-        precio: event.option.value.precioBase,
-        impuesto: Math.round((event.option.value.precioFinal - event.option.value.precioBase) * 100) / 100
-      })
-    this.calcular();
+
+      // let cantProductoFind = this.dataListDetalleFactura.find(c=>c.idProducto==producto.idProducto)?.cantidad;
+      // cantProductoFind = cantProductoFind==undefined? 1 : cantProductoFind + 1 ;
+      // alert(cantProductoFind)
+
+      this.miFormulario.patchValue(
+        {
+          cantidad: 1,
+          descripcion: producto.descripcion,
+          precio: producto.precioBase,
+          impuesto: this.impuestos,
+          subTotal: this.subTotal,
+          total: this.total
+        })
+    }
+
   }
+
+  seletProductPos(event: any, producto: any) {
+    this.miFormulario.patchValue({ cantidad: 1 })
+    this.selectProducto(event, 2, producto);
+    this.addDetails();
+  }
+
+  changeCant(evento: any, idProducto: number) {
+    this.dataListDetalleFactura.forEach(element => {
+      if (element.idProducto == idProducto) {
+        element.cantidad = parseInt(evento.target.value);
+        element.descuento = element.descuento * element.cantidad;
+        element.subTotal = (element.cantidad * element.precio);
+        element.total = (element.subTotal + element.impuestos) - element.descuento
+      }
+    });
+    this.calculoGeneral();
+    // this.cantidad = evento.target.value;
+    // this.cantidad = this.cantidad + evento.target.value
+
+
+  }
+
+  habilitarDescuentos() {
+    this.desc = this.desc == false ? true : false;
+    if (this.desc == false) {
+      this.dataListDetalleFactura.forEach(element => {
+        element.descuento = 0;
+        element.subTotal = (element.cantidad * element.precio);
+      });
+    }
+  }
+  aplyDesc(evento: any, idProducto: number) {
+    this.dataListDetalleFactura.forEach(element => {
+      if (element.idProducto == idProducto) {
+        element.descuento = (parseInt(evento.target.value) / 100) * (element.cantidad * element.precio);
+        element.subTotal = (element.cantidad * element.precio);
+        element.total = (element.subTotal + element.impuestos) - element.descuento
+      }
+    });
+    this.calculoGeneral();
+  }
+
+
+
+
+
 
   selectProductoById(producto: any, impuestos: any) {
     this.idProducto = producto.idProducto!;
@@ -395,10 +505,10 @@ export class NewsalesComponent {
     this.calcular();
   }
 
-  getById(idFactura: number | any){
+  getById(idFactura: number | any) {
     this.alertaService.ShowLoading();
-    this.facturaServcie.getById(idFactura).subscribe((data: ServiceResponse)=>{
-      if(data.status){
+    this.facturaServcie.getById(idFactura).subscribe((data: ServiceResponse) => {
+      if (data.status) {
         this.facturaForEdit = data.data;
         this.miFormulario.reset(this.facturaForEdit);
         this.alertaService.hideLoading();
@@ -437,6 +547,7 @@ export class NewsalesComponent {
   }
 
   setVencimiento(event: any = null) {
+
     let dias = this.dataListTerminos.find((c: iTermino) => c.idTermino == this.miFormulario.value.idTermino)?.dias;
     let fechaVencimiento = this.calVencimiento(this.miFormulario.value.fecha, dias);
     // let fechaFormateada = this.datePipe.transform(fechaVencimiento, 'yyyy-MM-dd hh:mm:ss');
@@ -458,9 +569,7 @@ export class NewsalesComponent {
       this.precio = this.miFormulario.value.precio;
       this.subTotal = this.cantidad * this.precio;
       this.impuestos = this.impuestoProduct * this.cantidad;
-
       this.descuento = (this.miFormulario.value.descuento / 100) * this.subTotal;
-
       this.total = this.subTotal + (this.impuestoProduct * this.cantidad) - this.descuento;
       this.miFormulario.patchValue({ subTotalDetails: this.subTotal, total: this.total, impuesto: this.cantidad == 1 ? this.impuestoProduct : this.impuestoProduct * this.cantidad })
     }
@@ -470,8 +579,8 @@ export class NewsalesComponent {
   }
 
 
-  onPayment(){
-    this.activePayment=this.activePayment===false? true : false;
+  onPayment() {
+    this.activePayment = this.activePayment === false ? true : false;
   }
 
 
@@ -485,12 +594,13 @@ export class NewsalesComponent {
       e += c.total;
       i += c.impuestos;
     })
+    this.dataSource.data = this.dataListDetalleFactura;
     this.subTotalGeneral = a;
     this.descuentoGeneral = b;
     this.totalGeneral = e;
     this.totalApagar = e;
     this.impuestosGenerales = i;
-
+    console.log(this.miFormulario.value)
     if (this.dataListDetalleFactura.length < 1) {
       this.subTotalGeneral = 0;
       this.descuentoGeneral = 0;
@@ -503,16 +613,13 @@ export class NewsalesComponent {
 
 
   resetDetails() {
-    this.editando=false;
+    this.editando = false;
     this.cantidad = 1;
     this.precio = 0;
     this.subTotal = 0;
     this.impuestos = 0;
     this.total = 0;
     this.descuento = 0;
-    this.dataListProductosSearch = [];
-    // this.dataListImpuestosDetails = [];
-    this.dataListContactos = [];
     this.idProducto = 0;
     this.miFormulario.patchValue(
       {
@@ -552,7 +659,7 @@ export class NewsalesComponent {
     }
   }
 
-  guardarFactura() {
+  setMiFormulario() {
     this.miFormulario.patchValue({
       detalle: this.dataListDetalleFactura,
       idEmpresa: this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa,
@@ -565,7 +672,10 @@ export class NewsalesComponent {
       impuestos: this.miFormulario.value.impuestoObjet,
       idNumeracion: this.idNumeracion
     })
+  }
 
+  guardarFactura() {
+    this.setMiFormulario();
     if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
       this.alertaService.ShowLoading();
       if (this.miFormulario.value.idFactura !== null) {
@@ -607,14 +717,21 @@ export class NewsalesComponent {
 
 
   //Este metodo siver para limpiar todo despues de hacer un insercion
-  resetData() {
-    this.resetDetails();
+  async resetData(accion: number) {
+    if (accion == 1) {
+      this.addDetails();
+    }
+    if (await this.alertaService.question("Esta seguro que desea cancelar?, si lo hace todos los datos que ha insertado se eliminara")) {
+      this.resetDetails();
+      this.resetHeader();
+    }
+
   }
 
-  
+
 
   resetHeader() {
-    this.dataSource.data=[];
+    this.dataSource.data = [];
     this.dataListDetalleFactura = [];
     this.miFormulario.patchValue({
       cantidad: 1,
@@ -631,7 +748,7 @@ export class NewsalesComponent {
       nombreClienteCompleto: "",
       comentario: "",
       idFactura: null,
-      itbis : 0
+      itbis: 0
 
     })
     this.totalGeneral = 0;
@@ -647,12 +764,14 @@ export class NewsalesComponent {
     this.miFormulario.patchValue({ firstCtrl: 'metodo' })
     this.metodoPagoSeleccionado = descripcion;
     this.setActive(index);
-    console.log(descripcion)
     if (descripcion.toUpperCase() !== "EFECTIVO") {
       this.dataListBancos = this.dataListBancos.filter(c => c.tipoCuenta.nombre.toUpperCase() !== "EFECTIVO");
     }
     else {
       this.getAllBancos();
+    }
+    if (metodo == 1) {
+      this.openModalPayCash();
     }
   }
 
@@ -669,14 +788,15 @@ export class NewsalesComponent {
     this.activeIndex = index;
   }
 
-  calcularPagoEfectivo(event: any) {
-    this.cambio = this.totalApagar - event.target.value;
-    let totalRecibido = event.target.value;
-    this.addMontoPagar(event);
+  calcularPagoEfectivo(event: any, monto: number = 0) {
+    let montoResult = monto !==0 ? monto : event.target.value;
+    this.cambio = this.totalApagar - montoResult;
+    let totalRecibido = montoResult;
+    this.addMontoPagar(montoResult);
     this.descripcionPago = this.cambio < 0 ? "CAMBIO" : "POR PAGAR";
     this.cambio = this.cambio < 0 ? (this.cambio * -1) : this.cambio;
-    this.miFormulario.patchValue({ cambio: this.cambio, totalRecibido: event.target.value, montoPagado: event.target.value })
-
+    this.miFormulario.patchValue({ cambio: this.cambio, totalRecibido: montoResult, montoPagado: montoResult })
+    console.log(this.miFormulario.value)
   }
 
   getAllBancos() {
@@ -686,12 +806,12 @@ export class NewsalesComponent {
   }
 
   addMontoPagar(event: any) {
-    event.target.value.length > 0 ? this.miFormulario.patchValue({ montoPagado: this.efectivo }) : 0;
+    event > 0 ? this.miFormulario.patchValue({ montoPagado: this.efectivo }) : 0;
   }
 
   resetFormPago() {
     this.metodoPagoSeleccionado = '';
-    this.activePayment=false;
+    this.activePayment = false;
   }
 
   pagarFactura() {
@@ -716,4 +836,37 @@ export class NewsalesComponent {
 
     }
   }
+
+
+  //Este codigo de aqui  en adelante es del post
+  codeBar: boolean = true;
+  seelctMetodFilter(value: number) {
+    if (value == 1)
+      this.codeBar = true;
+    else
+      this.codeBar = false;
+  }
+
+
+  openModalPayCash() {
+    if (this.miFormulario.value.idContacto != '' && this.dataListDetalleFactura.length > 0) {
+      this.dialog.open(PaymenSalesComponent, {
+        data : {
+          montoPagar : this.totalGeneral
+        }
+      }).afterClosed().subscribe(result => {  
+        if (result != undefined) {
+         
+          this.calcularPagoEfectivo(undefined, result.value.totalRecibido);
+          this.guardarFactura();
+        }
+      })
+    } else {
+      this.alertaService.errorAlert("Debe seleccionar los productos y el cliente para poder procesar esta transaccion.")
+    }
+
+  }
+
+
+
 }

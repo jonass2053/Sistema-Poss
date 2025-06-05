@@ -19,6 +19,9 @@ import { PagosService } from 'src/app/services/pagos.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { PayComponent } from '../payment/pay/pay.component';
 import { ThemePalette } from '@angular/material/core';
+import { ReportTicketInvoiceComponent } from './report-ticket-invoice/report-ticket-invoice.component';
+import { SelectPrinterComponent } from './select-printer/select-printer.component';
+import { InvoiceReportComponent } from 'src/app/reports/invoice-report/invoice-report.component';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -30,7 +33,9 @@ let ELEMENT_DATA: iFactura[] = []
   selector: 'app-saleslist',
   standalone: true,
   imports: [
-    importaciones
+    importaciones,
+    ReportTicketInvoiceComponent,
+    InvoiceReportComponent
   ],
   templateUrl: './saleslist.component.html',
   styleUrl: './saleslist.component.scss'
@@ -39,14 +44,14 @@ export class SaleslistComponent implements OnInit {
 
   dataSource = new MatTableDataSource<iFactura>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  imprimiendo: boolean = false;
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator; 
-    // this.getAll(1, 5); // Cargar los primeros 10 elementos
+    this.dataSource.paginator = this.paginator;
+    this.document = this.informacion.tipoDocumento;
 
   }
   color: ThemePalette = 'primary'; // Puede ser 'primary', 'accent', 'warn'
-  
+
   constructor(
     private fb: FormBuilder,
     private alertaService: AlertServiceService,
@@ -74,7 +79,6 @@ export class SaleslistComponent implements OnInit {
 
 
   displayedColumns: string[] = ['Numero', 'Cliente', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
-
   dialog = inject(MatDialog);
   facturaForPrint: any;
   doc: string = "";
@@ -89,7 +93,7 @@ export class SaleslistComponent implements OnInit {
       this.pagoService.facturaPagar = factura;
       var ref = this.dialog.open(PayComponent, { width: '750px', hasBackdrop: true });
       ref.beforeClosed().subscribe(c => {
-         this.getAll(this.pageNumber, this.pageSize, this.facturaService.document);
+        this.getAll(this.pageNumber, this.pageSize, this.facturaService.document);
       })
     }
     else
@@ -108,6 +112,7 @@ export class SaleslistComponent implements OnInit {
   pageSize: number = 7;
   totalItems = 0; // Total de elementos que hay en la API
   private previousPageIndex = 0; // Página anterior
+  document: string = "";
 
 
   goToNewProduct(idProducto: number) {
@@ -160,28 +165,24 @@ export class SaleslistComponent implements OnInit {
   // Método que maneja el cambio de página
   pageChanged(event: any): void {
     console.log('Paginación cambiada:', event);
-
     // Asegurarse de que el número de página nunca sea 0
     let currentPage = event.pageIndex + 1;  // Aumentamos 1 para que la página comience en 1
-
     // Calcular el cambio en la página (avance o retroceso)
     if (currentPage > this.previousPageIndex) {
       this.pageNumber += 1;  // Avanzamos una página
     } else if (currentPage < this.previousPageIndex) {
       this.pageNumber -= 1;  // Retrocedemos una página
     }
-
     // Guardamos el índice de la página actual
     this.previousPageIndex = currentPage;
-
     // Mostrar el número de página actual para debugging
     console.log('page number:', this.pageNumber);
     this.pageSize = event.pageSize;
 
-
     // Llamar al backend con el número de página ajustado y el tamaño de la página
     this.getAll(this.pageNumber, this.pageSize);
   }
+
   getAll(pageNumber: number, pageSize: number, tipoDocumento: string = "") {
     this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, this.informacion.tipoDocumento === "Cotización" ? 2 : 1).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
@@ -239,22 +240,34 @@ export class SaleslistComponent implements OnInit {
 
   // }
 
-  // getFacturaByIdForPrint(idFactura: number) {
+  printDiv(divId: string) {
+    this.imprimiendo = true;
+    setTimeout(() => {
+      const printContents = document.getElementById(divId)?.innerHTML;
+      const originalContents = document.body.innerHTML;
 
-  //   this.facturaService.getById(idFactura!).subscribe((data: ServiceResponse) => {
-  //     this.facturaForPrint = data.statusCode == 200 ? data.data : undefined;
-  //     this.facturaService.facturaEdit = this.facturaForPrint;
-  //     this.prtinReportPdf();
+      if (printContents) {
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        this.imprimiendo = false;
+        window.location.reload(); // recarga la app para restaurar el estado de Angular
+      }
+    }, 100);
 
-  //     setTimeout(() => {
-  //       this.printTres();
+  }
 
-  //     }, 2000);
-  //   })
+  getFacturaByIdForPrint(idFactura: number) {
+    this.facturaService.getById(idFactura).subscribe((data: ServiceResponse) => {
+      if (data.status) {
+        this.facturaForPrint = data.data;
+        this.selectPrinter('2', '2');
+      }
+    })
+  }
+  printMe() {
 
-
-  // }
-
+  }
 
 
   // printFactura() {
@@ -271,11 +284,9 @@ export class SaleslistComponent implements OnInit {
   // }
 
   //  Prueba de implementacion de generacion de reportes via pdf
-  // prtinReportPdf(){
-  //   var ref = this.dialog.open(FacturaReportComponent, { hasBackdrop: true })
-  //   ref.beforeClosed().subscribe(c => {
-  //     this.getAll(1,10,this.facturaService.document);
-  //   });
+  prtinReportPdf() {
+
+  }
 
 
   // this.reportService.generatePDF('print-section', 'mi-documento.pdf');
@@ -298,7 +309,8 @@ export class SaleslistComponent implements OnInit {
   // });
   // }
 
-  addNewDocument(idDocument : number) {
+  addNewDocument(idDocument: number, isPos : boolean) {
+    this.facturaService.isPos=isPos;
     if (this.facturaService.document === "Cotización") {
       this.router.navigate([`sales/newprice/${idDocument}`]);
     }
@@ -408,21 +420,15 @@ export class SaleslistComponent implements OnInit {
     };
 
     // Generar el reporte paginado
-
     const generateReport = () => {
-
       addLogo();
       addTableHeader();
-
       this.data.forEach((item, index) => {
-
         if (index > 0 && index % itemsPerPage === 0) {
-
           pdf.addPage();
           currentY = 40;
           addLogo();
           addTableHeader();
-
         }
 
         addTableRow(index, item)
@@ -445,5 +451,21 @@ export class SaleslistComponent implements OnInit {
 
     };
   }
+
+
+  selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(SelectPrinterComponent, {
+      width: '350px',
+      height: '350px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    }).afterClosed().subscribe(result => {
+      if (result != 4) {
+        this.printDiv(result == 1 ? 'ticket' : 'factura')
+      }
+    });
+  }
+
+
 
 }

@@ -44,11 +44,14 @@ import { NewPayComponent } from './components/payment/new-pay/new-pay.component'
 import { InventaryAdjustmentComponent } from './components/inventary/components/inventary-adjustment/inventary-adjustment.component';
 import { ShiftsComponent } from './components/shifts/shifts.component';
 import { CashManagementComponent } from './components/cash-management/cash-management.component';
+import { ReportTicketInvoiceComponent } from './components/saleslist/report-ticket-invoice/report-ticket-invoice.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
 
   {path:'login', component :LoginComponent},
+  {path:"report_ticket_invoice/:id", component : ReportTicketInvoiceComponent},
+
   {
     path:"",
     component:FullComponent,
@@ -79,6 +82,7 @@ const routes: Routes = [
       {path:"sales/newprice/:id", component : NewsalesComponent},
       {path:"sales/newsales/view/:id", component : ViewSalesComponent},
       {path:"sales/newprice/view/:id", component : ViewSalesComponent},
+
       {path:"sales/payment", component : PaymentComponent},
       {path:"payment/newpay", component : NewPayComponent},
       {path:"cash-management", component : CashManagementComponent},
@@ -103,7 +107,7 @@ const routes: Routes = [
   },
 
   {path:"", redirectTo:"/login", pathMatch:"full"},
-  {path:"**", redirectTo:"/login", pathMatch:"full"},
+  // {path:"**", redirectTo:"/login", pathMatch:"full"},
 ];
 
 @NgModule({

@@ -38,6 +38,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 
+
  export const  material : any =[
   MatFormFieldModule,
   CommonModule,
@@ -100,7 +101,8 @@ export const  importaciones : any =[
   AvatarModule,
   DatePicker,
   MatSidenavModule,
-  NgxPrintModule
+  NgxPrintModule,
+  FormsModule
   
 
 

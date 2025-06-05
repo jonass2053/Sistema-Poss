@@ -10,6 +10,7 @@ import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { BancosService } from 'src/app/services/bancos.service';
 import { InformationService } from 'src/app/services/information.service';
 import { ShiftsService } from 'src/app/services/shifts.service';
+import { NodataComponent } from '../../nodata/nodata.component';
 
 
 export interface iBilletesMonedas {
@@ -22,7 +23,10 @@ export interface iBilletesMonedas {
 @Component({
   selector: 'app-close-shift',
   standalone: true,
-  imports: [importaciones],
+  imports: [
+    importaciones,
+    NodataComponent
+  ],
   templateUrl: './close-shift.component.html',
   styleUrl: './close-shift.component.scss'
 })
@@ -63,6 +67,8 @@ export class CloseShiftComponent {
     totalTurno: this.fb.control(0),
     dineroEsperadoCaja: this.fb.control(0),
     dineroRealEnCaja: this.fb.control(0),
+    ticketsEsperadoCaja: this.fb.control(0),
+    ticketsRealCaja: this.fb.control(0),
     isOpen: this.fb.control(true),
     idUsuario: this.fb.control(null),
     idSucursal: this.fb.control(null),
@@ -136,7 +142,8 @@ export class CloseShiftComponent {
             this.userLocal = JSON.parse(userLocal);
             this.userLocal.data.idTurno = data.data.idTurno;
             localStorage.removeItem('user');
-            localStorage.setItem('user', JSON.stringify(this.userLocal))            
+            localStorage.setItem('user', JSON.stringify(this.userLocal))
+            this.informationService.idTurno = data.data.idTurno;
           }
           this.closeModal();
         } else {
@@ -144,7 +151,7 @@ export class CloseShiftComponent {
         }
       });
 
-    } else if(this.validate()) {
+    } else if (this.validate()) {
       //Cerrar turno
       this.miFormulario.patchValue({
         idSucursal: this.informationService.idSucursal,
@@ -153,8 +160,10 @@ export class CloseShiftComponent {
         idTurno: this.turnoService.isOpen.idTurno,
         baseInicial: this.turnoService.isOpen.baseInicial,
         fechaApertura: this.turnoService.isOpen.fechaApertura,
-        dineroEsperadoCaja: (this.turnoService.isOpen.baseInicial + this.turnoService.isOpen.resumen.vefec + this.turnoService.isOpen.resumen.vt + this.turnoService.isOpen.resumen.vtransf),
-        dineroRealEnCaja: (this.totalMontoTickets + this.resultadoMontoConteoBilletes),
+        dineroEsperadoCaja: (this.turnoService.isOpen.baseInicial + this.turnoService.isOpen.resumen.vefec + this.turnoService.isOpen.resumen.entradaCaja),
+        dineroRealEnCaja: this.resultadoMontoConteoBilletes,
+        ticketsEsperadoCaja: this.turnoService.isOpen.resumen.vt + this.turnoService.isOpen.resumen.vtransf,
+        ticketsRealCaja: this.totalMontoTickets,
         denominacion: this.dataListBilletesMonedas,
         faltante: this.montoFaltante,
         vT: this.turnoOpen?.resumen.vt
@@ -165,6 +174,7 @@ export class CloseShiftComponent {
           this.alertaService.successAlert(data.message)
           this.turnoService.isOpen = undefined;
           this.turnoOpen = this.turnoService.isOpen;
+          this.turnoService.resetTurno();
           this.closeModal();
         }
       })
@@ -175,17 +185,18 @@ export class CloseShiftComponent {
   getTurnoOpen() {
     this.turnoOpen = this.turnoService.isOpen;
     if (this.turnoOpen != undefined) {
-      this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.totalMontoTickets);
+      this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.turnoOpen!.resumen.entradaCaja + this.totalMontoTickets) - this.turnoOpen!.resumen.salidaCaja;
     }
 
     this.turnoService.getTurnoActual(this.informationService.idUsuario).subscribe((data: ServiceResponse) => {
       if (data.statusCode == 200) {
         this.turnoOpen = data.data;
         this.turnoService.isOpen = this.turnoOpen;
-        this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.totalMontoTickets);
+        this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.turnoOpen!.resumen.entradaCaja + this.totalMontoTickets) - this.turnoOpen!.resumen.salidaCaja;
         this.alertaService.hideLoading();
-      }})
-      
+      }
+    })
+
   }
 
   dataListBilletesMonedas: iBilletesMonedas[] = [
@@ -219,6 +230,7 @@ export class CloseShiftComponent {
 
 
   addComprobante() {
+
     if (this.miFormulario.value.montoComprobante != 0 && this.miFormulario.value.numeroComprobante != '') {
       this.dataListComprobantes.push({ numeracion: this.miFormulario.value.numeroComprobante, monto: this.miFormulario.value.montoComprobante })
       this.miFormulario.patchValue({ montoComprobante: 0, numeroComprobante: '' })
@@ -228,6 +240,7 @@ export class CloseShiftComponent {
     } else {
       this.alertaService.warnigAlert("los campos numero de ticket y monto estan vacios..")
     }
+
   }
 
   removeTicket(index: number, monto: number) {
@@ -239,11 +252,11 @@ export class CloseShiftComponent {
     this.resultadoMontoConteoBilletes = this.dataListBilletesMonedas.reduce((resultado, monto) => resultado + monto.Resultado, 0);
     if (this.turnoOpen != undefined) {
       if (this.resultadoMontoConteoBilletes == 0) {
-        this.montoFaltante = (this.turnoOpen.baseInicial + this.turnoOpen.resumen.vefec + this.turnoOpen.resumen.vtransf + this.turnoOpen.resumen.vt) - this.totalMontoTickets;
+        this.montoFaltante = (this.turnoOpen.baseInicial + this.turnoOpen.resumen.vefec + this.turnoOpen.resumen.vtransf + this.turnoOpen.resumen.vt + this.turnoOpen.resumen.entradaCaja) - (this.totalMontoTickets - this.turnoOpen.resumen.salidaCaja);
       } else {
-        this.montoFaltante = (this.turnoOpen.baseInicial + this.turnoOpen.resumen.vefec + this.turnoOpen.resumen.vtransf + this.turnoOpen.resumen.vt) - (this.resultadoMontoConteoBilletes + this.totalMontoTickets);
+        this.montoFaltante = (this.turnoOpen.baseInicial + this.turnoOpen.resumen.vefec + this.turnoOpen.resumen.vtransf + this.turnoOpen.resumen.vt + this.turnoOpen.resumen.entradaCaja) - (this.resultadoMontoConteoBilletes + this.totalMontoTickets) - this.turnoOpen.resumen.salidaCaja;
       }
-      this.miFormulario.patchValue({ comentarion: (this.montoFaltante == 0 ? 'El turno cuadro' : '') })
+      this.miFormulario.patchValue({ comentario: (this.montoFaltante == 0 ? 'El turno cuadro' : '') })
     }
   }
 
@@ -251,20 +264,20 @@ export class CloseShiftComponent {
     this.dialogRef.close();
   }
 
-  validate() : boolean{
-    if(this.turnoOpen?.resumen.vt!=0){
-      if(this.totalMontoTickets==0){
+  validate(): boolean {
+    if (this.turnoOpen?.resumen.vt != 0) {
+      if (this.totalMontoTickets == 0) {
         this.alertaService.warnigAlert("No se puede cerra el turno, debe insertar los tickets o bauches de las ventas con tarjetas o trasferencias.")
         return false;
       }
     }
-    if(this.turnoOpen?.resumen.vefec! + this.turnoOpen?.baseInicial!!==0){
-      if(this.resultadoMontoConteoBilletes==0){
+    if (this.turnoOpen?.resumen.vefec! + this.turnoOpen?.baseInicial! !== 0) {
+      if (this.resultadoMontoConteoBilletes == 0) {
         this.alertaService.warnigAlert("No se puede cerra el turno, primero debe consolidar el efectivo existente en caja.")
         return false;
       }
     }
-   
-    return true ;
+
+    return true;
   }
 }

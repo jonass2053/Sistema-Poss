@@ -78,7 +78,7 @@
 {
     padding-left: 20px;
     padding-right   : 20px;
-    width: 250px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     
@@ -290,8 +290,13 @@ mat-list-item .estado
   .signature-line {
     margin-top: 1rem;
   }
+
+
   
   @media print {
+     @page {
+    margin: 0mm; /* o usa cm, in, etc. */
+  }
     .body {
         background-color: white;
         display: flex;

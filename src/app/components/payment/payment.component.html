@@ -3,14 +3,20 @@
       <div class="demo-tab-content">
         <!-- Daily Activity -->
        
-            <div class="tiuloParaleto">
-              <h4 class="mb-56">Listado de pagos realizados</h4>
+            
+            <div class="headerNavCard">
+            <div class="titulo"> <mat-icon>description</mat-icon>Listado de pagos realizados <span
+                style="margin-left: 10px;"></span>
+              <!-- <a>
+                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+              </a> -->
+            </div>
             </div>
   
             <div class="filterandbutton">
-              <button (click)="newPay()" mat-raised-button class="me-8 mb-8" color="primary">Crear nuevo</button>
+              <button (click)="newPay()" mat-raised-button class="me-8 mb-8" color="primary"><mat-icon>add</mat-icon> Crear nuevo</button>
               <div class="containerfuncionesheader input-parent">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="fill" class="mini-input no-fill-background">
                   <mat-label>Buscar</mat-label>
                   <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar">
                   <mat-icon matSuffix>search</mat-icon>

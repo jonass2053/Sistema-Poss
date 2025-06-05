@@ -1,13 +1,19 @@
 <mat-sidenav-container class="sidenav-container">
 
   <!-- Sidebar -->
-  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+  <!-- <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false"> -->
+  <mat-sidenav #drawer class="sidenav" fixedInViewport mode="over" [opened]="(isHandset$ | async) === true">
+    <div class="headermenu">
+      <h4>MY APLICACION</h4>
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
     <div class="p-16">
       <div class="mb-16">
         <a href="javascript:void(0)" class="d-flex align-items-center">
-          <!-- <img src="../../../assets/images/ICONO.png" class="logorectangular" alt=""> <span class="ms-16 fw-medium fs-26">PAYNOVA </span> -->
         </a>
 
       </div>
@@ -18,7 +24,7 @@
 
             <a *ngIf="sidenav.menu!=='Ventas'" matRipple [matRippleColor]="'#f7f8f443'" routerLink="{{ sidenav.link }}"
               class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-              <mat-icon>{{sidenav.icon}}</mat-icon>  <span class="ps-4">{{
+              <mat-icon>{{sidenav.icon}}</mat-icon> <span class="ps-4">{{
                 sidenav.menu }}</span>
             </a>
 
@@ -48,7 +54,7 @@
         </ul>
       </div>
 
-      <div class="m-8 pt-4">
+      <!-- <div class="m-8 pt-4">
         <div class="buy-flexy ps-24 pe-24 mt-48 mb-48">
           <div class="text-center">
             <img src="assets/images/sidebar-buynow-bg.svg" class="img-fluid" alt="">
@@ -67,23 +73,29 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
-
   </mat-sidenav>
 
-  <mat-sidenav-content>
-
+  <mat-sidenav-content class="sidenav-content">
     <!-- Header -->
-    <mat-toolbar class="header ps-24 pe-24">
-
-      <button mat-icon-button class="ms-4 me-4" (click)="search=!search">
-        <i-feather name="search" class="mt-n3 text-light-muted feather-base text-dark"></i-feather>
+    <mat-toolbar class="header ps-24 pe-24 toolbar">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
-      <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
-        mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
-      <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
-        mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+      <button mat-stroked-button style="color:#FFFFFF;"
+        (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
+
+      <div>
+        <button style="color: #FFFFFF;" *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
+          mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
+        <button style="color: #FFFFFF;" *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
+          mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+
+      </div>
+
+
+
 
 
       <div class="ms-auto">
@@ -115,7 +127,7 @@
     </mat-toolbar>
 
     <!-- Content -->
-    <div class="body-wrapper">
+    <div class="body-wrapper main-content">
       <div class="page-wrapper">
         <router-outlet></router-outlet>
       </div>
@@ -127,15 +139,3 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
-
-
-<!-- Search Box -->
-<div *ngIf="search" class="search-section d-flex align-items-center">
-  <mat-form-field class="w-100" color="primary">
-    <mat-label class="fs-16">Search Here</mat-label>
-    <input matInput>
-  </mat-form-field>
-  <button mat-icon-button (click)="search=!search">
-    <i-feather name="x-circle" class="mt-n3 text-light-muted feather-base text-dark"></i-feather>
-  </button>
-</div>

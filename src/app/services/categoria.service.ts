@@ -11,36 +11,31 @@ import { baseUrl } from '../Core/utilities/enviroment.';
 })
 export class CategoriaService {
 
-  url : string = `${baseUrl}/Categoria`;
-constructor(
-    private http : HttpClient,
-    private fb : FormBuilder,
-    private alertas : AlertServiceService
-   ) { }
- 
-   
+  url: string = `${baseUrl}/Categoria`;
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private alertas: AlertServiceService
+  ) { }
 
-   insert(formualrio : any) : any
-   {
-      return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(catchError((error)=>
-      {
-        console.log(error);
-        this.alertas.errorAlert(error);
-        return error()
-      })
-       )
-   }
-   update(formualrio : any) : Observable<ServiceResponse>
-   {
+
+
+  insert(formualrio: any): any {
+    return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(catchError((error) => {
+      console.log(error);
+      this.alertas.errorAlert(error);
+      return error()
+    })
+    )
+  }
+  update(formualrio: any): Observable<ServiceResponse> {
     return this.http.put<ServiceResponse>(`${this.url}`, formualrio)
-   }
-   delete(id : number) : Observable<ServiceResponse>
-   {
+  }
+  delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`)
-   }
-   getAll() : Observable<ServiceResponse>
-   {
+  }
+  getAll(): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}`)
-   }
+  }
 
 }

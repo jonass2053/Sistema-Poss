@@ -77,7 +77,7 @@ export class NewPayComponent {
   searchContacto(event: any) {
     let valor = (event.target as HTMLInputElement).value;
     if (valor.length > 0) {
-      this.contactoService.getAllFilter((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
+      this.contactoService.getAllFilter((event.target as HTMLInputElement).value, this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
         this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
       })
     }

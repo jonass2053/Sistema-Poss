@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UsuarioService } from './services/usuario.service';
 import { InformationService } from './services/information.service';
 import { ShiftsService } from './services/shifts.service';
+import { ShiftsComponent } from './components/shifts/shifts.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent {
       information.idTurno = usuario.usuarioLogueado.data.idTurno;
       information.tipoDocumento  = localStorage.getItem('tipoDocumento')!;  
       information.mySucursal = usuario.usuarioLogueado.data.sucursal;  
+      turnoService.getTurnoActualExeq();
      }
   
   }

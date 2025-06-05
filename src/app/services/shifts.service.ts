@@ -15,16 +15,26 @@ import { InformationService } from './information.service';
 export class ShiftsService {
 
   url: string = `${baseUrl}/Turno`;
-  
+
   isOpen!: iTurno | undefined;
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
     private alertas: AlertServiceService,
-    private informartionService : InformationService
+    private informartionService: InformationService
   ) { }
-  userLocal : any | undefined;
+  userLocal: any | undefined;
 
+  resetTurno() {
+    let userLocal = localStorage.getItem('user');
+    if (userLocal != undefined && userLocal != null) {
+      this.userLocal = JSON.parse(userLocal);
+      this.userLocal.data.idTurno = 0;
+      localStorage.removeItem('user');
+      localStorage.setItem('user', JSON.stringify(this.userLocal))
+      this.informartionService.idTurno = 0;
+    }
+  }
 
   insert(formulario: any): any {
     return this.http.post<ServiceResponse>(`${this.url}`, formulario).pipe(catchError((error) => {
@@ -55,6 +65,21 @@ export class ShiftsService {
     return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}`)
   }
 
+  getTurnoActualExeq() {
+    this.getTurnoActual(this.informartionService.idUsuario).subscribe((data: ServiceResponse) => {
+      if (data.statusCode == 200) {
+        this.isOpen = data.data == null ? undefined : data.data;
+        let userLocal = localStorage.getItem('user');
+        if (userLocal != undefined && userLocal != null) {
+          this.userLocal = JSON.parse(userLocal);
+          this.userLocal.data.idTurno = data.data.idTurno;
+          localStorage.removeItem('user');
+          localStorage.setItem('user', JSON.stringify(this.userLocal))
+          this.informartionService.idTurno = data.data.idTurno;
+        }
+      }
+    })
+  }
   // getTurnoOpen(){
   //   this.alertas.ShowLoading();
   //   this.getById(this.informartionService.idTurno, this.informartionService.idUsuario).subscribe((data: ServiceResponse) => {

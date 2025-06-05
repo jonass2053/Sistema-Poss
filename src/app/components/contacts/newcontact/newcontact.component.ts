@@ -8,6 +8,7 @@ import { MsjService } from 'src/app/Core/utilities/msj.service';
 import { iContactoPos, idNumeracion, idTipoContacto, iTermino, iVendedor } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { ContactosService } from 'src/app/services/contactos.service';
+import { InformationService } from 'src/app/services/information.service';
 import { NumeracionService } from 'src/app/services/numeracion.service';
 import { TerminosService } from 'src/app/services/terminos.service';
 import { VendedoresService } from 'src/app/services/vendedores.service';
@@ -30,6 +31,7 @@ export class NewcontactComponent {
     private numeracionService: NumeracionService,
     private terminoService: TerminosService,
     private vendedorService: VendedoresService,
+    private informationService : InformationService,
     private route: ActivatedRoute
   ) {
 
@@ -136,7 +138,7 @@ export class NewcontactComponent {
 
   getAll() {
     this.cargando = true;
-    this.contactoService.getAll().subscribe((data: any) => {
+    this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: any) => {
       this.dataList = data.data;
       if (this.dataList.length > 0) {
         this.sinRegistros = false
@@ -156,8 +158,9 @@ export class NewcontactComponent {
     }
     else {
       this.cargando = true;
-      this.contactoService.getAllFilter(filtro).subscribe((data: any) => {
+      this.contactoService.getAllFilter(filtro, this.informationService.idEmpresa).subscribe((data: any) => {
         this.dataList = data.data;
+
         if (this.dataList.length > 0) {
           this.sinRegistros = false
           this.cargando = false;

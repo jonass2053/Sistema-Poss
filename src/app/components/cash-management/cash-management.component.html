@@ -9,58 +9,76 @@
                 <span class="icon text-green">$</span>
             </div>
             <div class="card-content">
-                <div class="balance" id="balance">$0.00</div>
+                <div class="balance" id="balance" *ngIf="turnoService.isOpen!=undefined">{{turnoService.isOpen.baseInicial + turnoService.isOpen.resumen.vefec +turnoService.isOpen.resumen.entradaCaja | number:'1.2-2'}}</div>
+                <div class="balance" id="balance" *ngIf="turnoService.isOpen==undefined">$0.00</div>
                 <p class="text-xs text-muted" id="last-updated">Actualizado: --</p>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div  class="tabs">
+        <div class="tabs">
             <mat-button-toggle-group appearance="standard" name="fontStyle" aria-label="Font Style">
                 <mat-button-toggle [checked]="true" (click)="selectView(1)" value="bold">Operaciones</mat-button-toggle>
                 <mat-button-toggle (click)="selectView(2)" value="italic">Historial</mat-button-toggle>
                 <mat-button-toggle (click)="selectView(3)" value="underline">Resumen Diario</mat-button-toggle>
-              </mat-button-toggle-group>
+            </mat-button-toggle-group>
         </div>
-
+ 
         <!-- Tab Content: Operaciones -->
         <div class="tab-content active" id="operations" *ngIf="operaciones">
-            <div class="card">
+           <div class="empty-message" *ngIf="turnoService.isOpen==undefined">Para poder registrar una transacción debe tener un turno abierto.</div>
+
+            <div class="card" *ngIf="turnoService.isOpen!==undefined">
                 <div class="card-header">
                     <h2>Registrar Movimiento de Efectivo</h2>
                     <p class="text-muted">Ingrese los detalles para registrar una entrada o salida de efectivo</p>
                 </div>
-                <div class="card-content">
-                    <form id="transaction-form">
+                <div class="card-content" >
+                    <form id="transaction-form" [formGroup]="miFormulario">
                         <div class="form-group">
-                            <label>Tipo de Operación</label>
-                            <div class="radio-group">
-                                <div class="radio-item">
-                                    <input type="radio" name="type" id="deposit" value="deposit" checked>
-                                    <label for="deposit" class="flex items-center">
-                                        <span class="icon text-green">↓</span> Entrada
-                                    </label>
-                                </div>
-                                <div class="radio-item">
-                                    <input type="radio" name="type" id="withdrawal" value="withdrawal">
-                                    <label for="withdrawal" class="flex items-center">
-                                        <span class="icon text-red">↑</span> Salida
-                                    </label>
-                                </div>
-                            </div>
+
+                            <label id="example-radio-group-label">Tipo de Operación</label>
+                            <mat-radio-group formControlName="ingreso" aria-label="Select an option">
+                                <mat-radio-button [value]="true">
+                                    Entrada <span class="icon text-green">↓</span>
+                                </mat-radio-button>
+                                <mat-radio-button [value]="false">
+                                    Salida <span class="icon text-red">↑</span>
+                                </mat-radio-button>
+                            </mat-radio-group>
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Monto ($)</label>
-                            <input type="number" id="amount" step="0.01" min="0.01" placeholder="0.00" required>
+                            <label for="amount">Monto ($)*</label>
+                            <input type="number" id="amount" step="0.01" min="0.01" placeholder="0.00" required
+                                formControlName="monto">
+                            <section class="required" *ngIf="miFormulario.get('monto')?.invalid">*Este campo es
+                                obligatorio.</section>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Referencia*</label>
+                            <input type="text" placeholder="Dijite una referencia del gasto ejemplo : N.Comprobante"
+                                required required formControlName="referencia">
+                            <section class="required" *ngIf="miFormulario.get('referencia')?.invalid">*Este campo es
+                                obligatorio.</section>
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Descripción</label>
-                            <textarea id="description" placeholder="Detalle del movimiento" rows="3"></textarea>
+                            <label for="description">Descripción*</label>
+                            <textarea id="description" formControlName="descripcion" required
+                                placeholder="Detalle del movimiento" rows="2"></textarea>
+                            <section class="required" *ngIf="miFormulario.get('descripcion')?.invalid">*Este campo es
+                                obligatorio.</section>
                         </div>
 
-                        <button type="submit" class="btn btn-block" id="submit-btn">Registrar Entrada</button>
+                        <!-- <button type="submit" class="btn btn-block" id="submit-btn">Registrar</button> -->
+                        <div class="flex">
+                            <button [disabled]="!miFormulario.valid" (click)="save()" type="button"
+                                class="btn"><mat-icon>save</mat-icon> Registrar</button>
+                            <button *ngIf="this.miFormulario.value.id!=null" (click)="resetForm()" type="button"
+                                class="btn"><mat-icon>cancel</mat-icon> Cancelar</button>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -73,7 +91,7 @@
                     <h2>Historial de Transacciones</h2>
                     <p class="text-muted">Registro de todas las entradas y salidas de efectivo</p>
                     <div class="search-container">
-                        <span class="search-icon">🔍</span>
+                        <!-- <span class="search-icon">🔍</span> -->
                         <input type="text" id="search" class="search-input" placeholder="Buscar por descripción...">
                     </div>
                 </div>
@@ -83,15 +101,61 @@
                             <tr>
                                 <th>Fecha</th>
                                 <th>Tipo</th>
+                                <th>Referencia</th>
                                 <th>Descripción</th>
-                                <th class="text-right">Monto</th>
+                                <th>Monto</th>
+                                <th></th>
+
                             </tr>
                         </thead>
                         <tbody id="transactions-body">
                             <!-- Las transacciones se cargarán dinámicamente aquí -->
+                            @for (movimiento of dataList; track $index) {
+                            <tr>
+                                <td>{{movimiento.fecha | date : 'dd/MM/YYYY hh:mm:ss'}}</td>
+                                <td>
+                                    <section class="text-green" *ngIf="movimiento.ingreso; else salida ">
+                                        ENTRADA <span class="icon text-green">↓</span>
+                                    </section>
+                                    <ng-template #salida>
+                                        <section class="text-danger">
+                                            SALIDA <span class="icon text-red">↑</span>
+                                        </section>
+                                    </ng-template>
+
+                                </td>
+                                <td>{{movimiento.referencia}}</td>
+                                <td>{{movimiento.descripcion}}</td>
+                                <td>{{movimiento.monto | number:'1.2-2'}}</td>
+                                <td><button class="btnopcion" mat-icon-button [matMenuTriggerFor]="menu"
+                                        aria-label="Example icon-button with a menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="edit(movimiento)">
+                                            <mat-icon class="text-green">edit</mat-icon>
+                                            <span>Editar</span>
+                                        </button>
+                                        <button mat-menu-item (click)="delete(movimiento.id)">
+                                            <mat-icon class="text-danger">delete</mat-icon>
+                                            <span>Eliminar</span>
+                                        </button>
+                                        <button mat-menu-item (click)="printMe(movimiento)">
+                                            <mat-icon>print</mat-icon>
+                                            <span>Imprimir
+
+                                            </span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+
+
+                            </tr>
+
+                            }
                         </tbody>
                     </table>
-                    <div class="empty-message" id="no-transactions">No hay transacciones registradas</div>
+                    <div class="empty-message" *ngIf="dataList.length==0">No hay transacciones registradas</div>
                 </div>
             </div>
         </div>
@@ -105,7 +169,7 @@
                     </h2>
                     <p class="text-muted" id="today-date">-- - Resumen de operaciones de efectivo</p>
                 </div>
-                <div class="card-content">
+                <div class="card-content" *ngIf="cashResumen.balance!=0  || cashResumen.montoTotalEntradas!=0 || cashResumen.montoTotalSalidas!=0">
                     <div class="grid grid-cols-3">
                         <div class="card">
                             <div class="card-header">
@@ -114,8 +178,10 @@
                                 </h3>
                             </div>
                             <div class="card-content">
-                                <div class="text-green" style="font-size: 24px; font-weight: bold;" id="total-deposits">$0.00</div>
-                                <p class="text-xs text-muted" id="deposit-count">0 transacciones</p>
+                                <div class="text-green" style="font-size: 24px; font-weight: bold;" id="total-deposits">
+                                    {{cashResumen.montoTotalEntradas | number:'1.2-2'}}</div>
+                                <p class="text-xs text-muted" id="deposit-count">{{cashResumen.cantEntradas}}
+                                    transacciones</p>
                             </div>
                         </div>
 
@@ -126,8 +192,10 @@
                                 </h3>
                             </div>
                             <div class="card-content">
-                                <div class="text-red" style="font-size: 24px; font-weight: bold;" id="total-withdrawals">$0.00</div>
-                                <p class="text-xs text-muted" id="withdrawal-count">0 transacciones</p>
+                                <div class="text-red" style="font-size: 24px; font-weight: bold;"
+                                    id="total-withdrawals">{{cashResumen.montoTotalSalidas | number:'1.2-2'}}</div>
+                                <p class="text-xs text-muted" id="withdrawal-count">{{cashResumen.cantCantSalidas}}
+                                    transacciones</p>
                             </div>
                         </div>
 
@@ -136,17 +204,103 @@
                                 <h3>Balance Neto del Día</h3>
                             </div>
                             <div class="card-content">
-                                <div style="font-size: 24px; font-weight: bold;" id="net-change">$0.00</div>
-                                <p class="text-xs text-muted" id="total-count">0 transacciones totales</p>
+                                <div style="font-size: 24px; font-weight: bold;" id="net-change">{{cashResumen.balance |
+                                    number:'1.2-2'}}</div>
+                                <p class="text-xs text-muted" id="total-count">{{cashResumen.cantCantSalidas +
+                                    cashResumen.cantEntradas}} transacciones totales</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="empty-message" id="no-today-transactions">No hay transacciones registradas hoy</div>
                 </div>
+                  <div *ngIf="cashResumen.balance==0 && cashResumen.montoTotalEntradas==0 && cashResumen.montoTotalSalidas==0" class="empty-message" id="no-today-transactions">No hay transacciones registradas hoy</div>
+
             </div>
         </div>
     </div>
 
-   
+
+</div>
+
+
+<div class="bodyRecibo" id="reporte" *ngIf="seleccion!=undefined">
+    <div class="body">
+
+        <div class="recibo">
+            <div class="encabezado">
+                <div class="titulo">Recibo de Salida de Efectivo</div>
+                <div class="subtitulo">Comprobante de Caja</div>
+            </div>
+
+            <div class="info-recibo">
+                <div>
+                    <strong>No. Recibo: </strong> <span id="numeroRecibo">{{seleccion.id}}</span>
+                </div>
+                <div>
+                    <strong>Fecha: {{seleccion.fecha | date : 'dd/MM/YYYY'}}</strong> <span id="fechaActual"></span>
+                </div>
+            </div>
+
+            <div class="contenido">
+                <div class="seccion">
+                    <div class="seccion-titulo">Información General</div>
+
+                    <div class="campo">
+                        <div class="etiqueta">Turno No.: </div>
+                        <div class="valor"><input type="text" id="numeroCaja" [value]="seleccion.idTurno"></div>
+                    </div>
+
+                    <div class="campo">
+                        <div class="etiqueta">Hora: </div>
+                        <div class="valor"><input type="text" id="hora"> {{seleccion.fecha | date : 'mediumTime'}}</div>
+                    </div>
+                </div>
+
+                <div class="monto">
+                    <div>MONTO: $<span contenteditable="true" id="monto">{{seleccion.monto | number:'1.2-2'}}</span>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">Detalles de la Operación</div>
+
+                    <div class="campo">
+                        <div class="etiqueta">Referencia:</div>
+                        <div class="valor"><input type="text" id="solicitante" [value]="seleccion.referencia"></div>
+                    </div>
+
+                    <div class="campo">
+                        <div class="etiqueta">Concepto:</div>
+                        <div class="valor"><textarea id="concepto" placeholder="Describa el motivo"
+                                [value]="seleccion.descripcion"></textarea></div>
+                    </div>
+
+                    <!-- <div class="campo">
+                    <div class="etiqueta">Autorizado por:</div> 
+                    <div class="valor"><input type="text" id="autorizado"></div>
+                </div> -->
+                </div>
+            </div>
+
+            <div class="firmas">
+                <div class="firma">
+                    <div class="firma-linea"></div>
+                    <div class="firma-texto">Firma del Solicitante</div>
+                </div>
+                <!-- <div class="firma">
+                <div class="firma-linea"></div>
+                <div class="firma-texto">Firma de Autorización</div>
+            </div> -->
+                <div class="firma">
+                    <div class="firma-linea"></div>
+                    <div class="firma-texto">Firma del Cajero</div>
+                </div>
+            </div>
+
+            <div class="pie">
+                <div>Este documento es un comprobante oficial de salida de efectivo.</div>
+                <div>Conserve este recibo para cualquier aclaración posterior.</div>
+            </div>
+        </div>
+    </div>
 </div>

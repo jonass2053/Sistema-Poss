@@ -1,9 +1,9 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+// * {
+//     margin: 0;
+//     padding: 0;
+//     box-sizing: border-box;
+//     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+// }
 
 .body {
     background-color: #f5f5f5;
@@ -149,16 +149,7 @@ textarea {
 
 /* Botones */
 .btn {
-    display: inline-block;
-    padding: 10px 16px;
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
+   margin: 5px;
 }
 
 .btn:hover {
@@ -241,8 +232,10 @@ tr:last-child td {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    font-size: 15px; /* Tamaño recomendado para mat-icon */
+    line-height: 1;
+    width: auto;  /* evita fijar ancho */
+    height: auto; /* evita fijar alto */
     margin-right: 4px;
 }
 
@@ -272,3 +265,212 @@ tr:last-child td {
 .justify-between {
     justify-content: space-between;
 }
+.btnopcion{
+    // border: 1px solid red;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.btnopcion mat-icon{
+    // border: 1px solid red;
+      font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.required{
+    text-align: right;
+    color: red;
+    font-size: 13px;
+  }
+
+     @media print {
+            .body {
+                padding: 0;
+                display: flex;
+                justify-content: right;
+            }
+            
+            .recibo {
+                border: 1px solid red;
+                max-width: none;
+                width: 100%;
+            }
+            
+            .imprimir {
+                display: none;
+            }
+            
+            @page {
+                size: auto;
+                margin: 10mm;
+            }
+
+
+                    .body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000;
+            background-color: #fff;
+            padding: 10px;
+        }
+        
+        /* Contenedor principal */
+        .recibo {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            border: 0.5px solid silver;
+            padding: 10px;
+        }
+        
+        /* Encabezado */
+        .encabezado {
+            text-align: center;
+            border-bottom: 2px solid silver;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .titulo {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .subtitulo {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        /* Información del recibo */
+        .info-recibo {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border: 0.5px solid silver;
+            padding: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        /* Contenido */
+        .contenido {
+            margin-bottom: 15px;
+        }
+        
+        .seccion {
+            margin-bottom: 10px;
+        }
+        
+        .seccion-titulo {
+            font-weight: bold;
+            border-bottom: 1px solid silver;
+            margin-bottom: 5px;
+            padding-bottom: 2px;
+        }
+        
+        .campo {
+            display: flex;
+            margin-bottom: 5px;
+            align-items: center;
+            height: auto;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .etiqueta { 
+            font-weight: bold;
+            width: 100px;
+            flex-shrink: 0;
+            height: 30px;
+
+            
+        }
+        
+        .valor {
+            flex-grow: 1;
+            border: 1px solid silver;
+            min-height: 5px;
+            padding: 3px 5px;
+
+        } 
+        
+        .valor input, .valor textarea {
+            width: 100%;
+            border: none;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            background: transparent;
+        }
+        
+        .valor textarea {
+            resize: none;
+            min-height: 10px;
+        }
+        
+        /* Monto destacado */
+        .monto {
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            border: 2px solid silver;
+            padding: 5px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+        }
+        
+        /* Firmas */
+        .firmas {
+            display: flex;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .firma {
+            flex: 1;
+            text-align: center;
+            padding: 0 5px;
+        }
+        
+        .firma-linea {
+            border-top: 1px solid #000;
+            margin-top: 40px;
+        }
+        
+        .firma-texto {
+            margin-top: 5px;
+        }
+        
+        /* Pie de página */
+        .pie {
+            text-align: center;
+            font-size: 10px;
+            margin-top: 10px;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+        }
+        
+        /* Botón de imprimir */
+        .imprimir {
+            display: block;
+            margin: 10px auto;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .imprimir:hover {
+            background-color: #0056b3;
+        }
+        
+        }

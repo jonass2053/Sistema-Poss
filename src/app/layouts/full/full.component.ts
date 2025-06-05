@@ -47,17 +47,17 @@ export class FullComponent {
     private breakpointObserver: BreakpointObserver,
     private facturaService: FacturaService,
     private information: InformationService,
-    public turnoService : ShiftsService,
+    public turnoService: ShiftsService,
     private router: Router) {
-      turnoService.getTurnoActual(information.idUsuario);
-     }
+    turnoService.getTurnoActual(information.idUsuario);
+  }
 
   routerActive: string = "activelink";
   listIngresos: boolean = false;
   listInventario: boolean = false;
   rowIcon: boolean = false;
 
-  
+
 
   showListVentas() {
     this.listIngresos == false ? this.listIngresos = true : this.listIngresos = false;
@@ -69,11 +69,11 @@ export class FullComponent {
 
   openShift(): void {
     this.dialog.open(CloseShiftComponent, {
-      width: '500px',
+      width: '450px',
     })
   }
 
-
+ 
   sidebarMenu: sidebarMenu[] = [
     {
       link: "/sales",
@@ -105,7 +105,7 @@ export class FullComponent {
       menu: "Contactos",
       chield: []
 
-    }, 
+    },
     {
       link: "/inventary",
       icon: "inventory",
@@ -125,7 +125,7 @@ export class FullComponent {
       chield: []
 
     },
-   
+
     {
       link: "/settings",
       icon: "settings",
@@ -133,7 +133,7 @@ export class FullComponent {
       chield: []
 
     }
-  
+
     // {
     //   link: "/home",
     //   icon: "home",
@@ -267,9 +267,18 @@ export class FullComponent {
     }
   }
 
-    openModalCloseShift(){
-      const dialogRef = this.dialog.open(CloseShiftComponent, {width: '1600px'});
+  openModalCloseShift() {
+    const dialogRef = this.dialog.open(CloseShiftComponent, { width: '2500px' });
+  }
+  facturar(idDocument: number, isPos : boolean) {
+    this.facturaService.isPos=isPos;
+    if (this.facturaService.document === "Cotización") {
+      this.router.navigate([`sales/newprice/${idDocument}`]);
     }
+    else {
+      this.router.navigate([`sales/newsale/${idDocument}`]);
+    }
+  }
 
 
 }

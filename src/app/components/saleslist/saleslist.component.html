@@ -7,15 +7,20 @@
       <div class="demo-tab-content">
         <!-- Daily Activity -->
         <mat-card-content>
-          <div class="tiuloParaleto">
-            <h4 class="mb-56">Listado de {{doc}}</h4>
+          <div class="headerNavCard">
+            <div class="titulo"> <mat-icon>description</mat-icon>Listado de {{document}} <span
+                style="margin-left: 10px;"></span>
+              <!-- <a>
+                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+              </a> -->
+            </div>
           </div>
 
           <div class="filterandbutton">
-            <button color="primary" (click)="addNewDocument(0)" mat-raised-button class="me-8 mb-8">Crear
-              nuevo</button>
+            <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
+              <mat-icon>add</mat-icon> nuevo</button>
             <div class="containerfuncionesheader input-parent">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="fill" class="mini-input no-fill-background">
                 <mat-label>Buscar</mat-label>
                 <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar">
                 <mat-icon matSuffix>search</mat-icon>
@@ -29,7 +34,7 @@
           <div class="table-responsive">
             <mat-progress-bar *ngIf="dataSource.data.length<1" mode="indeterminate"></mat-progress-bar>
             <div class="mat-elevation-z8">
-              <table id="" mat-table [dataSource]="dataSource">
+              <table aparence="fill" mat-table [dataSource]="dataSource">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                 <!-- Position Column -->
                 <ng-container matColumnDef="Numero">
@@ -57,24 +62,23 @@
 
                 <ng-container matColumnDef="Total">
                   <th mat-header-cell *matHeaderCellDef> Total </th>
-                  <td mat-cell *matCellDef="let element"> {{element.totalGeneral}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.totalGeneral | number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="MontoPagado">
                   <th mat-header-cell *matHeaderCellDef> Monto pagado </th>
-                  <td mat-cell *matCellDef="let element"> {{element.montoPagado}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.montoPagado | number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="MontoPorPagar">
                   <th mat-header-cell *matHeaderCellDef> Monto por pagar </th>
-                  <td mat-cell *matCellDef="let element"> {{element.montoPorPagar}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.montoPorPagar | number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Estado">
                   <th mat-header-cell *matHeaderCellDef> Estado </th>
                   <td mat-cell *matCellDef="let element">
-                    <div class="badge rounded-pill" style="text-align: center; border-radius: 5px; padding: 1px; color: white;"
-                      [style.background-color]="element.estadoFactura.color">
+                    <div class="badge rounded-pill" [style.background-color]="element.estadoFactura.color">
                       {{element.estadoFactura.nombre.toUpperCase() || ''}}</div>
                     <!-- {{element.estadoFactura.nombre}}  -->
 
@@ -96,7 +100,8 @@
                       <button
                         [ngClass]="{'disabled': element.montoPorPagar === 0, 'inactivo': element.montoPorPagar !== 0}"
                         (click)="openDialog(element)" matTooltip="Agregar pago" class="btnaccion" data-toggle="modal"
-                        data-target="#exampleModal"><mat-icon data-toggle="modal">payments</mat-icon></button>
+                        data-target="#exampleModal"><mat-icon color="primary"
+                          data-toggle="modal">payments</mat-icon></button>
 
                       <!-- <button  *ngIf="factura.montoPorPagar!==0" (click)="openDialog(factura)" matTooltip="Agregar pago" class="btnaccion" 
                                     data-toggle="modal" data-target="#exampleModal"><mat-icon
@@ -117,17 +122,17 @@
                       </button>
                       <mat-menu #menu="matMenu" xPosition="before">
                         <button mat-menu-item (click)="verFactura(element.idFactura!)">
-                          <mat-icon>visibility</mat-icon>
+                          <mat-icon color="primary">visibility</mat-icon>
                           <span>Ver detalle</span>
                         </button>
-                        <!-- <button mat-menu-item (click)="getFacturaByIdForPrint(element.idFactura!)">
-                                            <mat-icon>print</mat-icon>
-                                            <span>Imprimir</span>
-                                        </button> -->
+                        <button mat-menu-item (click)="getFacturaByIdForPrint(element.idFactura!)">
+                          <mat-icon color="black">print</mat-icon>
+                          <span>Imprimir</span>
+                        </button>
                         <button *ngIf="element.montoPagado==0"
                           [ngClass]="{'disabled': element.montoPagado !== 0, 'inactivo': element.montoPagado !== 0}"
                           mat-menu-item (click)="editar(element)" mat-menu-item>
-                          <mat-icon>edit</mat-icon>
+                          <mat-icon color="primary">edit</mat-icon>
                           <span>Editar</span>
                         </button>
                         <!-- <button
@@ -145,7 +150,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
 
-              <mat-paginator [length]="totalItems" [pageSize]="pageSize"  (page)="pageChanged($event)"></mat-paginator>
+              <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator>
 
 
             </div>
@@ -160,7 +165,8 @@
 
 
     </div>
+
   </div>
-
-
 </mat-card>
+<app-report-ticket-invoice [factura]="facturaForPrint" id="ticket" *ngIf="imprimiendo"></app-report-ticket-invoice>
+<app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo" id="factura"></app-invoice-report>

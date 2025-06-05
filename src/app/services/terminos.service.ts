@@ -16,7 +16,10 @@ export class TerminosService {
       private http : HttpClient,
       private alertas : AlertServiceService
      ) { }
-   
+     
+     resetTurno(){
+      
+     }
   
      insert(formualrio : any) : any
      {

@@ -1,0 +1,79 @@
+
+<div class="container-factura">
+
+<div id="print-section" class="factura-body">
+  <div class="header center">
+    <div class="logo bold">{{factura.empresaObj.razonSocial.toUpperCase()}}</div>
+    <div class="info">{{factura.sucursalObj.direccion}}</div>
+    <div class="info">Tel: {{factura.sucursalObj.telefono1}} / {{factura.sucursalObj.telefono2}}</div>
+    <div class="info bold">RNC: {{factura.empresaObj.rnc}}</div>
+  </div>
+
+  <div class="title">{{factura.numeracionObj.nombre.toUpperCase()}}</div>
+
+  <div class="fiscal-info">
+    <div><span class="bold">NCF:</span> {{factura.numeracion}}</div>
+    <div><span class="bold">Fecha :</span> {{factura.fechaCreacion | date : 'dd/MM/YYYY'}}</div>
+    <div><span class="bold">Hora: </span> {{factura.fechaCreacion | date : 'hh:mm:ss'}} </div>
+    <div><span class="bold">Cajero:</span> {{factura.usuario.nombre +" " + factura.usuario.apellidos}}</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="fiscal-info">
+    <div><span class="bold">Cliente:</span> {{factura.contacto.nombreRazonSocial}}</div>
+    <div><span class="bold">RNC/Cédula:</span> {{factura.contacto.rnc}}</div>
+  </div>  
+
+  <div class="divider"></div>
+
+  <table>
+    <thead>
+      <tr class="producto">
+        <th>CANT</th>
+        <th>DESCRIPCIÓN</th>
+        <th class="center">PRECIO</th>
+        <th class="right">TOTAL</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr class="producto" *ngFor="let detalle of factura.detalle; let i = index">
+        <td>{{detalle.cantidad}}</td>
+        <td class="left">{{detalle.nombre}}</td>
+        <td class="center">{{detalle.precio |  number : '1.2-5'}}</td>
+        <td class="right">{{detalle.total |  number : '1.2-5'}}</td>
+
+      </tr>
+    
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <div class="totals">
+    <div class="totals-row"><span>SUBTOTAL:</span><span>RD$ {{factura.subTotal |  number : '1.2-5'}}</span></div>
+    <div class="totals-row"><span>ITBIS (18%):</span><span>RD$ {{factura.itbis |  number : '1.2-5'}}</span></div>
+    <div class="totals-row bold"><span>TOTAL:</span><span>RD$ {{factura.totalGeneral |  number : '1.2-5'}}</span></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="fiscal-info">
+    <div><span class="bold">Forma de Pago:</span> {{factura.terminoObj.nombre}}</div>
+    <div><span class="bold">Monto Recibido:</span> RD$ {{factura.totalRecibido}}</div>
+    <div><span class="bold">Cambio:</span> RD$ {{factura.cambio}}</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer center">
+    <p>GRACIAS POR SU COMPRA</p>
+    <p>Conserve su factura para cualquier reclamación</p>
+    <p>Este documento es válido como comprobante fiscal</p>
+    <!-- <p>Fecha de vencimiento de NCF: 31/12/2025</p> -->
+  </div>
+</div>
+
+
+</div>

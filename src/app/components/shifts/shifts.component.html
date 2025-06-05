@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluit">
     <div class="row">
         <div class="col ml-3 header">
             <div class="flex">
@@ -13,7 +13,7 @@
                    <h2>No hay ningun turno abierto.</h2>
                 </div>
 
-              
+
             </div>
             <div *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado!.isOpen!=true">
                 <h2>{{turnoSeleccionado!.descripcion}}</h2>
@@ -22,12 +22,11 @@
                 </div>
 
             </div>
-
             <div style="display: flex;">
                 <button *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado.isOpen!=true" (click)="printMe()" type="button"
                     class="btn btn-primary"><mat-icon>print</mat-icon>Imprimir</button>
                 <button *ngIf="turnoService.isOpen!=undefined" (click)="openModalCloseShift()" type="button"
-                    class="btn btn-primary"><mat-icon>logout</mat-icon> Cerra turno</button>
+                    class="btn btn-danger"><mat-icon>logout</mat-icon> Cerra turno</button>
                 <button *ngIf="turnoService.isOpen==undefined" (click)="openShift()" type="button"
                     class="btn btn-primary"><mat-icon>menu_open</mat-icon> Abrir turno</button>
             </div>
@@ -60,7 +59,6 @@
             </div>
             <mat-divider></mat-divider>
             }
-
         </mat-list>
 
 
@@ -78,25 +76,35 @@
                     </div>
                     <div style="text-align: right;">
                         Total de ventas <br>
-                        {{totalMovimientoTurno | number:'1.2-2'}}
+                        {{turnoSeleccionado.resumen.vefec + turnoSeleccionado.resumen.vt + turnoSeleccionado.resumen.vtransf | number:'1.2-2'}}
                     </div>
 
                 </div>
                 <ul>
                     <li>
-                        Base inicial <div> {{turnoService.isOpen?.baseInicial | number:'1.2-2'}}</div>
+                        Base inicial <div> {{turnoSeleccionado.baseInicial | number:'1.2-2'}}</div>
                     </li>
                     <mat-divider></mat-divider>
                     <li>
-                        Ventas en efectivo <div>{{turnoService.isOpen?.resumen?.vefec| number:'1.2-2'}}</div>
+                        Ventas en efectivo <div>{{turnoSeleccionado.resumen.vefec| number:'1.2-2'}}</div>
                     </li>
                     <mat-divider></mat-divider>
                     <li>
-                        Ventas por tarjeta<div>{{turnoService.isOpen?.resumen?.vt| number:'1.2-2'}}</div>
+                        Ventas por tarjeta<div>{{turnoSeleccionado.resumen.vt| number:'1.2-2'}}</div>
                     </li>
                     <mat-divider></mat-divider>
                     <li>
-                        Ventas por trasferencia<div>{{turnoService.isOpen?.resumen?.vtransf | number:'1.2-2'}}</div>
+                        Ventas por trasferencia<div>{{turnoSeleccionado.resumen.vtransf | number:'1.2-2'}}</div>
+                    </li>
+                    <mat-divider></mat-divider>
+                        <mat-divider></mat-divider>
+                    <li class="text-danger">
+                        Salida efectivo de la caja<div><span *ngIf="efectivoEgresoCaja!=0">-</span>  {{efectivoEgresoCaja | number:'1.2-2'}}</div>
+                    </li>
+                    <mat-divider></mat-divider>
+                        <mat-divider></mat-divider>
+                    <li class="text-green">
+                        Ingreso de efectivo a la caja<div><span *ngIf="efectivoIngresoCaja!=0">+</span>  {{efectivoIngresoCaja | number:'1.2-2'}}</div>
                     </li>
                     <mat-divider></mat-divider>
 
@@ -165,12 +173,31 @@
                                 <span class="text-sm text-right">{{turnoSeleccionado!.resumen.vefec |
                                     number:'1.2-2'}}</span>
 
+                                      <span class="text-sm text-danger">Salida de efectivo de la caja:</span>
+                                <span class="text-sm text-right"><span *ngIf="efectivoEgresoCaja!=0">-</span>{{efectivoEgresoCaja |
+                                    number:'1.2-2'}}</span>
+
+                                      <span class="text-sm text-green">Ingreso de efectivo en la caja:</span>
+                                <span class="text-sm text-right"><span *ngIf="efectivoIngresoCaja!=0">+</span> {{efectivoIngresoCaja |
+                                    number:'1.2-2'}}</span>
+
                                 <!-- <span class="text-sm">- Retiradas:</span>
                     <span class="text-sm text-right">€100,00</span> -->
 
+                                       <span class="text-sm font-medium">Tickets final (teórico):</span>
+                                <span class="text-sm text-right font-medium">{{
+                                    turnoSeleccionado!.resumen.vtransf + turnoSeleccionado!.resumen.vt| number:'1.2-2'}}</span>
+
+                                <span class="text-sm">Tickets final (real):</span>
+                                <span class="text-sm text-right">{{turnoSeleccionado!.ticketsRealCaja|
+                                    number:'1.2-2'}}</span>
+
+
+
+
                                 <span class="text-sm font-medium">Efectivo final (teórico):</span>
                                 <span class="text-sm text-right font-medium">{{turnoSeleccionado!.baseInicial +
-                                    turnoSeleccionado!.resumen.vefec | number:'1.2-2'}}</span>
+                                    turnoSeleccionado!.resumen.vefec - efectivoEgresoCaja + efectivoIngresoCaja | number:'1.2-2'}}</span>
 
                                 <span class="text-sm">Efectivo final (real):</span>
                                 <span class="text-sm text-right">{{turnoSeleccionado!.dineroRealEnCaja |
@@ -208,7 +235,7 @@
                         <div class="space-y-1">
                             <div class="flex justify-between">
                                 <span class="font-medium">TOTAL VENTAS:</span>
-                                <span class="font-medium">{{totalMovimientoTurno | number:'1.2-2'}}</span>
+                                <span class="font-medium">{{turnoSeleccionado.resumen.vefec + turnoSeleccionado.resumen.vt + turnoSeleccionado.resumen.vtransf | number:'1.2-2'}}</span>
                             </div>
 
                             <!-- <div class="flex justify-between">
