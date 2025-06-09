@@ -82,7 +82,8 @@ export class ContactsComponent {
   color: ThemePalette = 'primary';
   disabled = false;
   documentoSeleccionado: any = "";
-  displayedColumns: string[] = ['idContacto', 'tipoIdentificacion', 'rnc', 'nombreRazonSocial', 'celular', 'correo', 'acciones'];
+  displayedColumns: string[] = ['idContacto', 'tipoIdentificacion','rnc', 'nombreRazonSocial', 'celular', 'correo','predeterminado', 'acciones'];
+ displayedColumnsProveedores: string[] = ['idContacto', 'tipoIdentificacion','rnc', 'nombreRazonSocial', 'celular', 'correo', 'acciones'];
 
 
 
@@ -238,6 +239,16 @@ export class ContactsComponent {
 
   goToNewContact(id: number) {
     this.router.navigate([`/contacts/new/${id}`])
+  }
+
+  setDefaultCustumer(idContacto : number ){
+    this.contactoService.setDefaultCustumer(idContacto, this.informationService.idEmpresa).subscribe((data : ServiceResponse)=>{
+      if(data.status){
+        this.getAll();
+      }else{
+        this.alertaService.errorAlert(data.message);
+      }
+    })
   }
 
 }

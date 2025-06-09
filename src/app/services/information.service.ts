@@ -6,7 +6,7 @@ import { iEmpresa, iSucursal } from '../interfaces/iTermino';
   providedIn: 'root'
 })
 export class InformationService {
-
+  isPos : boolean = false;
   idEmpresa: number=0;
   idSucursal : number=0;
   tipoDocumento : string="";

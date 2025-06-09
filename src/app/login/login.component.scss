@@ -9,6 +9,12 @@
 .example-container mat-form-field + mat-form-field {
     margin-left: 8px;
   }
+  form{
+      display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
   
   .example-right-align {
     text-align: right;
@@ -48,6 +54,14 @@
     width: 300px;
     margin-bottom: 10px;
   }
-.container{
-  background-color: #EDF0F6;
+.container-fluit{
+  background-color: #111827;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.example-card{
+  width: 100%;
 }

@@ -16,6 +16,7 @@ import { CategoryComponent } from "./components/category/category.component";
 import { ModelsComponent } from "./components/models/models.component";
 import { BrandComponent } from "./components/brand/brand.component";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NodataComponent } from '../nodata/nodata.component';
 
 export interface PeriodicElement {
   id: number;
@@ -35,13 +36,14 @@ export interface PeriodicElement {
     importaciones,
     CategoryComponent,
     ModelsComponent,
-    BrandComponent
+    BrandComponent,
+    NodataComponent
   ],
   templateUrl: './inventary.component.html',
   styleUrl: './inventary.component.scss'
 })
 export class InventaryComponent {
-  displayedColumns: string[] = ['imagen', 'idProducto', 'nombre', 'descripcion', 'precioBase', 'impuesto', 'cantInicial', 'acciones'];
+  displayedColumns: string[] = ['imagen', 'idProducto', 'nombre', 'descripcion', 'categoria', 'marca','modelo', 'precioBase', 'impuesto', 'cantInicial','estado', 'acciones'];
   dataList: iProducto[] = [];
   moneda!: iMoneda;
   impuestosCodigos: iImpuestoProductoCodigo[] = [];
@@ -65,6 +67,11 @@ export class InventaryComponent {
   formData = new FormData();
   isProduct: boolean = false;
   impuestoArray: Array<iiMpuesto> = [];
+   visible: boolean = false;
+
+    showDialog() {
+        this.visible = true;
+    }
 
   constructor(
     private router: Router,
@@ -94,6 +101,7 @@ export class InventaryComponent {
     this.loading();
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: any) => {
       this.dataList = data.data;
+      console.log(this.dataList)
       if (this.dataList.length > 0) {
         this.loading();
        
@@ -196,6 +204,7 @@ export class InventaryComponent {
   editar(producto: iProducto) {
     this.productoService.productoForEdit = producto;
     this.goToNewProduct(producto.idProducto!);
+    
   }
 
   loading() {

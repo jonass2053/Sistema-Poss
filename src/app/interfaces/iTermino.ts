@@ -95,7 +95,8 @@ export interface iContactoPos {
   limiteCredito: number
   idTermino: number
   idVendedor: number
-  incluirEstadoCuenta: boolean
+  incluirEstadoCuenta: boolean,
+  predeterminado : boolean
 }
 
 export interface idTipoContacto {
@@ -135,14 +136,19 @@ export interface iProducto {
   imagen: string,
   venderSinUnidades?: boolean,
   idCategoria: number,
+  categoriaObj : iCategoria,
   idEmpresa: number
   impuestos: iiMpuesto[]
   ImpuestosObj: iiMpuesto[]
   idMarca: number,
+  marcaObj : iMarca,
   idModelo: number,
+  modeloObj : iModelo,
   diferencia: number,
   razonAjuste: string
-  stockAjustado: number
+  stockAjustado: number,
+  estado : boolean
+
 
 }
 

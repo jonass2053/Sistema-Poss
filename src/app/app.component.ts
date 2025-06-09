@@ -3,6 +3,7 @@ import { UsuarioService } from './services/usuario.service';
 import { InformationService } from './services/information.service';
 import { ShiftsService } from './services/shifts.service';
 import { ShiftsComponent } from './components/shifts/shifts.component';
+import { FacturaService } from './services/factura.service';
 
 @Component({
   selector: 'app-root',
@@ -20,8 +21,10 @@ export class AppComponent {
       information.idSucursal = usuario.usuarioLogueado.data.sucursal.idSucursal;
       information.idUsuario = usuario.usuarioLogueado.data.idUsuario;
       information.idTurno = usuario.usuarioLogueado.data.idTurno;
-      information.tipoDocumento  = localStorage.getItem('tipoDocumento')!;  
+      information.tipoDocumento  = localStorage.getItem('tipoDocumento')!; 
       information.mySucursal = usuario.usuarioLogueado.data.sucursal;  
+      information.isPos = (localStorage.getItem('isPos')!)=="true"? true: false; 
+
       turnoService.getTurnoActualExeq();
      }
   

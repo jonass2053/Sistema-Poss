@@ -22,7 +22,7 @@
         <ul>
           <li class="list-group mb-2" *ngFor="let sidenav of sidebarMenu">
 
-            <a *ngIf="sidenav.menu!=='Ventas'" matRipple [matRippleColor]="'#f7f8f443'" routerLink="{{ sidenav.link }}"
+            <a *ngIf="sidenav.menu!=='Ventas'" matRipple  [matRippleColor]="'#f7f8f443'" routerLink="{{ sidenav.link }}"
               class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
               <mat-icon>{{sidenav.icon}}</mat-icon> <span class="ps-4">{{
                 sidenav.menu }}</span>

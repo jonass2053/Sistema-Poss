@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OpenShiftComponent } from 'src/app/components/shifts/open-shift/open-shift.component';
 import { CloseShiftComponent } from 'src/app/components/shifts/close-shift/close-shift.component';
 import { ShiftsService } from 'src/app/services/shifts.service';
+import { parse } from 'date-fns';
 
 interface sidebarMenu {
   link: string;
@@ -271,11 +272,12 @@ export class FullComponent {
     const dialogRef = this.dialog.open(CloseShiftComponent, { width: '2500px' });
   }
   facturar(idDocument: number, isPos : boolean) {
-    this.facturaService.isPos=isPos;
+    localStorage.setItem("isPos", JSON.stringify(isPos));
+    this.information.isPos=isPos;
     if (this.facturaService.document === "Cotización") {
       this.router.navigate([`sales/newprice/${idDocument}`]);
     }
-    else {
+    else { 
       this.router.navigate([`sales/newsale/${idDocument}`]);
     }
   }

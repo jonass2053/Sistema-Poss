@@ -1,5 +1,5 @@
 <form [formGroup]="miFormulario">
-    <mat-card appearance="outlined" *ngIf="!facturaServcie.isPos">
+    <mat-card appearance="outlined" *ngIf="!informationService.isPos">
         <mat-card-content>
 
             <div class="headerNavCard">
@@ -19,7 +19,7 @@
                         </mat-card-header>
 
                         <mat-card-content style="height: 120px; display: flex;">
-                            <mat-form-field appearance="fill" class="control mini-input no-fill-background"
+                            <mat-form-field appearance="fill" class="control"
                                 style="width: 20%;">
                                 <mat-icon matSuffix>person_add</mat-icon>
                                 <mat-label
@@ -293,7 +293,8 @@
 
 
                             </div>
-                            <div *ngIf="metodoPagoSeleccionado==''" style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
+                            <div *ngIf="metodoPagoSeleccionado==''"
+                                style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
                                 <button mat-raised-button color="primary" class="margin2"
                                     (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar sin pago</button>
 
@@ -370,8 +371,7 @@
 
 
     <!-- dise1@ post -->
-    <div class="containerPost" *ngIf="facturaServcie.isPos" >
-        
+    <div class="containerPost" *ngIf="informationService.isPos">
         <!-- Detalles -->
         <div class="detalleVenta">
             <div class="header">
@@ -427,6 +427,7 @@
 
                     </div>
                     <div *ngFor="let item of dataListDetalleFactura; let i = index" class="cardItem">
+
                         <label class="nombreItem">{{item.nombre | slice : 0:30 }}</label>
                         <input type="number" (input)="changeCant($event, item.idProducto)" class="form-control cant"
                             style="text-align: center; font-size: 13px;" min="1" [value]="item.cantidad">
@@ -503,8 +504,11 @@
                 <button class="btnitem" type="button" matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
             </div>
             <div class="containerItemPost">
+                <app-loader *ngIf="loader"></app-loader>
+                <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false" [mensaje]="'No se encontraron registros.'"></app-nodata>
                 @for (producto of dataListProductosSearch; track $index)
                 {
+
 
                 <div class="product-card" (click)="seletProductPos($event, producto)">
                     <img src="{{producto.imagen}}" alt="Producto" class="product-image">

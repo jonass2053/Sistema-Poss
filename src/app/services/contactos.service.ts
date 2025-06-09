@@ -47,5 +47,8 @@ export class ContactosService {
   getAllTipoContacto(): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/tipo-contactos`)
   }
+  setDefaultCustumer(id : number, idEmpresa : number): Observable<ServiceResponse> {
+    return this.http.put<ServiceResponse>(`${this.url}/set_default_custumer?id=${id}&idEmpresa=${idEmpresa}`, {})
+  }
 
 }

@@ -9,6 +9,6 @@ import { importaciones } from 'src/app/Core/utilities/material/material';
   styleUrl: './nodata.component.scss'
 })
 export class NodataComponent {
-  @Input() mensaje: string = '';
+  @Input() mensaje: string = 'No se encontrarón registros.';
 
 }

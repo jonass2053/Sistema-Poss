@@ -1,5 +1,5 @@
 import { Overlay, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -73,6 +73,7 @@ export class SaleslistComponent implements OnInit {
     this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
 
   }
+
 
 
 
@@ -310,7 +311,7 @@ export class SaleslistComponent implements OnInit {
   // }
 
   addNewDocument(idDocument: number, isPos : boolean) {
-    this.facturaService.isPos=isPos;
+    this.informacion.isPos=isPos;
     if (this.facturaService.document === "Cotización") {
       this.router.navigate([`sales/newprice/${idDocument}`]);
     }

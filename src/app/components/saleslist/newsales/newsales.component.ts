@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,6 +21,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { MatDialog } from '@angular/material/dialog';
 import { PaymenSalesComponent } from '../paymen-sales/paymen-sales.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { NodataComponent } from '../../nodata/nodata.component';
 
 declare var $: any;
 
@@ -29,7 +31,9 @@ declare var $: any;
   standalone: true,
   imports: [
     importaciones,
-    CdkStepperModule
+    CdkStepperModule,
+    LoaderComponent,
+    NodataComponent
   ],
   providers: [
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
@@ -39,7 +43,7 @@ declare var $: any;
   templateUrl: './newsales.component.html',
   styleUrl: './newsales.component.scss'
 })
-export class NewsalesComponent {
+export class NewsalesComponent implements OnDestroy  {
   @ViewChild('exampleModal') myModal!: ElementRef;
 
   readonly dialog = inject(MatDialog);
@@ -58,7 +62,7 @@ export class NewsalesComponent {
   activePayment: boolean = false;
   idFactura: any = 0;
   desc: boolean = false;
-
+  loader : boolean = false;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -74,7 +78,7 @@ export class NewsalesComponent {
     private bancoService: BancosService,
     private router: Router,
     private route: ActivatedRoute,
-    private informationService: InformationService
+    public informationService: InformationService
   ) {
     this.document = informationService.tipoDocumento;
     if (this.usuarioService.usuarioLogueado != undefined) {
@@ -92,6 +96,9 @@ export class NewsalesComponent {
     if (this.idFactura !== '0' && this.idFactura !== 0) {
       this.getById(this.idFactura);
     }
+  }
+  ngOnDestroy(): void {
+    localStorage.setItem('isPos', 'false');
   }
 
 
@@ -309,21 +316,33 @@ export class NewsalesComponent {
       })
   }
   getAllProduct() {
+    this.showLoader();
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       if (data.status) {
         this.dataListProductosSearch = data.data;
+        this.showLoader();
+        this.setDefaultCustumer();
       }
     })
   }
 
+  setDefaultCustumer(){
+    let contacto = this.dataListContactos.find(c=>c.predeterminado==true);
+    this.miFormulario.patchValue({idContacto : contacto?.idContacto, nombreClienteCompleto : contacto})
+    console.log(this.miFormulario.value)
+  }
+
   searchProducto(event: any) {
+    this.showLoader();
     let valor = (event.target as HTMLInputElement).value;
     if (valor.length > 0) {
       this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
         this.dataListProductosSearch = data.data;
+          this.showLoader();
       })
     } else {
       this.getAllProduct();
+
     }
   }
   searchProductoEdit(valor: string, cant: number) {
@@ -867,6 +886,9 @@ export class NewsalesComponent {
 
   }
 
+  showLoader(){
+    this.loader==this.loader==true? false : true;
+  }
 
 
 }
