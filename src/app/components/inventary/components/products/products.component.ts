@@ -48,7 +48,8 @@ export class ProductsComponent {
       idCategoria: this.fb.control(''),
       idEmpresa: this.fb.control(null),
       filterUnidades: this.fb.control(''),
-      idImpuesto: this.fb.control(null)
+      idImpuesto: this.fb.control(null),
+      barCode : this.fb.control('')
     });
 
 
@@ -204,6 +205,8 @@ export class ProductsComponent {
     this.formData.append('idMarca', this.miFormulario.get('idMarca')?.value == null ? '' : this.miFormulario.value.idMarca);
     this.formData.append('idModelo', this.miFormulario.get('idModelo')?.value == null ? '' : this.miFormulario.value.idModelo);
     this.formData.append('idImpuesto', this.miFormulario.get('idImpuesto')?.value == null ? '' : this.miFormulario.value.idImpuesto);
+    this.formData.append('barCode', this.miFormulario.get('barCode')?.value == null ? '' : this.miFormulario.value.barCode);
+
 
     if (this.miFormulario.valid) {
       this.miFormulario.get('idProducto')?.value === 0 ? this.insert() : this.update()

@@ -663,6 +663,7 @@ mat-paginator {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  margin-bottom: 8px;
 
 }
 
@@ -676,11 +677,12 @@ mat-paginator {
 
 .detalleVenta .body {
   font-size: 20px;
-  background-color: silver !important;
+  background-color: #f8f9fa !important;
   height: 35vh;
-  border: 1px solid gray;
+  border: 3px dotted silver;
   max-height: 500px;
   overflow: auto;
+  border-radius: 5px;
 
 }
 
@@ -909,6 +911,16 @@ mat-paginator {
   background-color: #145c25;
 
 }
+.btnA {
+ height: 50px;
+}
+.btnA .monto {
+  font-size: 25px;
+}
+.btnA section{
+  display: flex;
+  align-items: center;
+}
 
 .mini-input {
   font-size: 12px;
@@ -927,4 +939,19 @@ mat-paginator {
 
 #cantidad {
   border: 1px solid red;
+}
+
+.nodataSales{
+  width: 95%;
+  height: 99.7%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: silver;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.btnremover:hover{
+  cursor: pointer;
 }

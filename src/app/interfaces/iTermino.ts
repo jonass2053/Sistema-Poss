@@ -147,7 +147,9 @@ export interface iProducto {
   diferencia: number,
   razonAjuste: string
   stockAjustado: number,
-  estado : boolean
+  estado : boolean,
+  barCode : string
+  
 
 
 }

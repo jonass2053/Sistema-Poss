@@ -19,7 +19,7 @@
                         </mat-card-header>
 
                         <mat-card-content style="height: 120px; display: flex;">
-                            <mat-form-field appearance="fill" class="control"
+                            <mat-form-field appearance="fill" class="control mini-input no-fill-background"
                                 style="width: 20%;">
                                 <mat-icon matSuffix>person_add</mat-icon>
                                 <mat-label
@@ -376,7 +376,10 @@
         <div class="detalleVenta">
             <div class="header">
                 <div class="titulo">
-                    Factura de venta
+                    <div class="centerall">
+                        <mat-icon>description</mat-icon>
+                        Factura de venta
+                    </div>
                     <mat-icon *ngIf="dataListDetalleFactura.length>0" matTooltip="Aplicar descuento"
                         (click)="habilitarDescuentos()">pie_chart</mat-icon>
                 </div>
@@ -416,6 +419,12 @@
                 </div>
 
                 <div class="body">
+                    <div class="nodataSales"  *ngIf="dataListDetalleFactura.length==0">
+                        <mat-icon>shopping_cart</mat-icon>
+                        Selecciona productos para agregar a la venta
+                    </div>
+
+
                     <div class="headerTitulos" *ngIf="dataListDetalleFactura.length>0">
                         <section class="nombreItem">Item</section>
                         <section class="cant">Cant.</section>
@@ -446,7 +455,7 @@
                         </div>
                         <div class="montototal">
                             {{item.total | number : '1.2-5'}}
-                            <mat-icon (click)="removeItem(i,item)">close</mat-icon>
+                            <mat-icon class="btnremover" (click)="removeItem(i,item)">close</mat-icon>
 
                         </div>
 
@@ -454,6 +463,7 @@
                     <mat-divider></mat-divider>
 
                 </div>
+
 
                 <footer class="footer">
                     <div class="acciones montos mb-3 mt-3">
@@ -474,12 +484,13 @@
                     </div>
                     <div class="acciones">
                         <div class="btnA btnAcc1" (click)="openModalPayCash()">
-                            <section>Vender</section>
-                            <section>{{moneda.simbolo}} {{totalGeneral| number : '1.2-5'}}</section>
+                           
+                            <section><mat-icon>attach_money</mat-icon>  Vender</section>
+                            <section class="monto">{{moneda.simbolo}} {{totalGeneral| number : '1.2-5'}}</section>
                         </div>
 
                         <div class="btnA btnAcc2" (click)="resetData(2)">
-                            <section>{{dataListDetalleFactura.length}} Productos</section>
+                            <section> <mat-icon>list</mat-icon> {{dataListDetalleFactura.length}}  Productos</section>
                             <section>Cancelar</section>
                         </div>
 
@@ -500,12 +511,13 @@
                         src="../../../../assets/images/barcode-2-svgrepo-com.svg" alt=""></button>
                 <input type="text" class="form-control"
                     [placeholder]="codeBar==true? 'Código de barra' : 'Buscar producto'"
-                    aria-label="Example text with two button addons" (input)="searchProducto($event)">
+                    aria-label="Example text with two button addons" (input)="searchProducto($event)"  (keydown)="selectProductoByCodeBar($event)">
                 <button class="btnitem" type="button" matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
             </div>
             <div class="containerItemPost">
                 <app-loader *ngIf="loader"></app-loader>
-                <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false" [mensaje]="'No se encontraron registros.'"></app-nodata>
+                <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false"
+                    [mensaje]="'No se encontraron registros.'"></app-nodata>
                 @for (producto of dataListProductosSearch; track $index)
                 {
 

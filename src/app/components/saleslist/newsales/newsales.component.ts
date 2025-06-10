@@ -43,7 +43,7 @@ declare var $: any;
   templateUrl: './newsales.component.html',
   styleUrl: './newsales.component.scss'
 })
-export class NewsalesComponent implements OnDestroy  {
+export class NewsalesComponent implements OnDestroy {
   @ViewChild('exampleModal') myModal!: ElementRef;
 
   readonly dialog = inject(MatDialog);
@@ -62,7 +62,7 @@ export class NewsalesComponent implements OnDestroy  {
   activePayment: boolean = false;
   idFactura: any = 0;
   desc: boolean = false;
-  loader : boolean = false;
+  loader: boolean = false;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -305,15 +305,17 @@ export class NewsalesComponent implements OnDestroy  {
         this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
       })
     }
-    else{
+    else {
       this.getAllContactos();
     }
   }
 
-  getAllContactos(){
-  this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse)=>{
-          this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
-      })
+  getAllContactos() {
+    this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
+      this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      this.setDefaultContacto();
+
+    })
   }
   getAllProduct() {
     this.showLoader();
@@ -321,15 +323,13 @@ export class NewsalesComponent implements OnDestroy  {
       if (data.status) {
         this.dataListProductosSearch = data.data;
         this.showLoader();
-        this.setDefaultCustumer();
       }
     })
   }
 
-  setDefaultCustumer(){
-    let contacto = this.dataListContactos.find(c=>c.predeterminado==true);
-    this.miFormulario.patchValue({idContacto : contacto?.idContacto, nombreClienteCompleto : contacto})
-    console.log(this.miFormulario.value)
+  setDefaultContacto() {
+    let contacto = this.dataListContactos.find(c => c.predeterminado == true);
+    this.selectContacto(undefined, contacto);
   }
 
   searchProducto(event: any) {
@@ -338,13 +338,24 @@ export class NewsalesComponent implements OnDestroy  {
     if (valor.length > 0) {
       this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
         this.dataListProductosSearch = data.data;
-          this.showLoader();
+        this.showLoader();
       })
     } else {
       this.getAllProduct();
-
     }
   }
+
+  selectProductoByCodeBar(event : any){
+    if(event.key=='Enter' && this.codeBar==true){
+    this.seletProductPos(undefined, this.dataListProductosSearch[0])
+    }
+
+
+  }
+
+
+
+
   searchProductoEdit(valor: string, cant: number) {
 
     if (valor.length > 0) {
@@ -386,17 +397,16 @@ export class NewsalesComponent implements OnDestroy  {
 
   }
 
-  selectContacto(event: any) {
-    this.miFormulario.patchValue(
-      {
-        identificacion: event.option.value.rnc,
-        telefono: event.option.value.telefono1,
-        idNumeracion: this.informationService.tipoDocumento === "Cotización" ? 11 : event.option.value.idTipoNumeracion,
-        idContacto: event.option.value.idContacto,
-        nombreClienteCompleto: event.option.value
-
+  selectContacto(event: any, valor?: any) {
+    let currentValue = valor == undefined ? event.option.value : valor;
+    this.miFormulario.patchValue({
+        identificacion: currentValue.rnc,
+        telefono: currentValue.telefono1,
+        idNumeracion: this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idTipoNumeracion,
+        idContacto: currentValue.idContacto,
+        nombreClienteCompleto: currentValue
       })
-    this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : event.option.value.idTipoNumeracion;
+    this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idTipoNumeracion;
   }
 
   selectProducto(event: any, accion: number, producto: any = undefined) {
@@ -808,7 +818,7 @@ export class NewsalesComponent implements OnDestroy  {
   }
 
   calcularPagoEfectivo(event: any, monto: number = 0) {
-    let montoResult = monto !==0 ? monto : event.target.value;
+    let montoResult = monto !== 0 ? monto : event.target.value;
     this.cambio = this.totalApagar - montoResult;
     let totalRecibido = montoResult;
     this.addMontoPagar(montoResult);
@@ -858,7 +868,7 @@ export class NewsalesComponent implements OnDestroy  {
 
 
   //Este codigo de aqui  en adelante es del post
-  codeBar: boolean = true;
+  codeBar: boolean = false;
   seelctMetodFilter(value: number) {
     if (value == 1)
       this.codeBar = true;
@@ -870,12 +880,12 @@ export class NewsalesComponent implements OnDestroy  {
   openModalPayCash() {
     if (this.miFormulario.value.idContacto != '' && this.dataListDetalleFactura.length > 0) {
       this.dialog.open(PaymenSalesComponent, {
-        data : {
-          montoPagar : this.totalGeneral
+        data: {
+          montoPagar: this.totalGeneral
         }
-      }).afterClosed().subscribe(result => {  
+      }).afterClosed().subscribe(result => {
         if (result != undefined) {
-         
+
           this.calcularPagoEfectivo(undefined, result.value.totalRecibido);
           this.guardarFactura();
         }
@@ -886,8 +896,8 @@ export class NewsalesComponent implements OnDestroy  {
 
   }
 
-  showLoader(){
-    this.loader==this.loader==true? false : true;
+  showLoader() {
+    this.loader == this.loader == true ? false : true;
   }
 
 

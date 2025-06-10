@@ -13,10 +13,14 @@
   background-color: rgb(227, 227, 227);
   // border: 3px solid #affa6e;
   border-left: 0px;
-
-
-
 }
+
+.headerNavCard h4 {
+
+  margin:  0;
+  padding: 0;
+}
+
 
 .containerdoc {
   width: 100%;
@@ -94,6 +98,7 @@ th {
   justify-content: space-between;
 
 }
+
 
 .filterandbutton {
   display: flex;
@@ -434,7 +439,7 @@ h4 {
 
 
 
-.stock{
+.stock {
   background-color: #25b09b;
   color: white;
   display: flex;
@@ -443,13 +448,16 @@ h4 {
   border-radius: 5px;
 }
 
-.primarycolor{
+.primarycolor {
   color: #25b09b !important;
 }
+
 ::ng-deep .mi-toggle-personalizado.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
-  background-color: #4caf50 !important; /* color de fondo cuando está activado */
+  background-color: #4caf50 !important;
+  /* color de fondo cuando está activado */
 }
 
 ::ng-deep .mi-toggle-personalizado.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
-  background-color: #2e7d32 !important; /* color del círculo (thumb) cuando está activado */
+  background-color: #2e7d32 !important;
+  /* color del círculo (thumb) cuando está activado */
 }
