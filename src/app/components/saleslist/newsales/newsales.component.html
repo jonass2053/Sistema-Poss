@@ -75,6 +75,7 @@
                     </mat-card>
 
                 </div>
+                <!-- Seleccion de los productos -->
                 <div class="col-9">
                     <mat-card appearance="outlined">
                         <mat-card-content>
@@ -515,13 +516,12 @@
                 <button class="btnitem" type="button" matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
             </div>
             <div class="containerItemPost">
-                <app-loader *ngIf="loader"></app-loader>
+                <div class="containerItem">   
+                     <app-loader *ngIf="loader"></app-loader>
                 <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false"
                     [mensaje]="'No se encontraron registros.'"></app-nodata>
                 @for (producto of dataListProductosSearch; track $index)
                 {
-
-
                 <div class="product-card" (click)="seletProductPos($event, producto)">
                     <img src="{{producto.imagen}}" alt="Producto" class="product-image">
                     <div class="product-info">
@@ -530,6 +530,7 @@
                     </div>
                 </div>
                 }
+                </div> 
 
             </div>
         </div>

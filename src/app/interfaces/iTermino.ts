@@ -148,7 +148,8 @@ export interface iProducto {
   razonAjuste: string
   stockAjustado: number,
   estado : boolean,
-  barCode : string
+  barCode : string,
+  imgBarCode : any
   
 
 

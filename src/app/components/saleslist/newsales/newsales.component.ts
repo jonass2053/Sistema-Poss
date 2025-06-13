@@ -48,8 +48,6 @@ export class NewsalesComponent implements OnDestroy {
 
   readonly dialog = inject(MatDialog);
 
-
-
   isEditable = false;
   metodoPagoSeleccionado = "";
   moneda!: iMoneda;
@@ -714,6 +712,7 @@ export class NewsalesComponent implements OnDestroy {
             this.resetHeader();
             this.resetDetails();
             this.resetFormPago()
+            this.setDefaultContacto();
           }
           else {
             this.alertaService.errorAlert(data.message);
@@ -721,25 +720,21 @@ export class NewsalesComponent implements OnDestroy {
         })
       }
       else {
-
         this.facturaServcie.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
           if (data.statusCode == 200) {
             this.alertaService.successAlert(data.message);
             this.resetHeader();
             this.resetDetails();
-            this.resetFormPago()
+            this.resetFormPago();
+            this.setDefaultContacto();
           }
           else {
             this.alertaService.errorAlert(data.message);
           }
-
         })
       }
-
-
     }
     else {
-      console.log(this.miFormulario.value);
       this.alertaService.warnigAlert("Debe completar todos para poder guardar el documento");
     }
   }
@@ -754,7 +749,6 @@ export class NewsalesComponent implements OnDestroy {
       this.resetDetails();
       this.resetHeader();
     }
-
   }
 
 

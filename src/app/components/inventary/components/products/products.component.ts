@@ -79,10 +79,7 @@ export class ProductsComponent {
       this.getById(this.idProducto);
     }
   }
-
-
   impuestosArrayNumber: number[] = [];
-  
   tipoIdentificacion = [
     { nombre: "RNC" },
     { nombre: "Cedula" },
@@ -120,7 +117,6 @@ export class ProductsComponent {
   }
 
 
-
   insert() {
     this.alertaService.ShowLoading();
     this.productoService.insert(this.formData).subscribe((data: ServiceResponse) => {
@@ -130,8 +126,6 @@ export class ProductsComponent {
         imp.idImpuesto = a;
         this.impuestosCodigos.push(imp);
       });
-
-
       setTimeout(() => {
         this.alertaService.successAlert(data.message);
         if (data.status) {
@@ -141,6 +135,7 @@ export class ProductsComponent {
       }, 1000);
     })
   }
+
   async delete(id: any) {
     if (await this.alertaService.questionDelete()) {
       this.alertaService.ShowLoading();
@@ -163,7 +158,6 @@ export class ProductsComponent {
     this.isProduct = producto.isProduct;
     this.getMarcas(this.miFormulario.value.idCategoria)
     this.getModelos(this.miFormulario.value.idMarca)
-    // this.getAllUnidadesFilter('a');
     this.miFormulario.patchValue({ 'idUnidad': producto.idUnidad })
     this.imageUrl = producto.imagen;
     this.miFormulario.patchValue({ impuestos: producto.impuestos[0] })
@@ -172,6 +166,7 @@ export class ProductsComponent {
       this.miFormulario.patchValue({ 'filterUnidades': data.data.find((c: any) => c.idUnidad == producto.idUnidad) })
     })
   }
+
 
   update() {
     this.alertaService.ShowLoading();
@@ -183,6 +178,7 @@ export class ProductsComponent {
       }, 1000);
     })
   }
+
 
   save() {
     this.formData.append('idSucursal', this.informationService.idSucursal.toString())
@@ -206,15 +202,14 @@ export class ProductsComponent {
     this.formData.append('idModelo', this.miFormulario.get('idModelo')?.value == null ? '' : this.miFormulario.value.idModelo);
     this.formData.append('idImpuesto', this.miFormulario.get('idImpuesto')?.value == null ? '' : this.miFormulario.value.idImpuesto);
     this.formData.append('barCode', this.miFormulario.get('barCode')?.value == null ? '' : this.miFormulario.value.barCode);
-
-
     if (this.miFormulario.valid) {
-      this.miFormulario.get('idProducto')?.value === 0 ? this.insert() : this.update()
+      this.miFormulario.get('idProducto')?.value === 0 ? this.insert() : this.update();
     }
     else {
       this.alertaService.warnigAlert("Debe completar los campos necesarios para poder guardar el articulo.");
     }
   }
+
 
   getAll() {
     this.cargando = true;
@@ -230,11 +225,13 @@ export class ProductsComponent {
       }
     })
   }
+
   getAllCuentas() {
     this.productoService.getAllCuentas().subscribe((data: any) => {
       this.dataListUnidades = data.data;
     })
   }
+
 
   getAllCategorias() {
     this.productoService.getAllCategorias().subscribe((data: ServiceResponse) => {
@@ -255,6 +252,7 @@ export class ProductsComponent {
         this.miFormulario.reset(this.productoForEdit);
         this.imageUrl = data.data.imagen;
         this.alertaService.hideLoading();
+        this.isProduct = data.data.isProduct;
       }
     })
   }
@@ -360,8 +358,6 @@ export class ProductsComponent {
       let montoCalculado = this.miFormulario.value.precioBase + ((impuesto.porcentaje / 100) * this.miFormulario.value.precioBase);
       this.miFormulario.patchValue({ 'precioFinal': montoCalculado })
     }
-
-
   }
 
 
@@ -375,10 +371,8 @@ export class ProductsComponent {
   }
 
   isProductView(value: number) {
-    console.log('yo soy el valor del producto' + value)
     value == 1 ? this.isProduct = true : this.isProduct = false;
     value == 0 ? this.miFormulario.patchValue({ 'idCategoria': null, 'idMarca': null, 'idModelo': null }) : '';
-    console.log(this.isProduct)
   }
 
   getMarcas(idCategoria: number) {

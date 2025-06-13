@@ -1,0 +1,31 @@
+.contenedrobar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedrobar img{
+    border: 1px solid silver;
+}
+
+.botones{
+    display:  flex;
+    justify-content: space-between;
+}
+.botones button{
+    display:  flex;
+    justify-content: space-between;
+    border: none;
+    padding: 8px;
+    align-items: center;
+
+}
+
+@page {
+  size: auto;
+  margin: 0;
+}
+body {
+  margin: 0;
+  padding: 0;
+}

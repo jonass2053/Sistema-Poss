@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { importaciones } from 'src/app/Core/utilities/material/material';
 import { UsersComponent } from "../settings/components/users/users.component";
 import { Router } from '@angular/router';
@@ -17,6 +17,8 @@ import { ModelsComponent } from "./components/models/models.component";
 import { BrandComponent } from "./components/brand/brand.component";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NodataComponent } from '../nodata/nodata.component';
+import { GetBarCodeComponent } from 'src/app/get-bar-code/get-bar-code.component';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface PeriodicElement {
   id: number;
@@ -82,13 +84,15 @@ export class InventaryComponent {
     private marcaService: MarcasService,
     private modeloService: ModelosService,
     private categoriaService: CategoriaService,
-    private fb : FormBuilder
+    private fb : FormBuilder,
+
     ) {
     this.getAll();
     this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
     this.getAllUnidadesFilter('a');
   }
 
+      readonly dialog = inject(MatDialog);
 
  
 
@@ -217,6 +221,13 @@ export class InventaryComponent {
       console.log('else')
     }
     
+  }
+
+  openDialogGenerateCodeBar(id : number) {
+    const dialogRef = this.dialog.open(GetBarCodeComponent, { width : '500px', height : '350px', data : {id}});
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   

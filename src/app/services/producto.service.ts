@@ -22,16 +22,22 @@ export class ProductoService {
   productoForEdit!: iProducto;
 
   insert(formualrio: any): any {
-    return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(catchError((error) => {
-      console.log(error);
-      this.alertas.errorAlert(error);
+    return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(
+      catchError((error) => {
+      this.alertas.errorAlert(error.error.message);
       return error()
     })
     )
   }
 
-  update(formualrio: any): Observable<ServiceResponse> {
-    return this.http.put<ServiceResponse>(`${this.url}`, formualrio)
+  update(formualrio: any):  any {
+     return this.http.put<ServiceResponse>(`${this.url}`, formualrio).pipe(
+      catchError((error) => {
+      console.log(error)
+      this.alertas.errorAlert(error.error.message);
+      return error()
+    })
+    )
   }
   delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`)
@@ -103,6 +109,11 @@ export class ProductoService {
       return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}?desde=${desde}&hasta=${hasta}`)
     return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}`)
   }
+
+   generateBarCode(idProducto : number): Observable<ServiceResponse> {
+      return this.http.get<ServiceResponse>(`${this.url}/generate_barcode?idProducto=${idProducto}`)
+  }
+
 
 
 }
