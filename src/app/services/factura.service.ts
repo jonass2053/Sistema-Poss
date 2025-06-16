@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ServiceResponse } from '../interfaces/service-response-login';
 import { iPago } from '../interfaces/iTermino';
 import { UsuarioService } from './usuario.service';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { baseUrl } from '../Core/utilities/enviroment.';
+import { AlertServiceService } from '../Core/utilities/alert-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,13 @@ export class FacturaService {
   facturaEdit!: any;
   pagosFactura: iPago[] = [];
   url: string = `${baseUrl}/Factura`;
-  document: string = "Cotización";
+  document: string = "Factura";
   private headers: HttpHeaders;
   private header: { headers: HttpHeaders }
   constructor(
     private http: HttpClient,
-    private usuarioService: UsuarioService) {
+    private usuarioService: UsuarioService,
+    private alertaService : AlertServiceService) {
     this.headers = new HttpHeaders({ 'Authorization': `Bearer ${usuarioService.usuarioLogueado.token}` });
     this.header = { headers: this.headers };
   }
@@ -37,9 +39,16 @@ export class FacturaService {
   delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`, this.header)
   }
-  getAll(idSucursal: number, pageNumber: number, pageSize: number, tipoDocument: number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/getallpaginations/${idSucursal}/${pageNumber}/${pageSize}/${tipoDocument}`, this.header)
-  }
+ getAll(idSucursal: number, pageNumber: number, pageSize: number, tipoDocument: number): Observable<ServiceResponse> {
+  return this.http.get<ServiceResponse>(`${this.url}/getallpaginations/${idSucursal}/${pageNumber}/${pageSize}/${tipoDocument}`, this.header)
+    .pipe(
+      catchError((error : HttpErrorResponse) => {;
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      })
+    );
+}
   getAllFacturasPendientes(idSucursal: number, idCliente: number, pageNumber: number, pageSize: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/getallFacturasPendientesByIdCliente/${idSucursal}/${idCliente}/${pageNumber}/${pageSize}`, this.header)
   }

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { importaciones } from 'src/app/Core/utilities/material/material';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 
 
 @Component({
@@ -17,8 +18,8 @@ export class PaymenSalesComponent implements OnInit {
   change: number = 0
   quickCashOptions: number[] = [100, 120, 150, 200, 500, 1000, 2000]
 
-  constructor(private dialogRef: MatDialogRef<PaymenSalesComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder,) {
+  constructor(private alertaService : AlertServiceService, private dialogRef: MatDialogRef<PaymenSalesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder, ) {
     this.cashValue = data.montoPagar;
     this.totalAmount = data.montoPagar;
   }
@@ -46,6 +47,9 @@ export class PaymenSalesComponent implements OnInit {
       alert(`Pago confirmado. Entregue el cambio de $${this.change.toFixed(2)}`)
       this.miFormulario.patchValue({ totalRecibido: this.cashValue, cambio: this.change })
       this.dialogRef.close(this.miFormulario);
+    }else{
+      alert('else')
+      this.alertaService.errorAlert("Para procesar la transación debe saldar la deuda en su totalidad.")
     }
   }
 

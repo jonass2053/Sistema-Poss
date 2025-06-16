@@ -53,17 +53,6 @@ export class ViewSalesComponent {
       this.factura = r.data;
       facturaService.facturaEdit = this.factura;
       this.dataSource.data = r.data.detalle;
-      //   this.factura.detalle.forEach((i: iDetalleFactura) => {
-      //     i.impuestosObject?.forEach(c=>{
-      //       i.impuestosObject?.map(c=>{
-      //         c.monto = (this.factura.subTotal *(c.porcentaje /100))  
-      //       })
-      //       if(i.impuestosObject!==undefined) {
-      //         this.dataListIMpuestos =  i.impuestosObject;
-      //       }
-      //   });
-      // });
-
     });
 
 

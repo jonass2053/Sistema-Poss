@@ -447,6 +447,15 @@ h4 {
   border-radius: 5px;
 }
 
+.stockDown{
+  background-color: red;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
 .primarycolor {
   color: #25b09b !important;
 }
@@ -459,4 +468,22 @@ h4 {
 ::ng-deep .mi-toggle-personalizado.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
   background-color: #2e7d32 !important;
   /* color del círculo (thumb) cuando está activado */
+}
+
+.mini-input {
+  font-size: 12px;
+  /* Reducir tamaño de texto */
+  height: 70px;
+  /* Altura total del campo */
+  line-height: 1;
+  min-height: unset;
+  padding: 0;
+  margin: 0;
+}
+
+.headerNavCard h2{
+  
+margin: 0px !important;
+padding: 0px !important;
+
 }

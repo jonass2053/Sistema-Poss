@@ -632,6 +632,7 @@ mat-paginator {
   font-size: 14px;
   margin: 0 0 8px;
   color: #333;
+  line-height: 1.25;
 }
 
 .product-price {
@@ -877,6 +878,12 @@ mat-paginator {
 
 }
 
+.footer .acciones .containerbtns {
+  display: flex;
+  flex-direction: row;
+  
+}
+
 .footer .acciones div {
   display: flex;
   justify-content: space-between;
@@ -934,16 +941,6 @@ mat-paginator {
   align-items: center;
 }
 
-.mini-input {
-  font-size: 12px;
-  /* Reducir tamaño de texto */
-  height: 65px;
-  /* Altura total del campo */
-  line-height: 1;
-  min-height: unset;
-  padding: 0;
-  margin: 0;
-}
 
 .no-fill-background .mat-form-field-flex {
   background-color: transparent !important;
@@ -967,3 +964,4 @@ mat-paginator {
 .btnremover:hover{
   cursor: pointer;
 }
+

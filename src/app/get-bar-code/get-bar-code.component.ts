@@ -4,12 +4,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ProductoService } from '../services/producto.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ServiceResponse } from '../interfaces/service-response-login';
+import { LoaderComponent } from '../components/loader/loader.component';
 
 @Component({
   selector: 'app-get-bar-code',
   standalone: true,
   imports: [
-    importaciones
+    importaciones,
+    LoaderComponent
   ],
   templateUrl: './get-bar-code.component.html',
   styleUrl: './get-bar-code.component.scss'
@@ -23,14 +25,15 @@ export class GetBarCodeComponent {
     this.getBarCode();
    }
 
-
+   loading : boolean = false;
 
   getBarCode() {
+    this.loading=true;
     this.productoService.generateBarCode(this.data.id).subscribe((data: ServiceResponse) => {
       // const objectURL = URL.createObjectURL(data.data.ImgBarCode);
       // this.barcodeUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
       this.barcodeUrl = data.data.imgBarCode;
-      
+      this.loading=false;
     });
   }
 

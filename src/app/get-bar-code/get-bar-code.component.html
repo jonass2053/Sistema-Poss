@@ -1,8 +1,9 @@
 <h2 mat-dialog-title>Código de barra del producto</h2>
+<app-loader *ngIf="loading"></app-loader>
 <mat-dialog-content class="mat-typography contenedrobar" *ngIf="barcodeUrl!=undefined">
   <img [src]="barcodeUrl" alt="Codigo de barra">
 </mat-dialog-content>
-<mat-dialog-actions class="botones">
+<mat-dialog-actions class="botones" *ngIf="barcodeUrl!=undefined">
   <button  (click)="printBarcode()" class="text-centerall"><mat-icon>print</mat-icon> Imprimir</button>
   <button  [mat-dialog-close]="true"  class="text-centerall" cdkFocusInitial><mat-icon>cancel</mat-icon> Cancelar</button>
 </mat-dialog-actions>

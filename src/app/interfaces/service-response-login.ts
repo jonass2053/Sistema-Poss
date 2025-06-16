@@ -1,4 +1,5 @@
 export interface ServiceResponse {
+    dateNow : Date,
     message: string,
     token: string,
     status: string,

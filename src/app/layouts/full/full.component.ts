@@ -275,10 +275,10 @@ export class FullComponent {
     localStorage.setItem("isPos", JSON.stringify(isPos));
     this.information.isPos=isPos;
     if (this.facturaService.document === "Cotización") {
-      this.router.navigate([`sales/newprice/${idDocument}`]);
+      this.router.navigate([`sales/newprice/${idDocument}/6`]);
     }
     else { 
-      this.router.navigate([`sales/newsale/${idDocument}`]);
+      this.router.navigate([`sales/newsale/${idDocument}/1`]);
     }
   }
 

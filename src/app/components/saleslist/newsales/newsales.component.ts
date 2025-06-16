@@ -59,6 +59,7 @@ export class NewsalesComponent implements OnDestroy {
   displayedColumns: string[] = ['item', 'descripcion', 'cantidad', 'precio', 'subtotal', 'descuento', 'itbis', 'total', 'acciones'];
   activePayment: boolean = false;
   idFactura: any = 0;
+  idTipoDocumento : any =0;
   desc: boolean = false;
   loader: boolean = false;
 
@@ -91,9 +92,12 @@ export class NewsalesComponent implements OnDestroy {
     this.getAllProduct();
     this.getAllContactos();
     this.idFactura = this.route.snapshot.paramMap.get('id');
+    this.idTipoDocumento = this.route.snapshot.paramMap.get('idtipo');
+    this.document =  informationService.tipoDocumento;
     if (this.idFactura !== '0' && this.idFactura !== 0) {
       this.getById(this.idFactura);
     }
+    
   }
   ngOnDestroy(): void {
     localStorage.setItem('isPos', 'false');
@@ -107,7 +111,7 @@ export class NewsalesComponent implements OnDestroy {
       idContacto: factura.idContacto,
       identificacion: factura.contacto.rnc,
       telefono: factura.contacto.telefono1,
-      idTipoDocumento: factura.idTipoDocumento,
+      idTipoDocumento: this.idTipoDocumento,
       idSucursal: factura.idSucursal,
       idEmpresa: factura.idEmpresa,
       idTermino: factura.idTermino,
@@ -119,8 +123,10 @@ export class NewsalesComponent implements OnDestroy {
       totalGeneral: factura.totalGeneral,
       nombreClienteCompleto: factura.contacto.nombreRazonSocial,
       montoPagado: factura.montoPagado,
+      idDocumento: this.idTipoDocumento==1 && this.document=="Cotización"? factura.idFactura : undefined
+
     })
-    this.idNumeracion = factura.idNumeracion;
+    this.idNumeracion = this.idTipoDocumento==1 && this.document=="Cotización"? factura.contacto.idTipoNumeracion :factura.idNumeracion,
     this.impuestosGenerales = factura.itbis;
     this.miFormulario.get('nombreClienteCompleto')?.setValue(factura.contacto); // Cambia "Opción 2" por el valor deseado
     this.dataListDetalleFactura = factura.detalle;
@@ -177,6 +183,7 @@ export class NewsalesComponent implements OnDestroy {
     cambio: this.fb.control(0),
     noComprobante: [''],
     observacionPago: [''],
+    idDocumento: this.fb.control(null)
     // totalRecibido: [''],
     // cambio: ['']
 
@@ -326,8 +333,11 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   setDefaultContacto() {
-    let contacto = this.dataListContactos.find(c => c.predeterminado == true);
-    this.selectContacto(undefined, contacto);
+    if (this.miFormulario.value.idFactura == undefined) {
+      let contacto = this.dataListContactos.find(c => c.predeterminado == true);
+      this.selectContacto(undefined, contacto);
+    }
+
   }
 
   searchProducto(event: any) {
@@ -343,9 +353,9 @@ export class NewsalesComponent implements OnDestroy {
     }
   }
 
-  selectProductoByCodeBar(event : any){
-    if(event.key=='Enter' && this.codeBar==true){
-    this.seletProductPos(undefined, this.dataListProductosSearch[0])
+  selectProductoByCodeBar(event: any) {
+    if (event.key == 'Enter' && this.codeBar == true) {
+      this.seletProductPos(undefined, this.dataListProductosSearch[0])
     }
 
 
@@ -398,12 +408,12 @@ export class NewsalesComponent implements OnDestroy {
   selectContacto(event: any, valor?: any) {
     let currentValue = valor == undefined ? event.option.value : valor;
     this.miFormulario.patchValue({
-        identificacion: currentValue.rnc,
-        telefono: currentValue.telefono1,
-        idNumeracion: this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idTipoNumeracion,
-        idContacto: currentValue.idContacto,
-        nombreClienteCompleto: currentValue
-      })
+      identificacion: currentValue.rnc,
+      telefono: currentValue.telefono1,
+      idNumeracion: this.informationService.tipoDocumento === "Cotización" && this.idTipoDocumento!=1 ? 11 : currentValue.idTipoNumeracion,
+      idContacto: currentValue.idContacto,
+      nombreClienteCompleto: currentValue
+    })
     this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idTipoNumeracion;
   }
 
@@ -567,7 +577,6 @@ export class NewsalesComponent implements OnDestroy {
     this.numeracionService.getAll().subscribe((data: ServiceResponse) => {
       this.dataListNumeracion = data.data;
       if (this.facturaServcie.facturaEdit == undefined) {
-        // console.log('dentro')
         // this.miFormulario.patchValue({ "idNumeracion": (data.data.find((c: idNumeracion) => c.predeterminada == true)).idNumeracion })
       }
     })
@@ -687,6 +696,11 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   setMiFormulario() {
+    console.log(this.document)
+    console.log(this.idTipoDocumento)
+    console.log(this.miFormulario.value.idFactura)
+    console.log(this.miFormulario.value.idDocumento)
+
     this.miFormulario.patchValue({
       detalle: this.dataListDetalleFactura,
       idEmpresa: this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa,
@@ -697,15 +711,19 @@ export class NewsalesComponent implements OnDestroy {
       totalGeneral: this.totalGeneral,
       itbis: this.impuestosGenerales,
       impuestos: this.miFormulario.value.impuestoObjet,
-      idNumeracion: this.idNumeracion
+      idNumeracion: this.idNumeracion,
+      idFactura : this.document=="Cotización" && this.idTipoDocumento==1? null : this.miFormulario.value.idFactura
+      
+      // idTipoDocumento: this.miFormulario.value.idDocumento == undefined || this.miFormulario.value.idDocumento == null ? this.miFormulario.value.idDocumento : 1
     })
   }
 
   guardarFactura() {
     this.setMiFormulario();
+    console.log(this.miFormulario.value)
     if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
       this.alertaService.ShowLoading();
-      if (this.miFormulario.value.idFactura !== null) {
+      if (this.miFormulario.value.idFactura !== null && this.miFormulario.value.idDocumento == undefined) {
         this.facturaServcie.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
           if (data.status) {
             this.alertaService.successAlert(data.message);
@@ -784,18 +802,24 @@ export class NewsalesComponent implements OnDestroy {
 
   //Selecciona un metodo de pago
   setMetodoPago(metodo: number, descripcion: string, index: number) {
-    this.miFormulario.patchValue({ firstCtrl: 'metodo' })
-    this.metodoPagoSeleccionado = descripcion;
-    this.setActive(index);
-    if (descripcion.toUpperCase() !== "EFECTIVO") {
-      this.dataListBancos = this.dataListBancos.filter(c => c.tipoCuenta.nombre.toUpperCase() !== "EFECTIVO");
+    if (this.dataListDetalleFactura.length > 0) {
+      this.miFormulario.patchValue({ firstCtrl: 'metodo' })
+      this.metodoPagoSeleccionado = descripcion;
+      this.setActive(index);
+      if (descripcion.toUpperCase() !== "EFECTIVO") {
+        this.dataListBancos = this.dataListBancos.filter(c => c.tipoCuenta.nombre.toUpperCase() !== "EFECTIVO");
+      }
+      else {
+        this.getAllBancos();
+      }
+      if (metodo == 1) {
+        this.openModalPayCash();
+      }
+    } else {
+      this.alertaService.errorAlert("Debe seleccionar los productos y el cliente para poder procesar esta transacción.")
+
     }
-    else {
-      this.getAllBancos();
-    }
-    if (metodo == 1) {
-      this.openModalPayCash();
-    }
+
   }
 
   // Valida el formulario para que este no se envie si no se ha seleccionado un metodo de pago
@@ -885,7 +909,7 @@ export class NewsalesComponent implements OnDestroy {
         }
       })
     } else {
-      this.alertaService.errorAlert("Debe seleccionar los productos y el cliente para poder procesar esta transaccion.")
+      this.alertaService.errorAlert("Debe seleccionar los productos y el cliente para poder procesar esta transacción.")
     }
 
   }

@@ -256,6 +256,7 @@ export interface iFactura {
   montoPorPagar: number,
   estadoFactura: { idDetalleFactura: number, nombre: string, color: string },
   tipoDocumentoObj: iTipoDocumento
+  idDocumento : number
   detalle: iDetalleFactura[];
 }
 

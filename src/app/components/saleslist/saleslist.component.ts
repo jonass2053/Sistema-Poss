@@ -78,15 +78,17 @@ export class SaleslistComponent implements OnInit {
 
 
 
-
-  displayedColumns: string[] = ['Numero', 'Cliente', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
+  montoPagado: number = 0;
+  montoPorPagar: number = 0;
+  pagosVencido: number = 0;
+  displayedColumns: string[] = ['Numero', 'Cliente', 'Tipo', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
   dialog = inject(MatDialog);
   facturaForPrint: any;
   doc: string = "";
   data = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`);
   nombreAuthor = 'Juan Perez';
   fechaNow = new Date().toLocaleDateString();
-
+  dateNowServer = new Date();
 
 
   openDialog(factura: iFactura) {
@@ -136,25 +138,39 @@ export class SaleslistComponent implements OnInit {
   }
 
   editar(Factura: iFactura) {
-    if (Factura.montoPorPagar === 0) {
-      this.alertaService.warnigAlert("La factura no se puede editar Ten en cuenta que para editarla no puede estar cancelada o tener algún pago asociado.")
-    }
-    else {
-      this.cargando = true;
-      this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
-        console.log(data)
-        this.facturaService.facturaEdit = data.data;
-        this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}`);
-      })
-    }
+    // alert(this.document)
+    // if (Factura.montoPorPagar === 0 && this.document=='Cotización') {
+    //   this.alertaService.warnigAlert("La factura no se puede editar Ten en cuenta que para editarla no puede estar cancelada o tener algún pago asociado.")
+    // }
+    // else {
+    this.cargando = true;
+    this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
+      console.log(data)
+      this.facturaService.facturaEdit = data.data;
+      if (this.document == 'Cotización') {
+        this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/6`);
+      } else {
+        this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/1`);
+
+      }
+    })
+    // }
+  }
+
+  convertirAFactura(Factura: iFactura) {
+    this.cargando = true;
+    this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
+      this.facturaService.facturaEdit = data.data;
+      this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/1`);
+    })
   }
 
   verFactura(idFactura: number) {
     if (this.informacion.tipoDocumento === 'Cotización') {
-      this.router.navigateByUrl(`sales/newprice/view/${idFactura}`);
+      this.router.navigateByUrl(`sales/newprice/view/${idFactura}/6`);
     }
     else {
-      this.router.navigateByUrl(`sales/newsales/view/${idFactura}`);
+      this.router.navigateByUrl(`sales/newsales/view/${idFactura}/1`);
     }
   }
 
@@ -193,9 +209,13 @@ export class SaleslistComponent implements OnInit {
       //   this.paginator.length = this.totalItems;  // Establecer el total de registros
       //   this.paginator.pageIndex = pageNumber;   // Establecer el índice de la página actual
       // }
+      this.resetMontosResumen();
+      this.setResumenMontos();
+
       if (this.dataList.length > 0) {
         this.sinRegistros = false
         this.cargando = false;
+        this.dateNowServer = data.dateNow;
       }
       else {
         this.sinRegistros = true;
@@ -218,6 +238,10 @@ export class SaleslistComponent implements OnInit {
       this.facturaService.getAllFilter(this.informacion.idSucursal, filtro, this.informacion.tipoDocumento === "Cotización" ? 6 : 1, this.pageNumber, this.pageSize).subscribe((data: any) => {
         this.dataList = data.data;
         this.dataSource.data = data.data;
+        this.dateNowServer = data.dateNow;
+        this.resetMontosResumen();
+
+        this.setResumenMontos();
 
         if (this.dataList.length > 0) {
           this.sinRegistros = false
@@ -310,13 +334,13 @@ export class SaleslistComponent implements OnInit {
   // });
   // }
 
-  addNewDocument(idDocument: number, isPos : boolean) {
-    this.informacion.isPos=isPos;
+  addNewDocument(idDocument: number, isPos: boolean) {
+    this.informacion.isPos = isPos;
     if (this.facturaService.document === "Cotización") {
-      this.router.navigate([`sales/newprice/${idDocument}`]);
+      this.router.navigate([`sales/newprice/${idDocument}/6`]);
     }
     else {
-      this.router.navigate([`sales/newsale/${idDocument}`]);
+      this.router.navigate([`sales/newsale/${idDocument}/1`]);
     }
   }
 
@@ -465,6 +489,24 @@ export class SaleslistComponent implements OnInit {
         this.printDiv(result == 1 ? 'ticket' : 'factura')
       }
     });
+  }
+
+  setResumenMontos() {
+    this.dataSource.data.forEach(c => {
+      this.montoPagado += c.montoPagado;
+      console.log(this.montoPagado)
+      this.montoPorPagar += c.montoPorPagar;
+      if (new Date(this.dateNowServer) > new Date(c.vencimiento)) {
+        this.pagosVencido += c.montoPorPagar;
+      }
+
+    });
+  }
+
+  resetMontosResumen() {
+    this.montoPagado = 0;
+    this.montoPorPagar = 0;
+    this.pagosVencido = 0;
   }
 
 
