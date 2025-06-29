@@ -4,7 +4,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import {MatSelectModule} from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
 import {MatRadioModule} from '@angular/material/radio';
@@ -102,7 +102,8 @@ export const  importaciones : any =[
   DatePicker,
   MatSidenavModule,
   NgxPrintModule,
-  FormsModule
+  FormsModule,
+  RouterModule
   
 
 

@@ -113,6 +113,9 @@ export class ProductoService {
    generateBarCode(idProducto : number): Observable<ServiceResponse> {
       return this.http.get<ServiceResponse>(`${this.url}/generate_barcode?idProducto=${idProducto}`)
   }
+   getProductosByIdCategoria(idCategoria : number): Observable<ServiceResponse> {
+      return this.http.get<ServiceResponse>(`${this.url}/getbyidcategoria/${idCategoria}`)
+  }
 
 
 

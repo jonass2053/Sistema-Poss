@@ -5,7 +5,7 @@ import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones, MY_DATE_FORMATS } from 'src/app/Core/utilities/material/material';
-import { iBanco, iContactoPos, iDetalleFactura, idNumeracion, iFactura, iiMpuesto, iMoneda, iProducto, iTermino, iTipoDocumento, iVendedor } from 'src/app/interfaces/iTermino';
+import { iBanco, iCategoria, iContactoPos, iDetalleFactura, idNumeracion, iEstado, iEstadoFactura, iFactura, iiMpuesto, iMoneda, iProducto, iTermino, iTipoDocumento, iVendedor } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { BancosService } from 'src/app/services/bancos.service';
 import { ContactosService } from 'src/app/services/contactos.service';
@@ -23,6 +23,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { PaymenSalesComponent } from '../paymen-sales/paymen-sales.component';
 import { LoaderComponent } from '../../loader/loader.component';
 import { NodataComponent } from '../../nodata/nodata.component';
+import { ProductComponent } from 'src/app/dashboard/dashboard-components/product/product.component';
+import { ProductsComponent } from '../../inventary/components/products/products.component';
+import { NewcontactComponent } from '../../contacts/newcontact/newcontact.component';
+import { CategoriaService } from 'src/app/services/categoria.service';
 
 declare var $: any;
 
@@ -59,7 +63,7 @@ export class NewsalesComponent implements OnDestroy {
   displayedColumns: string[] = ['item', 'descripcion', 'cantidad', 'precio', 'subtotal', 'descuento', 'itbis', 'total', 'acciones'];
   activePayment: boolean = false;
   idFactura: any = 0;
-  idTipoDocumento : any =0;
+  idTipoDocumento: any = 0;
   desc: boolean = false;
   loader: boolean = false;
 
@@ -77,7 +81,8 @@ export class NewsalesComponent implements OnDestroy {
     private bancoService: BancosService,
     private router: Router,
     private route: ActivatedRoute,
-    public informationService: InformationService
+    public informationService: InformationService,
+    private categoriasService: CategoriaService
   ) {
     this.document = informationService.tipoDocumento;
     if (this.usuarioService.usuarioLogueado != undefined) {
@@ -91,13 +96,15 @@ export class NewsalesComponent implements OnDestroy {
     this.getAllBancos();
     this.getAllProduct();
     this.getAllContactos();
+    this.getAllCategorias();
+  
     this.idFactura = this.route.snapshot.paramMap.get('id');
     this.idTipoDocumento = this.route.snapshot.paramMap.get('idtipo');
-    this.document =  informationService.tipoDocumento;
+    this.document = informationService.tipoDocumento;
     if (this.idFactura !== '0' && this.idFactura !== 0) {
       this.getById(this.idFactura);
     }
-    
+
   }
   ngOnDestroy(): void {
     localStorage.setItem('isPos', 'false');
@@ -123,10 +130,11 @@ export class NewsalesComponent implements OnDestroy {
       totalGeneral: factura.totalGeneral,
       nombreClienteCompleto: factura.contacto.nombreRazonSocial,
       montoPagado: factura.montoPagado,
-      idDocumento: this.idTipoDocumento==1 && this.document=="Cotización"? factura.idFactura : undefined
+      idDocumento: this.idTipoDocumento == 1 && this.document == "Cotización" ? factura.idFactura : undefined
 
     })
-    this.idNumeracion = this.idTipoDocumento==1 && this.document=="Cotización"? factura.contacto.idTipoNumeracion :factura.idNumeracion,
+    this.idNumeracion = this.idTipoDocumento == 1 && this.document == "Cotización" ? factura.contacto.idTipoNumeracion : factura.idNumeracion,
+      this.miFormulario.patchValue({ idNumeracion: this.idNumeracion });
     this.impuestosGenerales = factura.itbis;
     this.miFormulario.get('nombreClienteCompleto')?.setValue(factura.contacto); // Cambia "Opción 2" por el valor deseado
     this.dataListDetalleFactura = factura.detalle;
@@ -191,6 +199,7 @@ export class NewsalesComponent implements OnDestroy {
 
 
   })
+  dataListCategorias: iCategoria[]=[];
   editando: boolean = false;
   idProducto: number = 0;
   nombre: string = "";
@@ -208,6 +217,7 @@ export class NewsalesComponent implements OnDestroy {
   dataListNumeracion: idNumeracion[] = [];
   dataListVendedores: iVendedor[] = [];
   dataListDetalleFactura: iDetalleFactura[] = [];
+  dataListEstadosFacturas : iEstadoFactura[]=[];
   DetalleFactura: iDetalleFactura = {
     idDetalleFactura: 0,
     nombre: "",
@@ -327,7 +337,17 @@ export class NewsalesComponent implements OnDestroy {
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       if (data.status) {
         this.dataListProductosSearch = data.data;
-        this.showLoader();
+        this.hidenLoader();
+      }
+    })
+  }
+
+    getProductByIdCategoria(idCategoria: number | any) {
+    this.showLoader();
+    this.productoService.getProductosByIdCategoria(idCategoria).subscribe((data: ServiceResponse) => {
+      if (data.status) {
+        this.dataListProductosSearch = data.data;
+        this.hidenLoader();
       }
     })
   }
@@ -346,7 +366,7 @@ export class NewsalesComponent implements OnDestroy {
     if (valor.length > 0) {
       this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
         this.dataListProductosSearch = data.data;
-        this.showLoader();
+        this.hidenLoader();
       })
     } else {
       this.getAllProduct();
@@ -359,6 +379,14 @@ export class NewsalesComponent implements OnDestroy {
     }
 
 
+  }
+
+  getAllCategorias(){
+    this.categoriasService.getAll().subscribe((c: ServiceResponse)=>{
+      if(c.status){
+        this.dataListCategorias = c.data;
+      }
+    })
   }
 
 
@@ -410,7 +438,7 @@ export class NewsalesComponent implements OnDestroy {
     this.miFormulario.patchValue({
       identificacion: currentValue.rnc,
       telefono: currentValue.telefono1,
-      idNumeracion: this.informationService.tipoDocumento === "Cotización" && this.idTipoDocumento!=1 ? 11 : currentValue.idTipoNumeracion,
+      idNumeracion: this.informationService.tipoDocumento === "Cotización" && this.idTipoDocumento != 1 ? 11 : currentValue.idTipoNumeracion,
       idContacto: currentValue.idContacto,
       nombreClienteCompleto: currentValue
     })
@@ -488,8 +516,6 @@ export class NewsalesComponent implements OnDestroy {
     this.calculoGeneral();
     // this.cantidad = evento.target.value;
     // this.cantidad = this.cantidad + evento.target.value
-
-
   }
 
   habilitarDescuentos() {
@@ -575,7 +601,7 @@ export class NewsalesComponent implements OnDestroy {
 
   getAllNumeracion() {
     this.numeracionService.getAll().subscribe((data: ServiceResponse) => {
-      this.dataListNumeracion = data.data;
+      this.dataListNumeracion = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1);
       if (this.facturaServcie.facturaEdit == undefined) {
         // this.miFormulario.patchValue({ "idNumeracion": (data.data.find((c: idNumeracion) => c.predeterminada == true)).idNumeracion })
       }
@@ -696,10 +722,6 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   setMiFormulario() {
-    console.log(this.document)
-    console.log(this.idTipoDocumento)
-    console.log(this.miFormulario.value.idFactura)
-    console.log(this.miFormulario.value.idDocumento)
 
     this.miFormulario.patchValue({
       detalle: this.dataListDetalleFactura,
@@ -711,9 +733,9 @@ export class NewsalesComponent implements OnDestroy {
       totalGeneral: this.totalGeneral,
       itbis: this.impuestosGenerales,
       impuestos: this.miFormulario.value.impuestoObjet,
-      idNumeracion: this.idNumeracion,
-      idFactura : this.document=="Cotización" && this.idTipoDocumento==1? null : this.miFormulario.value.idFactura
-      
+      // idNumeracion: this.idNumeracion,
+      idFactura: this.document == "Cotización" && this.idTipoDocumento == 1 ? null : this.miFormulario.value.idFactura
+
       // idTipoDocumento: this.miFormulario.value.idDocumento == undefined || this.miFormulario.value.idDocumento == null ? this.miFormulario.value.idDocumento : 1
     })
   }
@@ -895,6 +917,13 @@ export class NewsalesComponent implements OnDestroy {
   }
 
 
+  addProductDialo() {
+    this.dialog.open(ProductsComponent, {height : "90%"})
+  }
+   addContactDialo() {
+    this.dialog.open(NewcontactComponent, {height : "600px", width : "750px"})
+  }
+
   openModalPayCash() {
     if (this.miFormulario.value.idContacto != '' && this.dataListDetalleFactura.length > 0) {
       this.dialog.open(PaymenSalesComponent, {
@@ -915,7 +944,14 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   showLoader() {
-    this.loader == this.loader == true ? false : true;
+   this.loader = true;
+  }
+   hidenLoader() {
+   this.loader = false;
+  }
+
+  getAllEstadosFacturas(){
+
   }
 
 

@@ -100,17 +100,17 @@ th {
 
 
 .filterandbutton {
+  width: 100%; 
   display: flex;
   justify-content: space-between;
 
 }
 
-.filterandbutton button {
-  display: flex;
-  justify-content: space-between;
-  background-color: red;
+// .filterandbutton button {
+//   display: flex;
+//   justify-content: space-between;
 
-}
+// }
 
 .editarcolor {
   color: green;
@@ -486,4 +486,8 @@ h4 {
 margin: 0px !important;
 padding: 0px !important;
 
+}
+.containerfuncionesheader{
+  display: flex;
+  align-items: center;
 }

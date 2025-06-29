@@ -8,62 +8,129 @@
         <!-- Daily Activity -->
         <mat-card-content>
           <div class="headerNavCard">
-            <div class="titulo"> <mat-icon>description</mat-icon>Listado de {{document}} <span
-                style="margin-left: 10px;"></span>
-             
+
+            <div class="titulo">
+              <div class="centerall">
+                <mat-icon>description</mat-icon>Listado de {{document}} <span style="margin-left: 10px;"></span>
+              </div>
+
+
+              <div class="centerall">
+                <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
+                  <mat-icon>add</mat-icon> nuevo</button>
+                <button color="primary" (click)="showFilter()" mat-raised-button class="me-8 mb-8">Filtrar
+                  <mat-icon>manage_search</mat-icon></button>
+              </div>
 
               <!-- <a>
                 <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
               </a> -->
             </div>
           </div>
- <div class="summary-grid" *ngIf="document!='Cotización'">
-                <div class="summary-card">
-                  <div class="header-card">
-                    <div class="icon">$</div>
-                    <div class="title">Monto Pagado</div>
-                  </div>
-                  <div class="amount">{{ montoPagado | number:'1.2-2'}}</div>
-                  <!-- <div class="transactions">1025 transacciones</div> -->
-                </div>
 
-                <div class="summary-card">
-                  <div class="header-card">
-                    <div class="icon">$</div>
-                    <div matTooltip="Venta con tarjeta" class="title">Monto Por Pagar</div>
-                  </div>
-                  <div class="amount">{{ montoPorPagar | number:'1.2-2'}}</div>
-                  <!-- <div class="transactions">1025 transacciones</div> -->
-                </div>
+            <div class="filterandbutton">
+            <form [formGroup]="miFormulario">
+              <div class="containerfuncionesheader input-parent" *ngIf="filters">
 
-                <div class="summary-card">
-                  <div class="header-card">
-                    <div class="icon">$</div>
-                    <div matTooltip="Venta con trasferencia" class="title">Pago Vencido</div>
-                  </div>
-                  <div class="amount">{{ pagosVencido | number:'1.2-2'}}</div>
-                  <!-- <div class="transactions">1025 transacciones</div> -->
-                </div>
+                <mat-form-field style="width: 16.6%;" appearance="fill" class="no-fill-background">
+                  <mat-label>No. Documento</mat-label>
+                  <input matInput placeholder="Buscar" formControlName="noFactura">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                &nbsp;
 
-             
+                <mat-form-field style="width: 16.6%;" appearance="fill" class="no-fill-background">
+                  <mat-icon matSuffix>person_add</mat-icon>
+                  <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
+                  <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
+                    (input)="searchContacto($event)">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                    (optionSelected)="selectContacto($event)">
+                    <mat-option *ngFor="let contacto of dataListContactos" [value]="contacto">
+                      {{ contacto.nombreRazonSocial }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field class="no-fill-background" style="width: 16.6%;">
+                  <mat-label>Tipo de factura</mat-label>
+                  <mat-select formControlName="idNumeracion">
+                    @for (numeracion of dataListNumeraciones; track $index)
+                    {
+                    <mat-option [value]="numeracion.idNumeracion">{{numeracion.nombre}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                &nbsp;
+                 <mat-form-field class="no-fill-background" style="width: 16.6%;">
+                  <mat-label>Estado</mat-label>
+                  <mat-select formControlName="idEstado">
+                    @for (estado of dataListEstadosFactura; track $index)
+                    {
+                    <mat-option [value]="estado.idEstadoFactura">{{estado.nombre}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                &nbsp;
+                <mat-form-field class="no-fill-background" style="width: 20%;">
+                  <mat-label>Selecciona una fecha</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Fecha de inicio" formControlName="desde">
+                    <input matEndDate placeholder="Fecha fin" formControlName="hasta">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                &nbsp;
+
+                <button style="width: 200px;" color="primary" (click)="getAllFilter()" mat-raised-button
+                  class="me-8 mb-8">
+                  <mat-icon>search</mat-icon>Buscar</button>
+
+                <button style="width: 200px;" color="warn" (click)="resetFilters()" mat-raised-button
+                  class="me-8 mb-8">
+                  <mat-icon>autorenew</mat-icon>Reset.</button> 
               </div>
-          <div class="filterandbutton">
-            <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
-              <mat-icon>add</mat-icon> nuevo</button>
-            <div class="containerfuncionesheader input-parent">
-              <mat-form-field appearance="fill" class="mini-input no-fill-background">
-                <mat-label>Buscar</mat-label>
-                <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar">
-                <mat-icon matSuffix>search</mat-icon>
-              </mat-form-field>
+
+            </form>
+
+          </div>
+          <div class="summary-grid" *ngIf="document!='Cotización'">
+            <div class="summary-card">
+              <div class="header-card">
+                <div class="icon">$</div>
+                <div class="title">Monto Pagado</div>
+              </div>
+              <div class="amount">{{ montoPagado | number:'1.2-2'}}</div>
+              <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+
+            <div class="summary-card">
+              <div class="header-card">
+                <div class="icon">$</div>
+                <div matTooltip="Venta con tarjeta" class="title">Monto Por Pagar</div>
+              </div>
+              <div class="amount">{{ montoPorPagar | number:'1.2-2'}}</div>
+              <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
+
+            <div class="summary-card">
+              <div class="header-card">
+                <div class="icon">$</div>
+                <div matTooltip="Venta con trasferencia" class="title">Pago Vencido</div>
+              </div>
+              <div class="amount">{{ pagosVencido | number:'1.2-2'}}</div>
+              <!-- <div class="transactions">1025 transacciones</div> -->
             </div>
 
 
           </div>
+        
+
 
 
           <div class="table-responsive">
-            <mat-progress-bar *ngIf="dataSource.data.length<1" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
+
             <div class="mat-elevation-z8">
               <table aparence="fill" mat-table [dataSource]="dataSource">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -79,21 +146,21 @@
                   <td mat-cell *matCellDef="let element"> {{element.contacto.nombreRazonSocial || ''}} </td>
                 </ng-container>
 
-                 <ng-container matColumnDef="Tipo">
+                <ng-container matColumnDef="Tipo">
                   <th mat-header-cell *matHeaderCellDef> Tipo </th>
                   <td mat-cell *matCellDef="let element"> {{element.numeracionObj.nombre}} </td>
                 </ng-container>
 
                 <!-- Weight Column -->
                 <ng-container matColumnDef="Creación">
-                  <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
-                  <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date :'dd/mm/yyyy'}} </td>
+                  <th mat-header-cell *matHeaderCellDef> F. Creación </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date :'dd/MM/YYYY'}} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="Vencimiento">
-                  <th mat-header-cell *matHeaderCellDef> Fecha de vencimiento </th>
-                  <td mat-cell *matCellDef="let element"> {{element.vencimiento | date :'dd/mm/yyyy'}} </td>
+                  <th mat-header-cell *matHeaderCellDef> F.Vencimiento </th>
+                  <td mat-cell *matCellDef="let element"> {{element.vencimiento | date :'dd/MM/YYYY'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Total">
@@ -102,21 +169,27 @@
                 </ng-container>
 
                 <ng-container matColumnDef="MontoPagado">
-                  <th mat-header-cell *matHeaderCellDef> Monto pagado </th>
+                  <th mat-header-cell *matHeaderCellDef> M. pagado </th>
                   <td mat-cell *matCellDef="let element"> {{element.montoPagado | number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="MontoPorPagar">
-                  <th mat-header-cell *matHeaderCellDef> Monto por pagar </th>
+                  <th mat-header-cell *matHeaderCellDef> M. por pagar </th>
                   <td mat-cell *matCellDef="let element"> {{element.montoPorPagar | number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Estado">
                   <th mat-header-cell *matHeaderCellDef> Estado </th>
                   <td mat-cell *matCellDef="let element">
-                    <div class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
+                    <div *ngIf="document!='Cotización'" class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }}</div>
-                   
+
+                      <div *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"  class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
+                      SIN PAGOS APLICADOS </div>
+                      
+                      <div *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()!='POR PAGAR'"  class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
+                        {{ (element.estadoFactura?.nombre || '').toUpperCase() }} </div>
+
 
                   </td>
                 </ng-container>
@@ -165,8 +238,7 @@
                           <mat-icon color="black">print</mat-icon>
                           <span>Imprimir</span>
                         </button>
-                        <button *ngIf="document=='Cotización'" mat-menu-item
-                          (click)="convertirAFactura(element)">
+                        <button *ngIf="document=='Cotización'" mat-menu-item (click)="convertirAFactura(element)">
                           <mat-icon color="primary">transform</mat-icon>
                           <span>Convertir a factura</span>
                         </button>
@@ -190,10 +262,12 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
+              <app-nodata *ngIf="dataSource.data.length<1"></app-nodata>
+
 
             </div>
           </div>
-                                    <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator>
+          <!-- <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator> -->
 
         </mat-card-content>
 

@@ -45,7 +45,7 @@ export interface PeriodicElement {
   styleUrl: './inventary.component.scss'
 })
 export class InventaryComponent {
-  displayedColumns: string[] = ['imagen', 'idProducto', 'nombre', 'descripcion', 'categoria', 'marca','modelo', 'precioBase', 'impuesto', 'cantInicial','estado', 'acciones'];
+  displayedColumns: string[] = ['imagen', 'idProducto', 'barCode','nombre', 'descripcion', 'categoria', 'marca', 'precioBase', 'impuesto', 'cantInicial','estado', 'acciones'];
   dataList: iProducto[] = [];
   moneda!: iMoneda;
   impuestosCodigos: iImpuestoProductoCodigo[] = [];

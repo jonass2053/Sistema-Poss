@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { timeout } from 'rxjs';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones } from 'src/app/Core/utilities/material/material';
 import { MsjService } from 'src/app/Core/utilities/msj.service';
+import { ProductComponent } from 'src/app/dashboard/dashboard-components/product/product.component';
 import { iAlmacen, iCategoria, iCuentas, iiMpuesto, iImpuestoProductoCodigo, iMarca, iModelo, iMoneda, iProducto, iUnidades } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { AlmacenService } from 'src/app/services/almacen.service';
@@ -15,6 +16,7 @@ import { MarcasService } from 'src/app/services/marcas.service';
 import { ModelosService } from 'src/app/services/modelos.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-products',
@@ -49,7 +51,7 @@ export class ProductsComponent {
       idEmpresa: this.fb.control(null),
       filterUnidades: this.fb.control(''),
       idImpuesto: this.fb.control(null),
-      barCode : this.fb.control('')
+      barCode: this.fb.control('')
     });
 
 
@@ -65,7 +67,8 @@ export class ProductsComponent {
     private modeloService: ModelosService,
     private informationService: InformationService,
     private route: ActivatedRoute,
-    private router : Router
+    private router: Router,
+    @Optional() public dialogRef: MatDialogRef<ProductComponent>
 
   ) {
     // this.getAllUnidadesFilter('a');
@@ -73,9 +76,10 @@ export class ProductsComponent {
     this.getAllAlmacenes();
     this.getAllCategorias();
     this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
-    this.miFormulario.patchValue({idSucursal : this.informationService.idSucursal})
-    this.idProducto= this.route.snapshot.paramMap.get('id');
-    if (this.idProducto !=='0') {
+    this.miFormulario.patchValue({ idSucursal: this.informationService.idSucursal })
+    this.idProducto = this.route.snapshot.paramMap.get('id');
+    if (this.idProducto !== '0' && this.idProducto != null) {
+      alert('entre')
       this.getById(this.idProducto);
     }
   }
@@ -108,8 +112,8 @@ export class ProductsComponent {
   isProduct: boolean = false;
   impuestoArray: Array<iiMpuesto> = [];
   moneda!: iMoneda;
-  productoForEdit! : iProducto;
-  idProducto? : any= '0';
+  productoForEdit!: iProducto;
+  idProducto?: any = '0';
 
 
   uploadFile(file: File) {
@@ -153,7 +157,6 @@ export class ProductsComponent {
   }
 
   editar(producto: iProducto) {
-    console.log(producto)
     this.miFormulario.reset(producto)
     this.isProduct = producto.isProduct;
     this.getMarcas(this.miFormulario.value.idCategoria)
@@ -181,6 +184,7 @@ export class ProductsComponent {
 
 
   save() {
+    alert(this.miFormulario.value.barCode)
     this.formData.append('idSucursal', this.informationService.idSucursal.toString())
     this.formData.append('idEmpresa', this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa)
     this.formData.append('nombre', this.miFormulario.get('nombre')?.value);
@@ -239,15 +243,15 @@ export class ProductsComponent {
     })
   }
 
- 
+
   displayFn(producto?: iProducto): string | undefined | any {
     return producto ? producto.nombre : undefined;
   }
 
-  getById(idProducto: number | any){
+  getById(idProducto: number | any) {
     this.alertaService.ShowLoading();
-    this.productoService.getById(idProducto).subscribe((data: ServiceResponse)=>{
-      if(data.status){
+    this.productoService.getById(idProducto).subscribe((data: ServiceResponse) => {
+      if (data.status) {
         this.productoForEdit = data.data;
         this.miFormulario.reset(this.productoForEdit);
         this.imageUrl = data.data.imagen;
@@ -309,10 +313,17 @@ export class ProductsComponent {
       cantMaxima: 0
     })
     this.isProductView(0);
-    this.imageUrl ='';
-    if(this.idProducto!==0 || this.idProducto!=='0'){
-    this.router.navigate(['/inventary'])
+    this.imageUrl = '';
+    if (this.idProducto !== 0 || this.idProducto !== '0') {
+      if (this.dialogRef != null) {
+        this.dialogRef.close();
+      } else {
+        this.router.navigate(['/inventary'])
+
+      }
+
     }
+
   }
 
 
@@ -334,10 +345,10 @@ export class ProductsComponent {
     this.impuestoService.getAll().subscribe((data: ServiceResponse) => {
       this.dataListImpuesto = data.data;
       console.log(this.miFormulario.value.idProducto)
-      if(this.miFormulario.value.idProducto===0){
-        this.miFormulario.patchValue({idImpuesto : data.data.find((c : iiMpuesto)=>c.idImpuesto==3).idImpuesto})
+      if (this.miFormulario.value.idProducto === 0) {
+        this.miFormulario.patchValue({ idImpuesto: data.data.find((c: iiMpuesto) => c.idImpuesto == 3).idImpuesto })
       }
-        
+
     })
   }
 
@@ -364,8 +375,8 @@ export class ProductsComponent {
   getAllAlmacenes() {
     this.almacenService.getAll().subscribe((data: ServiceResponse) => {
       this.dataListAlmacenes = data.data;
-      if(data.data[0]!==undefined){
-        this.miFormulario.patchValue({idAlmacen : data.data[0].idAlmacen});
+      if (data.data[0] !== undefined) {
+        this.miFormulario.patchValue({ idAlmacen: data.data[0].idAlmacen });
       }
     })
   }

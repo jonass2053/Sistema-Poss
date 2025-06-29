@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { EditAdjustmentComponent } from './edit-adjustment/edit-adjustment.component';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 
 @Component({
@@ -23,7 +24,8 @@ import { EditAdjustmentComponent } from './edit-adjustment/edit-adjustment.compo
   ],
 
   templateUrl: './inventary-adjustment.component.html',
-  styleUrl: './inventary-adjustment.component.scss'
+  styleUrl: './inventary-adjustment.component.scss',
+  providers : [provideNativeDateAdapter()]
 })
 export class InventaryAdjustmentComponent {
   readonly dialog = inject(MatDialog);

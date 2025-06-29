@@ -50,7 +50,7 @@ export class AlertServiceService {
       text: msj,
       icon: "warning",
       confirmButtonColor: "#3085d6",
-      timer: 10000
+      timer: 30000
 
     });
   }

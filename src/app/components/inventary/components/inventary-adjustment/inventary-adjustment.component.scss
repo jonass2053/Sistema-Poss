@@ -35,7 +35,9 @@
 }
 .containerfuncionesheader{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; 
+    flex-direction: row;
+    // border: 1px solid red !im;
 }
 
 .just-vertical

@@ -1,138 +1,80 @@
-<mat-card appearance="raised">
-    <mat-card-content>
-        <div class="headerNavCard">
-            <h4 class="mb-56">Configuraciones generales de las impuestos</h4>
-            <a [routerLink]="['/settings']">
-                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
-            </a>
+<mat-card appearance="raised" class="mainContainer">
+    <div class="card-header">
+        <div class="header-with-icon">
+            <i class="fas fa-receipt"></i>
+            <h3>Configuración de Impuestos</h3>
         </div>
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-            <mat-card appearance="raised" class="cardForm">
-                <mat-card-content>
-                    <form class="formulario" [formGroup]="miFormulario">
-                        <div class="container">
-                            <div class="row">
+        <p>Gestiona los impuestos y tasas aplicables</p>
+    </div>
+    <mat-card-content>
 
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <mat-form-field class="example-full-width control" appearance="outline">
-                                        <mat-label>Nombre</mat-label>
-                                        <input matInput #message maxlength="256" class="control"
-                                            placeholder="Escriba nombre" formControlName="nombre">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <mat-form-field class="example-full-width control" appearance="outline">
-                                        <mat-label>Porcentaje %</mat-label>
-                                        <input matInput #message maxlength="256" type="number" class="control"
-                                            placeholder="Escriba el porcentaje" formControlName="porcentaje">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <mat-form-field class="example-full-width control" appearance="outline">
-                                        <mat-label>Descripcion</mat-label>
-                                        <input matInput #message maxlength="256" class="control"
-                                            placeholder="Escriba el porcentaje" formControlName="descripcion">
-                                    </mat-form-field>
-                                </div>
+        <div>
 
+            <form [formGroup]="miFormulario">
+                <div style="display: flex;">
 
-                            </div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput #message maxlength="256" placeholder="Escriba nombre" formControlName="nombre">
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field appearance="fill">
+                        <mat-label>Tasa (%)</mat-label>
+                        <input matInput #message maxlength="256" type="number" placeholder="Escriba el porcentaje"
+                            formControlName="porcentaje">
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field appearance="fill">
+                        <mat-label>Descripcion</mat-label>
+                        <input matInput #message maxlength="256" placeholder="Escriba el porcentaje"
+                            formControlName="descripcion">
+                    </mat-form-field>
+                </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button mat-raised-button class="me-8 mb-8" color="primary"
-                                (click)="save()">Guardar</button>
-                            <button *ngIf="editando" mat-raised-button class="me-8 mb-8" color="warn"
-                                (click)="resetForm()">Cancelar</button>
-                        </div>
-                    </form>
+            </form>
 
+            <div>
+                <button mat-raised-button class="me-8 mb-8" color="primary" (click)="save()"><mat-icon>save</mat-icon>
+                    Guardar</button>
+                <button *ngIf="editando" mat-raised-button class="me-8 mb-8" color="warn"
+                    (click)="resetForm()"><mat-icon>cancel</mat-icon> Cancelar</button>
+            </div>
 
-
-
-
-                </mat-card-content>
-            </mat-card>
-
-
-            <div class="container">
+            <div class="">
                 <!-- Daily Activity -->
-                <mat-card class="w-100 cardtable">
-                    <mat-card-content>
-                        <!-- <h4 class="mb-56">Listado de roles</h4> -->
+               
 
-                        <div class="table-responsive">
-                            <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
+                        @for (item of dataList; track $index)
+                        {
+                        <div class="tax-item">
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label>Nombre del Impuesto</label>
+                                    <input type="text" [value]="item.nombre" [readOnly]="true">
+                                </div>
 
-                                <!-- Id Column -->
-                                <ng-container matColumnDef="idImpuesto">
-                                    <th mat-header-cell *matHeaderCellDef> Cod </th>
-                                    <td mat-cell class="fw-medium" *matCellDef="let element"> {{element.idImpuesto}}
-                                    </td>
-                                </ng-container>
+                                <div class="form-group">
+                                    <label>Tasa (%)</label>
+                                    <input type="number" [value]="item.porcentaje" [readOnly]="true">
+                                </div>
+                                <div class="form-group">
+                                    <label>Descripcion</label>
+                                    <textarea rows="1" [value]="item.descripcion" [readOnly]="true"></textarea>
+                                </div>
+                                <div class="mb-0 fw-medium op-5 acciones">
+                                    <!-- {{element.project}} -->
 
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="nombre">
-                                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.nombre }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
+                                    <button class="btnaccion" (click)="editar(item)"> <mat-icon
+                                            class="">edit</mat-icon></button>
+                                    <button class="btnaccion" (click)="delete(item.idImpuesto)">
+                                        <mat-icon class="">delete</mat-icon></button>
 
-                                <ng-container matColumnDef="descripccion">
-                                    <th mat-header-cell *matHeaderCellDef> Descripcion </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.descripcion }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
-
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="porcentaje">
-                                    <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.porcentaje }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
-
-                              
-
-
-
-                                <!-- Project Column -->
-                                <ng-container matColumnDef="acciones">
-                                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="mb-0 fw-medium op-5 acciones">
-                                            <!-- {{element.project}} -->
-
-                                            <button class="btnaccion" (click)="editar(element)"> <mat-icon
-                                                    class="editarcolor">edit</mat-icon></button>
-                                            <button class="btnaccion" (click)="delete(element.idImpuesto)"> <mat-icon
-                                                    class="editarcolor">delete</mat-icon></button>
-
-                                        </div>
-                                    </td>
-                                </ng-container>
-
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="">
-                                    <th mat-header-cell *matHeaderCellDef> correo </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.correo }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
-
-
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
+                                </div>
+                            </div>
                         </div>
-                    </mat-card-content>
-                </mat-card>
+                        }
+
+
             </div>
         </div>
     </mat-card-content>

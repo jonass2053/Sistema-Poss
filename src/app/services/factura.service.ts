@@ -62,7 +62,16 @@ export class FacturaService {
     return this.http.get<ServiceResponse>(`${this.url}/getresumenventasbyidsucursal/${idSucursal}`, this.header)
   }
 
-  getAllFilter(idEmpresa: number, filter: string, idTipoDocumento: number, pageNumber: number, pageSize: number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/getallfilter/${filter}/${idEmpresa}/${idTipoDocumento}/${pageNumber}/${pageSize}`, this.header)
+  getAllFilter(idSucursal: number,  idTipoDocumento: number,  pageNumber: number, pageSize: number,  miFormulario : any): Observable<ServiceResponse> {
+    console.log(miFormulario)
+    return this.http.post<ServiceResponse>(`${this.url}/getallfilter/${idSucursal}/${idTipoDocumento}/${pageNumber}/${pageSize}`, miFormulario, this.header, )
   }
+  
+  getEstadoFacturas(): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/estados_document`, this.header, )
+  }
+
+
+
 }
+ 

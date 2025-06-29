@@ -107,6 +107,11 @@ export interface iEstado {
   id: number,
   estado: string
 }
+export interface iEstadoFactura {
+  idEstadoFactura: number,
+  nombre: string,
+  color: string
+}
 
 export interface iCategoria {
   idCategoria?: number,

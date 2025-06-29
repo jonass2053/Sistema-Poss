@@ -11,7 +11,7 @@
                         <div class="container">
                             <div class="headerNavCard">
                                 <h4>Mantenimiento de productos</h4>
-                                <a [routerLink]="['/inventary']">
+                                <a *ngIf="dialogRef==null" [routerLink]="['/inventary']">
                                     <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
                                 </a>
                             </div>

@@ -1,4 +1,4 @@
-<!-- Daily Activity -->
+<!-- 
 <mat-card class="w-100">
   <mat-card-content>
     <h4 class="mb-56">Configuraciones generales del sistema</h4>
@@ -25,20 +25,7 @@
           </mat-list>
           
         </mat-expansion-panel>
-        <!-- <mat-expansion-panel disabled>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Destination </mat-panel-title>
-            <mat-panel-description>
-              Type the country name
-              <mat-icon>map</mat-icon>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-      
-          <mat-form-field>
-            <mat-label>Country</mat-label>
-            <input matInput />
-          </mat-form-field>
-        </mat-expansion-panel> -->
+       
       
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -54,7 +41,6 @@
             <mat-divider></mat-divider>
             <mat-list-item><a [routerLink]="['/settings/numbers']">Numeraciones</a></mat-list-item>
             <mat-divider></mat-divider>
-            <!-- <mat-list-item><a [routerLink]="['empresa']">Datos generales</a></mat-list-item> -->
             <mat-divider></mat-divider>
             <mat-list-item><a [routerLink]="['/settings/sallers']">Vendedores</a></mat-list-item>
           </mat-list>
@@ -75,7 +61,6 @@
             <mat-divider></mat-divider>
             <mat-list-item><a [routerLink]="['/settings/brands']">Marcas</a></mat-list-item>
             <mat-divider></mat-divider>
-            <!-- <mat-list-item><a [routerLink]="['empresa']">Datos generales</a></mat-list-item> -->
             <mat-divider></mat-divider>
             <mat-list-item><a [routerLink]="['/settings/models']">Modelos</a></mat-list-item>
           </mat-list>
@@ -99,5 +84,87 @@
 
       </mat-accordion>
   </mat-card-content>
-</mat-card>
+</mat-card> -->
 
+
+
+<div class="app-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-cog"></i>
+      <h2>Configuraciones</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a (click)="chooseOpcion()" [routerLink]="['company']" color="primary" routerLinkActive="active" class="nav-item active"
+        data-section="business">
+        <mat-icon>store</mat-icon>
+        <span>Negocio</span>
+      </a>
+      <a (click)="chooseOpcion()" [routerLink]="['paymentsterms']" color="primary" routerLinkActive="active" class="nav-item active"
+        class="nav-item" data-section="printers">
+        <mat-icon>account_balance</mat-icon>
+        <span>Cond/Term.de Pagos</span>
+      </a>
+      <a (click)="chooseOpcion()" [routerLink]="['taxes']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
+        data-section="printers">
+        <mat-icon>receipt</mat-icon>
+        <span>Impuestos</span>
+      </a>
+      <a (click)="chooseOpcion()" [routerLink]="['numbers']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
+        data-section="printers">
+        <mat-icon>numbers</mat-icon>
+        <span>Numeraciones</span>
+      </a>
+      <a (click)="chooseOpcion()" [routerLink]="['role']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
+        data-section="printers">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Roles y permisos</span>
+      </a>
+      <a (click)="chooseOpcion()" [routerLink]="['users']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
+        data-section="printers">
+        <mat-icon>people</mat-icon>
+        <span>Usuarios</span>
+      </a>
+
+
+
+      <button class="nav-item" data-section="taxes">
+        <i class="fas fa-receipt"></i>
+        <span>Impuestos</span>
+      </button>
+      <button class="nav-item" data-section="users">
+        <i class="fas fa-users"></i>
+        <span>Usuarios</span>
+      </button>
+      <button class="nav-item" data-section="inventory">
+        <i class="fas fa-boxes"></i>
+        <span>Inventario</span>
+      </button>
+      <button class="nav-item" data-section="reports">
+        <i class="fas fa-chart-bar"></i>
+        <span>Reportes</span>
+      </button>
+      <button class="nav-item" data-section="security">
+        <i class="fas fa-shield-alt"></i>
+        <span>Seguridad</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Business Configuration -->
+    <div *ngIf="anySelect=='0'" style="display: flex; align-items: center;">
+      <mat-icon>arrow_back</mat-icon>
+     Selecciones una de las opciones de la izquierda
+    </div>
+    <router-outlet>
+
+
+
+
+    </router-outlet>
+  </div>
+</div>

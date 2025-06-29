@@ -24,7 +24,7 @@
                         <mat-card-content style="height: 120px; display: flex;">
                             <mat-form-field appearance="fill" class="control mini-input no-fill-background"
                                 style="width: 20%;">
-                                <mat-icon matSuffix>person_add</mat-icon>
+                                <mat-icon (click)="addContactDialo()" matSuffix>person_add</mat-icon>
                                 <mat-label
                                     matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
                                 <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
@@ -110,7 +110,6 @@
                                         {{ producto.nombre }}
                                     </mat-option>
                                 </mat-autocomplete>
-
                             </mat-form-field>
                             <mat-form-field class="example-full-width control mini-input no-fill-background"
                                 appearance="fill" style="width: 15%;">
@@ -398,6 +397,7 @@
                         <mat-icon>description</mat-icon>
                         Factura de venta
                     </div>
+                    <!-- <mat-icon matTooltip="Agregar nuevo contacto" (click)="addContactDialo()" matSuffix>person_add</mat-icon> -->
                     <mat-icon *ngIf="dataListDetalleFactura.length>0" matTooltip="Aplicar descuento"
                         (click)="habilitarDescuentos()">pie_chart</mat-icon>
                 </div>
@@ -415,7 +415,7 @@
                 </div> -->
 
                     <mat-form-field appearance="fill" class="mini-input no-fill-background">
-                        <mat-icon matSuffix>person_add</mat-icon>
+
                         <mat-label
                             matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
                         <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
@@ -542,13 +542,32 @@
                     [placeholder]="codeBar==true? 'Código de barra' : 'Buscar producto'"
                     aria-label="Example text with two button addons" (input)="searchProducto($event)"
                     (keydown)="selectProductoByCodeBar($event)">
-                <button class="btnitem" type="button" matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
+                <button (click)="addProductDialo()" class="btnitem" type="button"
+                    matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
             </div>
             <div class="containerItemPost">
+                <!-- Buscar por categoria de los producto     -->
+                <div>
+                    <label>Buscar por categoria</label>
+                    <div class="categorias">
+                        <button class="itemCategoria" (click)="getAllProduct()">Todos</button>
+                        @for (categoria of dataListCategorias; track $index)
+                        {
+                        <button (click)="getProductByIdCategoria(categoria.idCategoria)"
+                            class="itemCategoria">{{categoria.nombre}}</button>
+                        }
+
+                    </div>
+                </div>
+
+
                 <div class="containerItem">
-                    <app-loader *ngIf="loader"></app-loader>
-                    <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false"
-                        [mensaje]="'No se encontraron registros.'"></app-nodata>
+                    <div>
+                        <app-loader *ngIf="loader"></app-loader>
+                        <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false"
+                            [mensaje]="'No se encontraron registros.'"></app-nodata>
+                    </div>
+
                     @for (producto of dataListProductosSearch; track $index)
                     {
                     <div class="product-card" (click)="seletProductPos($event, producto)">

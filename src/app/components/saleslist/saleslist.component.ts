@@ -1,6 +1,6 @@
 import { Overlay, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,7 +10,7 @@ import { timeout } from 'rxjs';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones } from 'src/app/Core/utilities/material/material';
 import { MsjService } from 'src/app/Core/utilities/msj.service';
-import { iFactura, iMoneda } from 'src/app/interfaces/iTermino';
+import { iContactoPos, idNumeracion, iEstadoFactura, iFactura, iMoneda } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { FacturaService } from 'src/app/services/factura.service';
 import { GeneratePDFService } from 'src/app/services/generate-pdf.service';
@@ -22,6 +22,9 @@ import { ThemePalette } from '@angular/material/core';
 import { ReportTicketInvoiceComponent } from './report-ticket-invoice/report-ticket-invoice.component';
 import { SelectPrinterComponent } from './select-printer/select-printer.component';
 import { InvoiceReportComponent } from 'src/app/reports/invoice-report/invoice-report.component';
+import { NumeracionService } from 'src/app/services/numeracion.service';
+import { NodataComponent } from '../nodata/nodata.component';
+import { ContactosService } from 'src/app/services/contactos.service';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -35,7 +38,8 @@ let ELEMENT_DATA: iFactura[] = []
   imports: [
     importaciones,
     ReportTicketInvoiceComponent,
-    InvoiceReportComponent
+    InvoiceReportComponent,
+    NodataComponent
   ],
   templateUrl: './saleslist.component.html',
   styleUrl: './saleslist.component.scss'
@@ -52,6 +56,8 @@ export class SaleslistComponent implements OnInit {
   }
   color: ThemePalette = 'primary'; // Puede ser 'primary', 'accent', 'warn'
 
+
+
   constructor(
     private fb: FormBuilder,
     private alertaService: AlertServiceService,
@@ -63,7 +69,11 @@ export class SaleslistComponent implements OnInit {
     private sso: ScrollStrategyOptions,
     private pagoService: PagosService,
     private reportService: GeneratePDFService,
-    private informacion: InformationService
+    private informacion: InformationService,
+    private numeracionService: NumeracionService,
+    private contactoService: ContactosService,
+    private informationService: InformationService
+
 
   ) {
 
@@ -71,13 +81,29 @@ export class SaleslistComponent implements OnInit {
     facturaService.facturaEdit = undefined;
     this.doc = informacion.tipoDocumento;
     this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
+    this.getAllNumeraciones();
+    this.getAllEstadoFactura();
 
   }
 
+  miFormulario: FormGroup = this.fb.group({
+    idNumeracion: this.fb.control(null),
+    desde: this.fb.control(null),
+    hasta: this.fb.control(null),
+    noFactura: this.fb.control(null),
+    idContacto: this.fb.control(null),
+    idEstado : this.fb.control(null),
+    nombreClienteCompleto: this.fb.control(''),
+  });
+  filters: boolean = false;
 
+  showFilter() {
+    this.filters = this.filters == false ? true : false;
+  }
 
-
-
+  dataListContactos: iContactoPos[] = [];
+  dataListNumeraciones: idNumeracion[] = [];
+  dataListEstadosFactura : iEstadoFactura[]=[];
   montoPagado: number = 0;
   montoPorPagar: number = 0;
   pagosVencido: number = 0;
@@ -112,7 +138,7 @@ export class SaleslistComponent implements OnInit {
   paginations: number[] = [1];
   filtro: string = "";
   pageNumber: number = 1;
-  pageSize: number = 7;
+  pageSize: number = 50;
   totalItems = 0; // Total de elementos que hay en la API
   private previousPageIndex = 0; // Página anterior
   document: string = "";
@@ -137,6 +163,28 @@ export class SaleslistComponent implements OnInit {
     }
   }
 
+  getAllContactos() {
+    this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
+      this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      // this.setDefaultContacto();
+
+    })
+  }
+
+
+  searchContacto(event: any) {
+    let valor = (event.target as HTMLInputElement).value;
+    if (valor.length > 0) {
+      this.contactoService.getAllFilter((event.target as HTMLInputElement).value, this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
+        this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      })
+    }
+    else {
+      this.getAllContactos();
+    }
+  }
+
+
   editar(Factura: iFactura) {
     // alert(this.document)
     // if (Factura.montoPorPagar === 0 && this.document=='Cotización') {
@@ -145,7 +193,6 @@ export class SaleslistComponent implements OnInit {
     // else {
     this.cargando = true;
     this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
-      console.log(data)
       this.facturaService.facturaEdit = data.data;
       if (this.document == 'Cotización') {
         this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/6`);
@@ -155,6 +202,19 @@ export class SaleslistComponent implements OnInit {
       }
     })
     // }
+  }
+
+  selectContacto(event: any, valor?: any) {
+    let currentValue = valor == undefined ? event.option.value : valor;
+    this.miFormulario.patchValue({
+      idContacto: currentValue.idContacto,
+      nombreClienteCompleto: currentValue
+    })
+  }
+
+
+  displayFn(contacto?: iContactoPos): string | undefined | any {
+    return contacto ? contacto.nombreRazonSocial : undefined;
   }
 
   convertirAFactura(Factura: iFactura) {
@@ -181,7 +241,6 @@ export class SaleslistComponent implements OnInit {
   // Función para manejar el cambio de página
   // Método que maneja el cambio de página
   pageChanged(event: any): void {
-    console.log('Paginación cambiada:', event);
     // Asegurarse de que el número de página nunca sea 0
     let currentPage = event.pageIndex + 1;  // Aumentamos 1 para que la página comience en 1
     // Calcular el cambio en la página (avance o retroceso)
@@ -193,14 +252,15 @@ export class SaleslistComponent implements OnInit {
     // Guardamos el índice de la página actual
     this.previousPageIndex = currentPage;
     // Mostrar el número de página actual para debugging
-    console.log('page number:', this.pageNumber);
     this.pageSize = event.pageSize;
 
     // Llamar al backend con el número de página ajustado y el tamaño de la página
-    this.getAll(this.pageNumber, this.pageSize);
+  
+    this.getAllFilter();
   }
 
   getAll(pageNumber: number, pageSize: number, tipoDocumento: string = "") {
+    this.cargando = true;
     this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, this.informacion.tipoDocumento === "Cotización" ? 2 : 1).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
       this.totalItems = data.totalItems; // Asume que la API también devuelve el total de items
@@ -211,7 +271,6 @@ export class SaleslistComponent implements OnInit {
       // }
       this.resetMontosResumen();
       this.setResumenMontos();
-
       if (this.dataList.length > 0) {
         this.sinRegistros = false
         this.cargando = false;
@@ -227,29 +286,41 @@ export class SaleslistComponent implements OnInit {
 
 
 
-  getAllFilter(event: any) {
-    const filtro = (event.target as HTMLInputElement).value;
-    this.filtro = filtro;
-    if (filtro == "") {
+  getAllFilter() {
+    const { noFactura, desde, hasta, idNumeracion, idContacto, idEstado } = this.miFormulario.value;
+    this.cargando = true;
+    this.setFormatDate();
+
+    // Verificar si todos están vacíos, y solo así ejecutar getAll
+    const todosVacios = [noFactura, desde, hasta, idNumeracion, idContacto, idEstado].every(
+      valor => valor === undefined || valor === null || (typeof valor === 'string' && valor.trim() === '')
+    );
+    console.log(this.miFormulario.value)
+    if (todosVacios) {
       this.getAll(this.pageNumber, this.pageSize, 'Factura');
     }
     else {
       this.cargando = true;
-      this.facturaService.getAllFilter(this.informacion.idSucursal, filtro, this.informacion.tipoDocumento === "Cotización" ? 6 : 1, this.pageNumber, this.pageSize).subscribe((data: any) => {
+      this.facturaService.getAllFilter(
+        this.informacion.idSucursal,
+        this.informacion.tipoDocumento === "Cotización" ? 6 : 1,
+        this.pageNumber,
+        this.pageSize,
+        this.miFormulario.value
+      ).subscribe((data: any) => {
         this.dataList = data.data;
         this.dataSource.data = data.data;
         this.dateNowServer = data.dateNow;
         this.resetMontosResumen();
-
+        this.cargando = false;
         this.setResumenMontos();
 
         if (this.dataList.length > 0) {
           this.sinRegistros = false
-          this.cargando = false;
+
         }
         else {
           this.sinRegistros = true;
-          this.cargando = false;
         }
       })
     }
@@ -313,6 +384,9 @@ export class SaleslistComponent implements OnInit {
 
   }
 
+  resetFilters(){
+    this.miFormulario.reset();
+  }
 
   // this.reportService.generatePDF('print-section', 'mi-documento.pdf');
 
@@ -348,7 +422,6 @@ export class SaleslistComponent implements OnInit {
 
   printTres() {
     const element = document.getElementById('print-section');
-    console.log(element)
     if (element !== null) {
       // Accedes al elemento sin el error de null
       const divContent = element.innerHTML;
@@ -494,7 +567,6 @@ export class SaleslistComponent implements OnInit {
   setResumenMontos() {
     this.dataSource.data.forEach(c => {
       this.montoPagado += c.montoPagado;
-      console.log(this.montoPagado)
       this.montoPorPagar += c.montoPorPagar;
       if (new Date(this.dateNowServer) > new Date(c.vencimiento)) {
         this.pagosVencido += c.montoPorPagar;
@@ -509,6 +581,32 @@ export class SaleslistComponent implements OnInit {
     this.pagosVencido = 0;
   }
 
+  desde: any = null;
+  hasta: any = null;
+  getAllNumeraciones() {
+    this.numeracionService.getAll().subscribe((data: ServiceResponse) => {
+      if (data.status) {
+        this.dataListNumeraciones = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1);
+      }
+    })
+  }
 
+  setFormatDate() {
+    let desdeOri: Date | null = this.miFormulario.value.desde ? new Date(this.miFormulario.value.desde) : null;
+    let hastaOri: Date | null = this.miFormulario.value.hasta ? new Date(this.miFormulario.value.hasta) : null;
+    if (desdeOri != undefined && hastaOri != undefined) {
+      this.desde = `${desdeOri?.getFullYear()}-${(desdeOri?.getMonth()!) + 1}-${desdeOri?.getDate()}`;
+      this.hasta = `${hastaOri?.getFullYear()}-${(hastaOri?.getMonth()!) + 1}-${hastaOri?.getDate()}`;
+    }
 
+  }
+
+  getAllEstadoFactura(){
+    this.facturaService.getEstadoFacturas().subscribe((response : ServiceResponse)=>{
+      if(response){
+        console.log(response)
+        this.dataListEstadosFactura = response.data;
+      }
+    })
+  }
 }

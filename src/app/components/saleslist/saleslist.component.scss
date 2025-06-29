@@ -199,6 +199,15 @@
   margin-top: 10px;
 }
 
+
+
+
+.headerNavCard .titulo{
+  width: 100%;
+  justify-content: space-between;
+}
+
+
 /* Estilos específicos para impresión */
 @media print {
   .receipt-container {
@@ -310,3 +319,4 @@
             color: #6c757d;
             
         }
+

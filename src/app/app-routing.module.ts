@@ -61,7 +61,23 @@ const routes: Routes = [
       {path:"sales", component:DashboardComponent},
       {path:"contacts", component : ContactsComponent},
       {path:"contacts/new/:id", component : NewcontactComponent },
-      {path:"settings", component : SettingsComponent},
+      {path:"settings", component : SettingsComponent,
+        children : [
+         {path: 'company', component: CompanyComponent },
+         {path: 'paymentsterms', component : PaymentTermsComponent},
+         {path: 'taxes', component : TaxesComponent},
+         {path: 'numbers', component : NumbersComponent},
+        {path: 'users', component : UsersComponent},
+        {path: 'role', component : RoleComponent}
+
+
+
+        ]
+      }
+      
+      
+      
+      ,
       {path:"settings/company", component : CompanyComponent},
       {path:"settings/role", component : RoleComponent},
       {path:"settings/paymentsterms", component : PaymentTermsComponent},

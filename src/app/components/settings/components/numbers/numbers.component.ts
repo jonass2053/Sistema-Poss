@@ -62,7 +62,7 @@ export class NumbersComponent {
   checked = false;
   disabled = false;
   documentoSeleccionado :  any ="";
-  displayedColumns: string[] = ['idNumeracion', 'nombre', 'prefijo', 'numeracionInicial', 'contador', 'predeterminada', 'acciones'];
+  displayedColumns: string[] = [ 'nombre', 'prefijo', 'numeracionInicial', 'contador', 'predeterminada', 'acciones'];
  
 
 
