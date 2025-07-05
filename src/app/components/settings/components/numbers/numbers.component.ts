@@ -63,7 +63,7 @@ export class NumbersComponent {
   disabled = false;
   documentoSeleccionado :  any ="";
   displayedColumns: string[] = [ 'nombre', 'prefijo', 'numeracionInicial', 'contador', 'predeterminada', 'acciones'];
- 
+  viewForm : boolean =false;
 
 
 
@@ -169,6 +169,7 @@ export class NumbersComponent {
 
 
   editar(numeracion: idNumeracion) {
+    this.showForm();
     this.cargarTipoNumeracion(numeracion.idTipoDocumento)
     this.miFormulario.patchValue({
         'idNumeracion' : numeracion.idNumeracion,
@@ -188,6 +189,7 @@ export class NumbersComponent {
   resetForm() {
     this.miFormulario.reset();
     this.dataListTipoNumeracion =[];
+    this.showForm();
   }
 
   cargarTipoNumeracion(idTipoDocumento: any){
@@ -204,4 +206,12 @@ export class NumbersComponent {
         this.miFormulario.patchValue({"prefijo": tipo.prefijo, "nombre": tipo.nombre},)
       } 
   }
+
+  showForm(){
+   this.viewForm= this.viewForm==true? false : true;
+  }
+  
+ 
+
+  
 }

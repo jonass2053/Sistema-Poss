@@ -1,0 +1,22 @@
+<mat-card appearance="raised" class="mainContainer">
+    <div class="card-header">
+        <div class="header-with-icon">
+            <i class="fas fa-receipt"></i>
+            <h3>Configuración del Inventario</h3>
+        </div>
+        <p>Gestiona las marcas y los modelos de tus productos</p>
+    </div>
+    <mat-card-content>
+        <mat-tab-group>
+            <mat-tab label="Categorias">
+                <app-category></app-category>
+            </mat-tab>
+            <mat-tab label="Marcas">
+                <app-brand></app-brand>
+            </mat-tab>
+            <mat-tab label="Modelos">
+            <app-models></app-models>     
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>

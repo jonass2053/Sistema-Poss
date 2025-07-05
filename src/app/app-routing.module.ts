@@ -45,6 +45,8 @@ import { InventaryAdjustmentComponent } from './components/inventary/components/
 import { ShiftsComponent } from './components/shifts/shifts.component';
 import { CashManagementComponent } from './components/cash-management/cash-management.component';
 import { ReportTicketInvoiceComponent } from './components/saleslist/report-ticket-invoice/report-ticket-invoice.component';
+import { SettingInventaryComponent } from './components/settings/components/setting-inventary/setting-inventary.component';
+import { ConfiguracionesGeneralesComponent } from './components/settings/components/configuraciones-generales/configuraciones-generales.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -63,15 +65,15 @@ const routes: Routes = [
       {path:"contacts/new/:id", component : NewcontactComponent },
       {path:"settings", component : SettingsComponent,
         children : [
-         {path: 'company', component: CompanyComponent },
-         {path: 'paymentsterms', component : PaymentTermsComponent},
-         {path: 'taxes', component : TaxesComponent},
-         {path: 'numbers', component : NumbersComponent},
+        {path: 'company', component: CompanyComponent },
+        {path: 'paymentsterms', component : PaymentTermsComponent},
+        {path: 'taxes', component : TaxesComponent},
+        {path: 'numbers', component : NumbersComponent},
         {path: 'users', component : UsersComponent},
-        {path: 'role', component : RoleComponent}
-
-
-
+        {path: 'role', component : RoleComponent},
+        {path: 'inventary', component : SettingInventaryComponent},
+        {path: 'generalsetting', component : ConfiguracionesGeneralesComponent}
+      
         ]
       }
       

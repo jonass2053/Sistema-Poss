@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^17.3.7",
     "@angular/platform-browser-dynamic": "^17.3.7",
     "@angular/router": "^17.3.7",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "angular-feather": "^6.5.1",
     "apexcharts": "^3.49.0",
     "date-fns": "^4.1.0",

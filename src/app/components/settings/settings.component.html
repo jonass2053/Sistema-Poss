@@ -97,36 +97,46 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a (click)="chooseOpcion()" [routerLink]="['company']" color="primary" routerLinkActive="active" class="nav-item active"
-        data-section="business">
+      <a (click)="chooseOpcion()" [routerLink]="['company']" color="primary" routerLinkActive="active"
+        class="nav-item active" data-section="business">
         <mat-icon>store</mat-icon>
         <span>Negocio</span>
       </a>
-      <a (click)="chooseOpcion()" [routerLink]="['paymentsterms']" color="primary" routerLinkActive="active" class="nav-item active"
-        class="nav-item" data-section="printers">
+      <a (click)="chooseOpcion()" [routerLink]="['paymentsterms']" color="primary" routerLinkActive="active"
+        class="nav-item active" class="nav-item" data-section="printers">
         <mat-icon>account_balance</mat-icon>
         <span>Cond/Term.de Pagos</span>
       </a>
-      <a (click)="chooseOpcion()" [routerLink]="['taxes']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
-        data-section="printers">
+      <a (click)="chooseOpcion()" [routerLink]="['taxes']" color="primary" routerLinkActive="active"
+        class="nav-item active" class="nav-item" data-section="printers">
         <mat-icon>receipt</mat-icon>
         <span>Impuestos</span>
       </a>
-      <a (click)="chooseOpcion()" [routerLink]="['numbers']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
-        data-section="printers">
+      <a (click)="chooseOpcion()" [routerLink]="['numbers']" color="primary" routerLinkActive="active"
+        class="nav-item active" class="nav-item" data-section="printers">
         <mat-icon>numbers</mat-icon>
         <span>Numeraciones</span>
       </a>
-      <a (click)="chooseOpcion()" [routerLink]="['role']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
-        data-section="printers">
+      <a (click)="chooseOpcion()" [routerLink]="['inventary']" color="primary" routerLinkActive="active"
+        class="nav-item active" class="nav-item" data-section="printers">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Inventario</span>
+      </a>
+      <a (click)="chooseOpcion()" [routerLink]="['role']" color="primary" routerLinkActive="active"
+        class="nav-item active" class="nav-item" data-section="printers">
         <mat-icon>admin_panel_settings</mat-icon>
         <span>Roles y permisos</span>
       </a>
-      <a (click)="chooseOpcion()" [routerLink]="['users']" color="primary" routerLinkActive="active" class="nav-item active" class="nav-item"
-        data-section="printers">
+      <a (click)="chooseOpcion()" [routerLink]="['users']" color="primary" routerLinkActive="active"
+        class="nav-item active" class="nav-item" data-section="printers">
         <mat-icon>people</mat-icon>
         <span>Usuarios</span>
       </a>
+      <button (click)="chooseOpcion()" [routerLink]="['generalsetting']" class="nav-item" data-section="taxes">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Conf. generales</span>
+      </button>
+
 
 
 
@@ -158,7 +168,7 @@
     <!-- Business Configuration -->
     <div *ngIf="anySelect=='0'" style="display: flex; align-items: center;">
       <mat-icon>arrow_back</mat-icon>
-     Selecciones una de las opciones de la izquierda
+      Selecciones una de las opciones de la izquierda
     </div>
     <router-outlet>
 

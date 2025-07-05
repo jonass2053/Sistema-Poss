@@ -103,7 +103,7 @@ export const  importaciones : any =[
   MatSidenavModule,
   NgxPrintModule,
   FormsModule,
-  RouterModule
+  RouterModule,
   
 
 

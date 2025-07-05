@@ -458,3 +458,8 @@ export interface iCashResumen{
   montoTotalSalidas : number,
   balance : number
 }
+
+export interface iConfiguracion{
+  id : number,
+  impresionAutomatica : boolean
+}

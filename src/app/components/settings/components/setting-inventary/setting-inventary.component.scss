@@ -1,100 +1,17 @@
 .cardForm
 {
-    width: 300px;
-}
-.tbnacciones{
-    width: 150px;
+    width: 100%;
 }
 .cardtable
 {   min-width: 700px;
     width: 800px;
+    height: 60vh;
     overflow: auto;
-}  /* Reset y base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
+
 .mainContainer{
-    width: 70vw;
+    width: 50vw;
 }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8fafc;
-    color: #334155;
-    line-height: 1.6;
-}
-
-/* Layout principal */
-.app-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 256px;
-    background: white;
-    border-right: 1px solid #e2e8f0;
-    padding: 1rem;
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.sidebar-header i {
-    font-size: 1.5rem;
-    color: #3b82f6;
-}
-
-.sidebar-header h2 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #1e293b;
-}
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border: none;
-    background: transparent;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
-    width: 100%;
-    font-size: 0.875rem;
-}
-
-.nav-item:hover {
-    background-color: #f1f5f9;
-}
-
-.nav-item.active {
-    background-color: #3b82f6;
-    color: white;
-}
-
-.nav-item i {
-    width: 1rem;
-    text-align: center;
-}
-
 /* Contenido principal */
 .main-content {
     flex: 1;
@@ -103,7 +20,7 @@ body {
 }
 
 .content-section {
-    display: none;
+    // display: none;
     max-width: 64rem;
     margin: 0 auto;
 }

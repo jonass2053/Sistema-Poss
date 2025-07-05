@@ -5,7 +5,7 @@ import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones, MY_DATE_FORMATS } from 'src/app/Core/utilities/material/material';
-import { iBanco, iCategoria, iContactoPos, iDetalleFactura, idNumeracion, iEstado, iEstadoFactura, iFactura, iiMpuesto, iMoneda, iProducto, iTermino, iTipoDocumento, iVendedor } from 'src/app/interfaces/iTermino';
+import { iBanco, iCategoria, iConfiguracion, iContactoPos, iDetalleFactura, idNumeracion, iEstado, iEstadoFactura, iFactura, iiMpuesto, iMoneda, iProducto, iTermino, iTipoDocumento, iVendedor } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { BancosService } from 'src/app/services/bancos.service';
 import { ContactosService } from 'src/app/services/contactos.service';
@@ -27,6 +27,9 @@ import { ProductComponent } from 'src/app/dashboard/dashboard-components/product
 import { ProductsComponent } from '../../inventary/components/products/products.component';
 import { NewcontactComponent } from '../../contacts/newcontact/newcontact.component';
 import { CategoriaService } from 'src/app/services/categoria.service';
+import { PrintServiceService } from 'src/app/services/print-service.service';
+import { ConfiguracionesGeneralesComponent } from '../../settings/components/configuraciones-generales/configuraciones-generales.component';
+import { ConfiguracionesFactService } from 'src/app/services/configuraciones.service';
 
 declare var $: any;
 
@@ -51,7 +54,7 @@ export class NewsalesComponent implements OnDestroy {
   @ViewChild('exampleModal') myModal!: ElementRef;
 
   readonly dialog = inject(MatDialog);
-
+  configuraciones!: iConfiguracion;
   isEditable = false;
   metodoPagoSeleccionado = "";
   moneda!: iMoneda;
@@ -82,7 +85,9 @@ export class NewsalesComponent implements OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     public informationService: InformationService,
-    private categoriasService: CategoriaService
+    private categoriasService: CategoriaService,
+    private printService: PrintServiceService,
+    private configuracionesServices: ConfiguracionesFactService
   ) {
     this.document = informationService.tipoDocumento;
     if (this.usuarioService.usuarioLogueado != undefined) {
@@ -97,7 +102,8 @@ export class NewsalesComponent implements OnDestroy {
     this.getAllProduct();
     this.getAllContactos();
     this.getAllCategorias();
-  
+    this.getConfiguraciones();
+
     this.idFactura = this.route.snapshot.paramMap.get('id');
     this.idTipoDocumento = this.route.snapshot.paramMap.get('idtipo');
     this.document = informationService.tipoDocumento;
@@ -199,7 +205,7 @@ export class NewsalesComponent implements OnDestroy {
 
 
   })
-  dataListCategorias: iCategoria[]=[];
+  dataListCategorias: iCategoria[] = [];
   editando: boolean = false;
   idProducto: number = 0;
   nombre: string = "";
@@ -217,7 +223,7 @@ export class NewsalesComponent implements OnDestroy {
   dataListNumeracion: idNumeracion[] = [];
   dataListVendedores: iVendedor[] = [];
   dataListDetalleFactura: iDetalleFactura[] = [];
-  dataListEstadosFacturas : iEstadoFactura[]=[];
+  dataListEstadosFacturas: iEstadoFactura[] = [];
   DetalleFactura: iDetalleFactura = {
     idDetalleFactura: 0,
     nombre: "",
@@ -342,7 +348,7 @@ export class NewsalesComponent implements OnDestroy {
     })
   }
 
-    getProductByIdCategoria(idCategoria: number | any) {
+  getProductByIdCategoria(idCategoria: number | any) {
     this.showLoader();
     this.productoService.getProductosByIdCategoria(idCategoria).subscribe((data: ServiceResponse) => {
       if (data.status) {
@@ -381,9 +387,9 @@ export class NewsalesComponent implements OnDestroy {
 
   }
 
-  getAllCategorias(){
-    this.categoriasService.getAll().subscribe((c: ServiceResponse)=>{
-      if(c.status){
+  getAllCategorias() {
+    this.categoriasService.getAll().subscribe((c: ServiceResponse) => {
+      if (c.status) {
         this.dataListCategorias = c.data;
       }
     })
@@ -647,6 +653,8 @@ export class NewsalesComponent implements OnDestroy {
 
 
 
+
+
   contador = 0;
   calculoGeneral() {
     let a = 0; let b = 0; let e = 0; let i = 0;
@@ -742,7 +750,6 @@ export class NewsalesComponent implements OnDestroy {
 
   guardarFactura() {
     this.setMiFormulario();
-    console.log(this.miFormulario.value)
     if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
       this.alertaService.ShowLoading();
       if (this.miFormulario.value.idFactura !== null && this.miFormulario.value.idDocumento == undefined) {
@@ -767,6 +774,16 @@ export class NewsalesComponent implements OnDestroy {
             this.resetDetails();
             this.resetFormPago();
             this.setDefaultContacto();
+            //Realizamos el get de la factura para poder imprimir
+            if (this.configuraciones.impresionAutomatica) {
+              this.facturaServcie.getById(data.data.idFactura).subscribe((response: ServiceResponse) => {
+                if (response.status) {
+                  setTimeout(() => {
+                  this.printService.printTicketFactura(response.data);
+                  }, 600);
+                }
+              })
+            }
           }
           else {
             this.alertaService.errorAlert(data.message);
@@ -851,6 +868,8 @@ export class NewsalesComponent implements OnDestroy {
     }
   }
 
+
+
   activeIndex: number | null = null;
 
   setActive(index: number) {
@@ -918,10 +937,10 @@ export class NewsalesComponent implements OnDestroy {
 
 
   addProductDialo() {
-    this.dialog.open(ProductsComponent, {height : "90%"})
+    this.dialog.open(ProductsComponent, { height: "90%" })
   }
-   addContactDialo() {
-    this.dialog.open(NewcontactComponent, {height : "600px", width : "750px"})
+  addContactDialo() {
+    this.dialog.open(NewcontactComponent, { height: "600px", width: "750px" })
   }
 
   openModalPayCash() {
@@ -944,15 +963,22 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   showLoader() {
-   this.loader = true;
+    this.loader = true;
   }
-   hidenLoader() {
-   this.loader = false;
+  hidenLoader() {
+    this.loader = false;
   }
 
-  getAllEstadosFacturas(){
-
+  //Metodo para llamar la configuracion del sistema en este caso para saber si la factura se imprimirra automaticamente o no
+  getConfiguraciones() {
+    this.configuracionesServices.getAll().subscribe((response: ServiceResponse) => {
+      if (response.status) {
+        this.configuraciones = response.data;
+      }
+    })
   }
+
+
 
 
 }

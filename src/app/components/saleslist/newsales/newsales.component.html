@@ -389,6 +389,57 @@
 
     <!-- dise1@ post -->
     <div class="containerPost" *ngIf="informationService.isPos">
+
+         <div class="buscadorItems">
+            <div class="input-group mb-3">
+                <button class="btnitem" (click)="seelctMetodFilter(2)" matTooltip="Buscar producto" type="button">
+                    <mat-icon>search</mat-icon></button>
+                <button class="btnitem" (click)="seelctMetodFilter(1)" matTooltip="Código de barra" type="button"><img
+                        src="../../../../assets/images/barcode-2-svgrepo-com.svg" alt=""></button>
+                <input type="text" class="form-control"
+                    [placeholder]="codeBar==true? 'Código de barra' : 'Buscar producto'"
+                    aria-label="Example text with two button addons" (input)="searchProducto($event)"
+                    (keydown)="selectProductoByCodeBar($event)">
+                <button (click)="addProductDialo()" class="btnitem" type="button"
+                    matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
+            </div>
+            <div class="containerItemPost">
+                <!-- Buscar por categoria de los producto     -->
+                <div>
+                    <label>Buscar por categoria</label>
+                    <div class="categorias">
+                        <button class="itemCategoria" (click)="getAllProduct()">Todos</button>
+                        @for (categoria of dataListCategorias; track $index)
+                        {
+                        <button (click)="getProductByIdCategoria(categoria.idCategoria)"
+                            class="itemCategoria">{{categoria.nombre}}</button>
+                        }
+
+                    </div>
+                </div>
+
+
+                <div class="containerItem">
+                    <div>
+                        <app-loader *ngIf="loader"></app-loader>
+                        <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false"
+                            [mensaje]="'No se encontraron registros.'"></app-nodata>
+                    </div>
+
+                    @for (producto of dataListProductosSearch; track $index)
+                    {
+                    <div class="product-card" (click)="seletProductPos($event, producto)">
+                        <img src="{{producto.imagen}}" alt="Producto" class="product-image">
+                        <div class="product-info">
+                            <p class="product-name">{{producto.nombre}}</p>
+                            <p class="product-price">${{producto.precioBase| number : '1.2-5'}}</p>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </div>
         <!-- Detalles -->
         <div class="detalleVenta">
             <div class="header">
@@ -532,56 +583,7 @@
             </div>
 
         </div>
-        <div class="buscadorItems">
-            <div class="input-group mb-3">
-                <button class="btnitem" (click)="seelctMetodFilter(2)" matTooltip="Buscar producto" type="button">
-                    <mat-icon>search</mat-icon></button>
-                <button class="btnitem" (click)="seelctMetodFilter(1)" matTooltip="Código de barra" type="button"><img
-                        src="../../../../assets/images/barcode-2-svgrepo-com.svg" alt=""></button>
-                <input type="text" class="form-control"
-                    [placeholder]="codeBar==true? 'Código de barra' : 'Buscar producto'"
-                    aria-label="Example text with two button addons" (input)="searchProducto($event)"
-                    (keydown)="selectProductoByCodeBar($event)">
-                <button (click)="addProductDialo()" class="btnitem" type="button"
-                    matTooltip="Nuevo producto"><mat-icon>add</mat-icon></button>
-            </div>
-            <div class="containerItemPost">
-                <!-- Buscar por categoria de los producto     -->
-                <div>
-                    <label>Buscar por categoria</label>
-                    <div class="categorias">
-                        <button class="itemCategoria" (click)="getAllProduct()">Todos</button>
-                        @for (categoria of dataListCategorias; track $index)
-                        {
-                        <button (click)="getProductByIdCategoria(categoria.idCategoria)"
-                            class="itemCategoria">{{categoria.nombre}}</button>
-                        }
-
-                    </div>
-                </div>
-
-
-                <div class="containerItem">
-                    <div>
-                        <app-loader *ngIf="loader"></app-loader>
-                        <app-nodata *ngIf="dataListProductosSearch.length==0 && loader==false"
-                            [mensaje]="'No se encontraron registros.'"></app-nodata>
-                    </div>
-
-                    @for (producto of dataListProductosSearch; track $index)
-                    {
-                    <div class="product-card" (click)="seletProductPos($event, producto)">
-                        <img src="{{producto.imagen}}" alt="Producto" class="product-image">
-                        <div class="product-info">
-                            <p class="product-name">{{producto.nombre}}</p>
-                            <p class="product-price">${{producto.precioBase| number : '1.2-5'}}</p>
-                        </div>
-                    </div>
-                    }
-                </div>
-
-            </div>
-        </div>
+       
 
     </div>
 

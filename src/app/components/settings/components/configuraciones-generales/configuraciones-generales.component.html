@@ -1,0 +1,225 @@
+<div class="container">
+    <form [formGroup]="miFormulario">
+        <div class="header">
+            <h1>Configuraciones Generales</h1>
+            <p>Administra las configuraciones principales del sistema</p>
+        </div>
+
+        <div class="settings-grid">
+
+            <div class="settings-card">
+                <h2 class="card-title">Factura</h2>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Imprimir ticket automaticamente</div>
+                        <div class="setting-description">Imprimir el comprobante de venta al momento de hacer la venta
+                        </div>
+                    </div>
+                    <div class="setting-control">
+                        <p><mat-slide-toggle formControlName="impresionAutomatica"></mat-slide-toggle></p>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <!-- Configuraciones de Seguridad -->
+            <!-- <div class="settings-card">
+                <h2 class="card-title">Seguridad</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Autenticación de dos factores</div>
+                        <div class="setting-description">Seguridad adicional para tu cuenta</div>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Tiempo de sesión</div>
+                        <div class="setting-description">Duración antes del cierre automático</div>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option value="15">15 minutos</option>
+                            <option value="30" selected>30 minutos</option>
+                            <option value="60">1 hora</option>
+                            <option value="240">4 horas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Cambiar contraseña</div>
+                        <div class="setting-description">Actualizar tu contraseña actual</div>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-secondary">Cambiar</button>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Configuraciones de Apariencia -->
+            <!-- <div class="settings-card">
+                <h2 class="card-title">Apariencia</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Tema del sistema</div>
+                        <div class="setting-description">Modo claro u oscuro</div>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option value="light" selected>Claro</option>
+                            <option value="dark">Oscuro</option>
+                            <option value="auto">Automático</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Color principal</div>
+                        <div class="setting-description">Color de acento del sistema</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="color" class="color-picker" value="#667eea">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Tamaño de fuente</div>
+                        <div class="setting-description">Tamaño del texto en la interfaz</div>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option value="small">Pequeño</option>
+                            <option value="medium" selected>Mediano</option>
+                            <option value="large">Grande</option>
+                        </select>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Configuraciones del Sistema -->
+            <!-- <div class="settings-card">
+                <h2 class="card-title">Sistema</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Actualizaciones automáticas</div>
+                        <div class="setting-description">Instalar actualizaciones automáticamente</div>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Almacenamiento usado</div>
+                        <div class="setting-description">Espacio utilizado del sistema</div>
+                    </div>
+                    <div class="setting-control">
+                        <div>
+                            <div class="storage-bar">
+                                <div class="storage-fill"></div>
+                            </div>
+                            <div class="storage-info">6.5 GB de 10 GB utilizados</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Zona horaria</div>
+                        <div class="setting-description">Zona horaria del sistema</div>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option value="America/Mexico_City" selected>Ciudad de México (GMT-6)</option>
+                            <option value="America/New_York">Nueva York (GMT-5)</option>
+                            <option value="Europe/Madrid">Madrid (GMT+1)</option>
+                            <option value="Asia/Tokyo">Tokio (GMT+9)</option>
+                        </select>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Configuraciones Avanzadas -->
+            <!-- <div class="settings-card">
+                <h2 class="card-title">Configuraciones Avanzadas</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Modo desarrollador</div>
+                        <div class="setting-description">Habilitar funciones de desarrollo</div>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Logs del sistema</div>
+                        <div class="setting-description">Nivel de detalle de los registros</div>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option value="error">Solo errores</option>
+                            <option value="warning" selected>Advertencias</option>
+                            <option value="info">Información</option>
+                            <option value="debug">Debug</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Exportar configuración</div>
+                        <div class="setting-description">Descargar backup de configuraciones</div>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-secondary">Exportar</button>
+                    </div>
+                </div>
+
+                <div class="danger-zone">
+                    <div class="danger-title">Zona de Peligro</div>
+                    <div class="setting-item" style="border: none; padding: 8px 0;">
+                        <div class="setting-info">
+                            <div class="setting-label">Restablecer configuraciones</div>
+                            <div class="setting-description">Volver a los valores predeterminados</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-danger">Restablecer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+            <button style="width: auto; padding: 10px;" mat-raised-button class="me-8 mb-8" color="primary"
+                (click)="saveChange()"><mat-icon>save</mat-icon> Guardar cambios</button>
+       
+
+
+</div>
+</form>
+</div>

@@ -2,203 +2,202 @@
     <div class="card-header">
         <h3>Configuraciones generales de las numeraciones <label for=""></label></h3>
         <p>Configuración básica de las numeraciones de los documentos de tu negocio</p>
+        <button  mat-raised-button class="me-8 mb-8 tbnacciones" color="primary" (click)="showForm()"><mat-icon>add</mat-icon> Crear</button>
     </div>
     <mat-card-content>
         <div>
-          
-                    <form class="formulario" [formGroup]="miFormulario">
-                        <div class="container">
-                            <div class="mb-8">
-                                <mat-slide-toggle formControlName="predeterminada" class="example-margin"
-                                    [color]="color" [checked]="checked">
-                                    Seleccionar como predeterminada
-                                </mat-slide-toggle>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <mat-form-field appearance="fill" class="control">
-                                        <mat-label>Tipo de documento</mat-label>
-                                        <mat-select formControlName="idTipoDocumento">
-                                            <!-- <mat-option>Clear</mat-option> -->
-                                            <mat-option (click)="cargarTipoNumeracion(tipo.idTipoDocumento)"
-                                                *ngFor="let tipo of dataListTipoDocumentos"
-                                                [value]='tipo.idTipoDocumento'>{{tipo.nombre}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+            <form class="formulario" [formGroup]="miFormulario" *ngIf="viewForm==true">
+                <div class="container">
+                    <div class="mb-8">
+                        <mat-slide-toggle formControlName="predeterminada" class="example-margin" [color]="color"
+                            [checked]="checked">
+                            Seleccionar como predeterminada
+                        </mat-slide-toggle>
+                    </div>
 
-                                </div> &nbsp;
-                                <div class="col">
-                                    <mat-form-field appearance="fill" class="control">
-                                        <mat-label>Tipo de numeración</mat-label>
-                                        <mat-select formControlName="idTipoNumeracion">
-                                            <!-- <mat-option>Clear</mat-option> -->
-                                            <mat-option (click)="seleccionarTipoNumeracion(tipo)"
-                                                *ngFor="let tipo of dataListTipoNumeracion"
-                                                [value]="tipo.idTipoNumeracion">{{tipo.nombre}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="control">
+                                <mat-label>Tipo de documento</mat-label>
+                                <mat-select formControlName="idTipoDocumento">
+                                    <!-- <mat-option>Clear</mat-option> -->
+                                    <mat-option (click)="cargarTipoNumeracion(tipo.idTipoDocumento)"
+                                        *ngFor="let tipo of dataListTipoDocumentos"
+                                        [value]='tipo.idTipoDocumento'>{{tipo.nombre}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
 
-                            <div class="row">
-                                <mat-form-field appearance="fill" class="example-full-width control">
-                                    <mat-label>Nombre</mat-label>
-                                    <input type="text" matInput #message minlength="3" class="control"
-                                        placeholder="Escriba el nombre de la numeración" formControlName="nombre">
-                                </mat-form-field>
-                            </div>
+                        </div> &nbsp;
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="control">
+                                <mat-label>Tipo de numeración</mat-label>
+                                <mat-select formControlName="idTipoNumeracion">
+                                    <!-- <mat-option>Clear</mat-option> -->
+                                    <mat-option (click)="seleccionarTipoNumeracion(tipo)"
+                                        *ngFor="let tipo of dataListTipoNumeracion"
+                                        [value]="tipo.idTipoNumeracion">{{tipo.nombre}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
 
-                            <div class="row">
+                    <div class="row">
+                        <mat-form-field appearance="fill" class="example-full-width control">
+                            <mat-label>Nombre</mat-label>
+                            <input type="text" matInput #message minlength="3" class="control"
+                                placeholder="Escriba el nombre de la numeración" formControlName="nombre">
+                        </mat-form-field>
+                    </div>
 
-                                <div class="col">
+                    <div class="row">
 
-                                    <mat-form-field class="example-full-width" appearance="fill" class="control">
-                                        <mat-label>Vigencia</mat-label>
-                                        <input matInput [matDatepicker]="picker" formControlName="vigencia">
-                                        <mat-hint>MM/DD/YYYY</mat-hint>
-                                        <mat-datepicker-toggle matIconSuffix [for]="picker">
-                                            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                                        </mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
-                                    </mat-form-field>
-                                </div> &nbsp;
-                                <div class="col">
-                                    <mat-form-field appearance="fill" class="example-full-width control">
-                                        <mat-label>Prefijo</mat-label>
-                                        <input type="text" matInput class="control"
-                                            placeholder="Escriba el prefijo de la numeracion" formControlName="prefijo">
-                                    </mat-form-field>
+                        <div class="col">
 
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-
-                                    <mat-form-field appearance="fill" class="example-full-width control">
-                                        <mat-label>Numeración inicial</mat-label>
-                                        <input type="text" matInput class="control"
-                                            placeholder="Escriba la numeracion inicial"
-                                            formControlName="numeracionInicial">
-                                    </mat-form-field>
-                                </div> &nbsp;
-                                <div class="col">
-                                    <mat-form-field appearance="fill" class="example-full-width control">
-                                        <mat-label>Numeración actual</mat-label>
-                                        <input type="text" matInput class="control"
-                                            placeholder="Escriba la numeracion donde inicial"
-                                            formControlName="contador">
-                                    </mat-form-field>
-                                </div> &nbsp;
-                                <div class="col">
-                                    <mat-form-field appearance="fill" class="example-full-width control">
-                                        <mat-label>Numeración final</mat-label>
-                                        <input type="text" matInput class="control"
-                                            placeholder="Escriba la numeración final" formControlName="numeracionFinal">
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                            <mat-form-field class="example-full-width" appearance="fill" class="control">
+                                <mat-label>Vigencia</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="vigencia">
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker">
+                                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div> &nbsp;
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="example-full-width control">
+                                <mat-label>Prefijo</mat-label>
+                                <input type="text" matInput class="control"
+                                    placeholder="Escriba el prefijo de la numeracion" formControlName="prefijo">
+                            </mat-form-field>
 
                         </div>
+                    </div>
 
-                        <div class="modal-footer">
-                            <button mat-raised-button class="me-8 mb-8 tbnacciones" color="primary"
-                                (click)="save()"><mat-icon>save</mat-icon>  Guardar</button>
-                            <button mat-raised-button class="me-8 mb-8 tbnacciones" color="warn"
-                                (click)="resetForm()"><mat-icon>cancel</mat-icon> Cancelar</button>
+                    <div class="row">
+                        <div class="col">
+
+                            <mat-form-field appearance="fill" class="example-full-width control">
+                                <mat-label>Numeración inicial</mat-label>
+                                <input type="text" matInput class="control" placeholder="Escriba la numeracion inicial"
+                                    formControlName="numeracionInicial">
+                            </mat-form-field>
+                        </div> &nbsp;
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="example-full-width control">
+                                <mat-label>Numeración actual</mat-label>
+                                <input type="text" matInput class="control"
+                                    placeholder="Escriba la numeracion donde inicial" formControlName="contador">
+                            </mat-form-field>
+                        </div> &nbsp;
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="example-full-width control">
+                                <mat-label>Numeración final</mat-label>
+                                <input type="text" matInput class="control" placeholder="Escriba la numeración final"
+                                    formControlName="numeracionFinal">
+                            </mat-form-field>
                         </div>
-                    </form>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button mat-raised-button class="me-8 mb-8 tbnacciones" color="primary"
+                        (click)="save()"><mat-icon>save</mat-icon> Guardar</button>
+                    <button mat-raised-button class="me-8 mb-8 tbnacciones" color="warn"
+                        (click)="resetForm()"><mat-icon>cancel</mat-icon> Cancelar</button>
+                </div>
+            </form>
 
 
 
 
 
-              
+
 
             <div class="container">
-            
-                        <!-- <h4 class="mb-56">Listado de roles</h4> -->
 
-                        <div class="table-responsive">
-                            <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
-                                                     <!-- Assigned Column -->
-                                <ng-container matColumnDef="nombre">
-                                    <th mat-header-cell *matHeaderCellDef> nombre </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.nombre }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
+                <!-- <h4 class="mb-56">Listado de roles</h4> -->
 
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="prefijo">
-                                    <th mat-header-cell *matHeaderCellDef> prefijo </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.prefijo }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
+                        <!-- Assigned Column -->
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef> nombre </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.nombre }}</p>
+                                <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                            </td>
+                        </ng-container>
 
-                                <ng-container matColumnDef="numeracionInicial">
-                                    <th mat-header-cell *matHeaderCellDef> No. Inicial </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.numeracionInicial }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
+                        <!-- Assigned Column -->
+                        <ng-container matColumnDef="prefijo">
+                            <th mat-header-cell *matHeaderCellDef> prefijo </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.prefijo }}</p>
+                                <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                            </td>
+                        </ng-container>
 
-                                <ng-container matColumnDef="contador">
-                                    <th mat-header-cell *matHeaderCellDef> Contador </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.contador }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
+                        <ng-container matColumnDef="numeracionInicial">
+                            <th mat-header-cell *matHeaderCellDef> No. Inicial </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.numeracionInicial }}</p>
+                                <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                            </td>
+                        </ng-container>
 
-                                <ng-container matColumnDef="predeterminada">
-                                    <th mat-header-cell *matHeaderCellDef> Predeterminada </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">
-                                            <mat-slide-toggle (click)="setNumberDefault(element.idNumeracion)"
-                                                class="example-margin-details" [color]="color"
-                                                [checked]="element.predeterminada">
-                                            </mat-slide-toggle>
-                                        </p>
+                        <ng-container matColumnDef="contador">
+                            <th mat-header-cell *matHeaderCellDef> Contador </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.contador }}</p>
+                                <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                            </td>
+                        </ng-container>
 
-                                    </td>
-                                </ng-container>
+                        <ng-container matColumnDef="predeterminada">
+                            <th mat-header-cell *matHeaderCellDef> Predeterminada </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">
+                                    <mat-slide-toggle (click)="setNumberDefault(element.idNumeracion)"
+                                        class="example-margin-details" [color]="color"
+                                        [checked]="element.predeterminada">
+                                    </mat-slide-toggle>
+                                </p>
 
-                                <!-- Project Column -->
-                                <ng-container matColumnDef="acciones">
-                                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="mb-0 fw-medium op-5 acciones">
-                                            <!-- {{element.project}} -->
+                            </td>
+                        </ng-container>
 
-                                            <button class="btnaccion" (click)="editar(element)"> <mat-icon
-                                                    class="editarcolor">edit</mat-icon></button>
-                                            <button class="btnaccion" (click)="delete(element.idNumeracion)"> <mat-icon
-                                                    class="deletecolor">delete</mat-icon></button>
+                        <!-- Project Column -->
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="mb-0 fw-medium op-5 acciones">
+                                    <!-- {{element.project}} -->
 
-                                        </div>
-                                    </td>
-                                </ng-container>
+                                    <button class="btnaccion" (click)="editar(element)"> <mat-icon
+                                            class="editarcolor">edit</mat-icon></button>
+                                    <button class="btnaccion" (click)="delete(element.idNumeracion)"> <mat-icon
+                                            class="deletecolor">delete</mat-icon></button>
 
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="">
-                                    <th mat-header-cell *matHeaderCellDef> correo </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.correo }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Assigned Column -->
+                        <ng-container matColumnDef="">
+                            <th mat-header-cell *matHeaderCellDef> correo </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.correo }}</p>
+                                <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                            </td>
+                        </ng-container>
 
 
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-                        </div>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
 
             </div>
         </div>

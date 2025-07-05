@@ -1,21 +1,10 @@
 
 <mat-card appearance="raised">
-    <mat-card-content>
-        <div class="headerNavCard">
-            <h4 >Mantenimiento de modelos</h4>
-
-            <a [routerLink]="['/settings']">
-                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
-            </a>
-        </div>
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-            <mat-card appearance="raised" class="cardForm">
-                <mat-card-content>
+        <div style="margin-top: 15px;" >
                     <form class="formulario" [formGroup]="miFormulario" (ngSubmit)="save()">
                         <div class="container">
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12" >
-                                    <mat-form-field appearance="outline" class="control">
+                            <div style="display: flex;">
+                                    <mat-form-field appearance="fill" class="control">
                                         <mat-label>Marcas</mat-label>
                                         <mat-select disableRipple formControlName="idMarca">
                                             <mat-option [value]="marca.idMarca"
@@ -26,10 +15,8 @@
                                             </ng-template>
                                         </mat-select>
                                     </mat-form-field>
-                                </div>
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-
-                                    <mat-form-field class="example-full-width control" appearance="outline">
+                                    &nbsp;
+                                    <mat-form-field class="example-full-width control" appearance="fill">
                                         <mat-label>Nombre</mat-label>
                                         <input matInput #message maxlength="256" class="control"
                                             placeholder="Escriba nombre" formControlName="nombre">
@@ -38,7 +25,7 @@
                                     </mat-form-field>
                                 </div>
 
-                            </div>
+                        
 
                         </div>
                         <div class="modal-footer">
@@ -50,14 +37,12 @@
 
 
 
-                </mat-card-content>
-            </mat-card>
+ 
 
 
             <div class="container">
                 <!-- Daily Activity -->
-                <mat-card class="w-100 cardtable">
-                    <mat-card-content>
+                
                         <!-- <h4 class="mb-56">Listado de roles</h4> -->
 
                         <div class="table-responsive">
@@ -99,9 +84,8 @@
                                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                             </table>
                         </div>
-                    </mat-card-content>
-                </mat-card>
+                   
             </div>
         </div>
-    </mat-card-content>
+  
 </mat-card>
