@@ -1,4 +1,4 @@
-<div class="payment-panel">
+<!-- <div class="payment-panel">
   <div class="panel-header">
     <h1>
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,4 +85,215 @@
       </button>
     </div>
   </div>
+</div> -->
+<form [formGroup]="miFormulario">
+<div class="payment-container">
+  <!-- Header -->
+  <!-- <div class="header">
+    <div class="header-content">
+      <svg class="header-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+      </svg>
+      <h1>Métodos de Pago</h1>
+    </div>
+  </div> -->
+
+  <!-- Total Amount -->
+  <div class="total-section">
+    <p class="total-label">Total a Pagar</p>
+    <p class="total-amount">${{ totalAmount.toFixed(2) }}</p>
+  </div>
+
+  <!-- Payment Methods Tabs -->
+  <div class="tabs-container">
+    <div class="tabs-list">
+      <button class="tab-trigger" [class.active]="selectedPaymentMethod === 'cash'"
+        (click)="selectPaymentMethod('cash', 1)">
+        <svg class="tab-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+        </svg>
+        Efectivo
+      </button>
+      <button class="tab-trigger" [class.active]="selectedPaymentMethod === 'card'"
+        (click)="selectPaymentMethod('card', 2 )">
+        <svg class="tab-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+        </svg>
+        Tarjeta
+      </button>
+      <button class="tab-trigger" [class.active]="selectedPaymentMethod === 'transfer'"
+        (click)="selectPaymentMethod('transfer', 3)">
+        <svg class="tab-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
+        </svg>
+        Transferencia
+      </button>
+    </div>
+    <!-- Cash Payment Tab -->
+    <div class="tab-content" *ngIf="selectedPaymentMethod === 'cash'">
+     
+        <div class="form-group">
+          <label for="cash-received" class="form-label">Efectivo Recibido:</label>
+          <div class="input-wrapper">
+            <span class="currency-symbol">$</span>
+            <input id="cash-received" type="number" formControlName="cashReceived" (input)="setQuickAmount(0, $event)" class="form-input cash-input"
+              placeholder="0">
+          </div>
+        </div>
+
+        <!-- Quick Amount Buttons -->
+        <div class="quick-amounts">
+          <button *ngFor="let amount of quickAmounts" type="button" class="quick-amount-btn"
+            (click)="setQuickAmount(amount, undefined)">
+            ${{ amount }}
+          </button>
+        </div>
+
+        <!-- Cash Summary -->
+        <div class="summary-card">
+          <div class="summary-item">
+            <svg class="summary-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+            <div>
+              <p class="summary-label">Efectivo Recibido</p>
+              <p class="summary-value">${{ (miFormulario.get('cashReceived')?.value || 0) }}</p>
+            </div>
+          </div>
+
+          <div class="change-section">
+            <div class="change-content">
+              <div class="change-icon">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" />
+                </svg>
+              </div>
+              <div>
+                <p class="change-label">Cambio a Devolver</p>
+                <p class="change-value">${{ changeToReturn.toFixed(2) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+    </div>
+
+    <!-- Card Payment Tab -->
+    <div class="tab-content" *ngIf="selectedPaymentMethod === 'card'">
+      
+        <div class="form-group">
+          <label for="card-amount" class="form-label">Monto Pagado</label>
+          <div class="input-wrapper">
+            <input id="card-amount" type="number" formControlName="cashReceived" (input)="setQuickAmount(0, $event)" class="form-input" placeholder="845.00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="card-bank-account" class="form-label">Cuenta Bancaria</label>
+          <select class="form-select form-group" aria-label="Default select example" formControlName="idBanco">
+          <option selected [value]="null">Seleccione una de las opciones</option>
+          <option *ngFor="let banco of dataListBanco" [value]="banco.idBanco">{{banco.nombreCuenta}}</option>
+        </select>
+        </div>
+       
+
+        <div class="form-group">
+          <label for="card-ticket" class="form-label">Número de Ticket</label>
+          <input id="card-ticket" type="text" formControlName="noComprobante" class="form-input"
+            placeholder="Ej: TKT-001234">
+        </div>
+
+        <div class="form-group">
+          <label for="card-observation" class="form-label">Observación</label>
+          <input id="card-observation" type="text" formControlName="observacionPago" class="form-input"
+            placeholder="Observaciones adicionales (opcional)">
+        </div>
+
+        <div class="summary-card blue">
+          <div class="summary-item">
+            <svg class="summary-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+            </svg>
+            <div>
+              <p class="summary-label">Total a Cobrar</p>
+              <p class="summary-value">${{ totalAmount.toFixed(2) }}</p>
+            </div>
+          </div>
+        </div>
+      
+    </div>
+
+    <!-- Transfer Payment Tab -->
+    <div class="tab-content" *ngIf="selectedPaymentMethod === 'transfer'">
+        <div class="form-group">
+          <label for="transfer-amount" class="form-label">Monto Pagado</label>
+          <div class="input-wrapper">
+            <input id="transfer-amount" type="number" formControlName="cashReceived" (input)="setQuickAmount(0, $event)"  class="form-input"
+              placeholder="845.00">
+          </div>
+        </div>
+
+       <div class="form-group">
+          <label for="card-bank-account" class="form-label">Cuenta Bancaria</label>
+          <select class="form-select form-group" aria-label="Default select example" formControlName="idBanco">
+          <option selected [value]="null">Seleccione una de las opciones</option>
+          <option *ngFor="let banco of dataListBanco" [value]="banco.idBanco">{{banco.nombreCuenta}}</option>
+        </select>
+        </div>
+
+        <div class="form-group">
+          <label for="transfer-ticket" class="form-label">Número de Ticket</label>
+          <input id="transfer-ticket" type="text" formControlName="noComprobante" class="form-input"
+            placeholder="Ej: TKT-001235">
+        </div>
+
+        <div class="form-group">
+          <label for="transfer-observation" class="form-label">Observación</label>
+          <input id="transfer-observation" type="text" formControlName="observacionPago" class="form-input"
+            placeholder="Observaciones adicionales (opcional)">
+        </div>
+
+        <div class="summary-card blue">
+          <div class="summary-item">
+            <svg class="summary-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
+            </svg>
+            <div>
+              <p class="summary-label">Total a Transferir</p>
+              <p class="summary-value">${{ totalAmount.toFixed(2) }}</p>
+            </div>
+          </div>
+        </div>
+   
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="btn btn-cancel" (click)="onCancel()">
+      <svg class="btn-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+      </svg>
+      Cancelar
+    </button>
+    <button  class="button" 
+        [disabled]="!isPaymentValid()"
+        (click)="confirmPayment()" class="btn btn-confirm">
+      <svg class="btn-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+      </svg>
+      Confirmar Pago
+    </button>
+  </div>
+
+  <!-- Bottom spacing -->
+  <div class="bottom-spacing"></div>
 </div>
+</form>

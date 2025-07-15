@@ -1,5 +1,4 @@
 <mat-sidenav-container class="sidenav-container">
-
   <!-- Sidebar -->
   <!-- <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false"> -->
@@ -21,31 +20,51 @@
       <div class="pt-8">
         <ul>
           <li class="list-group mb-2" *ngFor="let sidenav of sidebarMenu">
-
-            <a *ngIf="sidenav.menu!=='Ventas'" matRipple  [matRippleColor]="'#f7f8f443'" routerLink="{{ sidenav.link }}"
-              class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-              <mat-icon>{{sidenav.icon}}</mat-icon> <span class="ps-4">{{
-                sidenav.menu }}</span>
+            <a *ngIf="sidenav.menu!=='Ventas' && sidenav.menu!=='Caja' && sidenav.menu!=='POS'"  matRipple [matRippleColor]="'white'"
+              routerLink="{{ sidenav.link }}" class="sidebar-menu w-100 d-flex align-items-center"
+              [routerLinkActive]="routerActive">
+              <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
             </a>
-
+            <a (click)="facturar(0, true)"  *ngIf="sidenav.menu=='POS'" matRipple [matRippleColor]="'white'"
+              routerLink="{{ sidenav.link }}" class="sidebar-menu w-100 d-flex align-items-center"
+              [routerLinkActive]="routerActive">
+              <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
+            </a>
             <div *ngIf="sidenav.menu==='Ventas'" style="display: flex; flex-direction: column; width: 100%;">
-              <a routerLink="{{ sidenav.link }}" matRipple [matRippleColor]="'#f7f8f443'" (click)="showListVentas()"
+              <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListVentas()"
                 class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-                <i-feather name="{{ sidenav.icon }}" class="feather-base me-12"></i-feather> <span class="ps-4">{{
-                  sidenav.menu }}
+                <i class="{{ sidenav.icon }}"></i> {{
+                sidenav.menu }}
+                <span class="ps-4">
                 </span>
                 <div style="margin-left: 80px">
                   <i-feather *ngIf="rowIcon==false" name="chevron-down"></i-feather>
                   <i-feather *ngIf="rowIcon" name="chevron-up"></i-feather>
                 </div>
               </a>
-
               <div class="contItem" [class.show]="listIngresos" *ngIf="sidenav.menu=='Ventas'">
-                <a (click)="selectDocument('Factura')"> <span class="centerall"> Facturas</span></a>
-                <a (click)="selectDocument('Cotización')"><span class="centerall"> Cotización</span></a>
-                <a [routerLink]="['sales/payment']"><span class="centerall"> Pagos recibidos</span></a>
-                <a [routerLink]="['sales/payment']"><span class="centerall"> Notas de credito</span></a>
+                <a (click)="selectDocument('Factura')"> <span class="centerall"> • Facturas</span></a>
+                <a (click)="selectDocument('Cotización')"><span class="centerall">• Cotización</span></a>
+                <a [routerLink]="['sales/payment']"><span class="centerall">• Pagos recibidos</span></a>
+                <!-- <a [routerLink]="['sales/payment']"><span class="centerall">• Notas de credito</span> </a> -->
+              </div>
+            </div>
 
+            <div *ngIf="sidenav.menu==='Caja'" style="display: flex; flex-direction: column; width: 100%;">
+              <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListCaja()"
+                class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
+                <i class="{{ sidenav.icon }}"></i> {{
+                sidenav.menu }}
+                <span class="ps-4">
+                </span>
+                <div style="margin-left: 80px">
+                  <i-feather *ngIf="rowIconCaja==false" name="chevron-down"></i-feather>
+                  <i-feather *ngIf="rowIconCaja" name="chevron-up"></i-feather>
+                </div>
+              </a>
+              <div class="contItem" [class.show]="listCaja" *ngIf="sidenav.menu=='Caja'">
+                <a routerLink="/shifts"> <span class="centerall"> • Manejo de turno</span></a>
+                <a routerLink="/cash-management"> <span class="centerall"> • Gastos/Ingresos</span></a>
               </div>
             </div>
 
@@ -83,13 +102,12 @@
       <button mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <button mat-stroked-button style="color:#FFFFFF;"
-        (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
+      <button mat-stroked-button (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
 
       <div>
-        <button style="color: #FFFFFF;" *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
+        <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
           mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
-        <button style="color: #FFFFFF;" *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
+        <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
           mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
 
       </div>
@@ -104,7 +122,7 @@
           <div class="d-flex align-items-center">
             <img src="assets/images/user2.webp" class="rounded-circle" alt="">
             <span class="fw-light ms-8 text-secondary">Hi,</span>
-            <span class="fw-bold ms-8">Julia</span>
+            <span class="fw-bold ms-8">{{usuarioService.usuarioLogueado.data.nombre}}</span>
             <i-feather name="chevron-down" class="feather-base"></i-feather>
           </div>
         </button>

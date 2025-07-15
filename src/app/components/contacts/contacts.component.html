@@ -27,7 +27,7 @@
       </div>
       <mat-tab-group>
         <mat-tab label="Clientes">
-          <mat-progress-bar style="margin-top: 10px;" *ngIf="dataList.length<1" mode="indeterminate"></mat-progress-bar>
+          <mat-progress-bar style="margin-top: 10px;" *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
 
           <div class="table-responsive">
             <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
@@ -188,8 +188,12 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumnsProveedores;"></tr>
             </table>
           </div>
+
         </mat-tab>
+
       </mat-tab-group>
+        <app-nodata *ngIf="noData"></app-nodata>
+
     </div>
   </mat-card-content>
 </mat-card>

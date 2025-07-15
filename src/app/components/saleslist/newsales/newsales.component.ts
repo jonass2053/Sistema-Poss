@@ -167,6 +167,7 @@ export class NewsalesComponent implements OnDestroy {
     idSucursal: this.fb.control("", Validators.required),
     idEmpresa: this.fb.control("", Validators.required),
     idTermino: this.fb.control("", Validators.required),
+    idMetodoPago :  this.fb.control(null),
     idUsuario: this.fb.control("", Validators.required),
     idVendedor: this.fb.control(null),
     identificacion: this.fb.control({ value: "", disabled: true }),
@@ -350,7 +351,7 @@ export class NewsalesComponent implements OnDestroy {
 
   getProductByIdCategoria(idCategoria: number | any) {
     this.showLoader();
-    this.productoService.getProductosByIdCategoria(idCategoria).subscribe((data: ServiceResponse) => {
+    this.productoService.getProductosByIdCategoria(idCategoria, this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
       if (data.status) {
         this.dataListProductosSearch = data.data;
         this.hidenLoader();
@@ -388,7 +389,7 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getAllCategorias() {
-    this.categoriasService.getAll().subscribe((c: ServiceResponse) => {
+    this.categoriasService.getAll(this.informationService.idEmpresa).subscribe((c: ServiceResponse) => {
       if (c.status) {
         this.dataListCategorias = c.data;
       }
@@ -775,7 +776,7 @@ export class NewsalesComponent implements OnDestroy {
             this.resetFormPago();
             this.setDefaultContacto();
             //Realizamos el get de la factura para poder imprimir
-            if (this.configuraciones.impresionAutomatica) {
+            if (this.configuraciones.impresionAutomatica && this.miFormulario.value.montoPagado!=0) {
               this.facturaServcie.getById(data.data.idFactura).subscribe((response: ServiceResponse) => {
                 if (response.status) {
                   setTimeout(() => {
@@ -884,7 +885,6 @@ export class NewsalesComponent implements OnDestroy {
     this.descripcionPago = this.cambio < 0 ? "CAMBIO" : "POR PAGAR";
     this.cambio = this.cambio < 0 ? (this.cambio * -1) : this.cambio;
     this.miFormulario.patchValue({ cambio: this.cambio, totalRecibido: montoResult, montoPagado: montoResult })
-    console.log(this.miFormulario.value)
   }
 
   getAllBancos() {
@@ -950,10 +950,18 @@ export class NewsalesComponent implements OnDestroy {
           montoPagar: this.totalGeneral
         }
       }).afterClosed().subscribe(result => {
-        if (result != undefined) {
-
-          this.calcularPagoEfectivo(undefined, result.value.totalRecibido);
+        if (result != undefined) {         
+          this.miFormulario.patchValue(
+            {idMetodoPago : result.value.idMetodoPago, 
+              cambio:  result.value.cambio, 
+              totalRecibido:  result.value.cashReceived,
+              montoPagado:  result.value.cashReceived ,
+              idBanco : result.value.idBanco,
+              observacionPago : result.value.observacionPago,
+              noComprobante : result.value.noComprobante
+              })
           this.guardarFactura();
+
         }
       })
     } else {

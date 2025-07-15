@@ -82,7 +82,7 @@ export class ShiftsComponent {
     });
   }
   getTurnoActual() {
-    this.turnoService.getTurnoActual(this.informationService.idUsuario).subscribe((data: ServiceResponse) => {
+    this.turnoService.getTurnoActual(this.informationService.idUsuario, this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       if (data.statusCode == 200) {
          this.efectivoIngresoCaja = data.data.resumen.entradaCaja;
         this.efectivoEgresoCaja = data.data.resumen.salidaCaja;

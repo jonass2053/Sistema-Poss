@@ -55,8 +55,8 @@ export class PagosService {
   }
 
 
-  getAllFilter(filter : string, idSucursal : number) : Observable<ServiceResponse>{
-    return this.http.get<ServiceResponse>(`${this.url}/getallfilter/${filter}/${idSucursal}`, this.header )
+  getAllFilter(idSucursal : number, filtros : any) : Observable<ServiceResponse>{
+    return this.http.post<ServiceResponse>(`${this.url}/getallfilter/${idSucursal}`, filtros, this.header )
    }
 
   getByIdFactura(idFactura: number): Observable<ServiceResponse> {

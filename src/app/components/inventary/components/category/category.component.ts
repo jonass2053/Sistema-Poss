@@ -5,6 +5,7 @@ import { importaciones } from 'src/app/Core/utilities/material/material';
 import { iCategoria } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { CategoriaService } from 'src/app/services/categoria.service';
+import { InformationService } from 'src/app/services/information.service';
 
 @Component({
   selector: 'app-category',
@@ -19,7 +20,8 @@ export class CategoryComponent {
   constructor(
     private fb: FormBuilder,
     private alertaService: AlertServiceService,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private informationService : InformationService
   ) {
     this.getAll();
   }
@@ -93,7 +95,7 @@ export class CategoryComponent {
 
   getAll() {
     this.cargando=true;
-    this.categoriaService.getAll().subscribe((data: any) => {
+    this.categoriaService.getAll(this.informationService.idEmpresa).subscribe((data: any) => {
       this.dataList = data.data;
       this.dataList.length>0 ? this.sinRegistros=false : this.sinRegistros=true;
       this.cargando=false;

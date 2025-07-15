@@ -1,0 +1,633 @@
+
+.reports-section {
+  width: 95vw;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* Header de Reportes */
+.reports-header {
+  padding: 25px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.reports-main-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Main Tabs Navigation */
+.report-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 10px;
+}
+
+/* Angular Material Tabs Customization */
+.report-tabs mat-tab-group {
+  width: 100%;
+}
+
+.report-tabs .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs .mat-mdc-tab {
+  flex-grow: 1;
+}
+
+.report-tabs .mat-mdc-tab-header {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.report-tabs .mat-mdc-tab-labels {
+  justify-content: center;
+  gap: 10px;
+}
+
+.report-tabs .mat-mdc-tab {
+  background-color: transparent;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  opacity: 0.7;
+  min-width: unset !important; /* Override default min-width */
+}
+
+.report-tabs .mat-mdc-tab:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+}
+
+.report-tabs .mat-mdc-tab.mat-mdc-tab-active {
+  background-color: #4caf50; /* Green accent */
+  opacity: 1;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.report-tabs .mat-mdc-tab-header-pagination {
+  display: none !important; /* Hide pagination arrows if tabs don't fit */
+}
+
+.report-tabs .mat-mdc-tab-header-pagination-controls-enabled .mat-mdc-tab-header-pagination {
+  display: flex !important;
+}
+
+.report-tabs .mat-mdc-tab-header-pagination-chevron {
+  color: white;
+}
+
+.report-tabs .mat-mdc-tab-indicator {
+  display: none !important; /* Hide default indicator */
+}
+
+/* Report Content Area */
+.report-content {
+  padding: 30px;
+}
+
+.report-panel {
+  /* display: none; handled by *ngIf */
+}
+
+.report-panel-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+/* Sub-Tabs Navigation */
+.sub-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 5px;
+  flex-wrap: wrap; /* Allow wrapping for many sub-tabs */
+}
+
+.sub-tabs mat-tab-group {
+  width: 100%;
+}
+
+.sub-tabs .mat-mdc-tab-header {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.sub-tabs .mat-mdc-tab-labels {
+  justify-content: center;
+  gap: 5px;
+}
+
+.sub-tabs .mat-mdc-tab {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  color: #555;
+  padding: 8px 15px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  min-width: unset !important; /* Override default min-width */
+}
+
+.sub-tabs .mat-mdc-tab:hover {
+  background-color: #e9ecef;
+  color: #333;
+}
+
+.sub-tabs .mat-mdc-tab.mat-mdc-tab-active {
+  background-color: #3498db; /* Blue accent for sub-tabs */
+  color: white;
+  border-color: #3498db;
+  box-shadow: 0 2px 5px rgba(52, 152, 219, 0.2);
+}
+
+.sub-tabs .mat-mdc-tab-indicator {
+  display: none !important; /* Hide default indicator */
+}
+
+/* Filters */
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 30px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.filters-container mat-form-field {
+  width: 200px; /* Adjust as needed */
+}
+
+.filters-container button {
+  height: 56px; /* Match mat-form-field height */
+}
+
+/* Summary Cards (reused) */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #4caf50;
+  transition: transform 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-3px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.card-icon {
+  font-size: 20px;
+  color: #4caf50;
+}
+
+.card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.card-description {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Chart Card (reused/adapted) */
+.chart-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.chart-card .card-title {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+/* Simple Bar Chart (CSS only) */
+.bar-chart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 180px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  border-left: 1px solid #eee;
+  position: relative;
+}
+
+.bar-chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+  flex-grow: 1;
+}
+
+.bar {
+  width: 40px;
+  background-color: #3498db;
+  border-radius: 5px 5px 0 0;
+  transition: height 0.5s ease;
+  position: relative;
+}
+
+.bar-value {
+  position: absolute;
+  top: -18px;
+  font-size: 10px;
+  color: #333;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bar-label {
+  position: absolute;
+  bottom: -20px;
+  font-size: 11px;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* Table Section (reused/adapted) */
+.table-section {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.table-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.export-button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.export-button:hover {
+  background: #45a049;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 13px;
+}
+
+.data-table th {
+  background-color: #e9ecef;
+  font-weight: 600;
+  color: #555;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-badge.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.status-badge.refunded {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.status-badge.in-stock {
+  background-color: #d4edda;
+  color: #155724;
+}
+.status-badge.low-stock {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.status-badge.out-of-stock {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.status-badge.overdue {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #e74c3c;
+} /* Specific for overdue */
+
+.amount-cell {
+  font-weight: 600;
+  color: #27ae60;
+}
+.amount-cell.overdue {
+  color: #e74c3c; /* Red for overdue amounts */
+}
+
+/* Specific chart colors for payments */
+.bar.transfer {
+  background-color: #10b981;
+}
+.bar.card {
+  background-color: #3b82f6;
+}
+.bar.cash {
+  background-color: #f59e0b;
+}
+.bar.check {
+  background-color: #8b5cf6;
+}
+
+.print-controls {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #eee;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reports-section {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .reports-header {
+    padding: 15px 20px;
+  }
+  .reports-main-title {
+    font-size: 24px;
+  }
+  .report-tabs .mat-mdc-tab-labels {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .report-tabs .mat-mdc-tab {
+    flex-grow: 1;
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+  .report-content {
+    padding: 20px 15px;
+  }
+  .report-panel-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  .sub-tabs .mat-mdc-tab-labels {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 5px;
+  }
+  .sub-tabs .mat-mdc-tab {
+    flex-grow: 1;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filters-container mat-form-field {
+    width: 100%;
+  }
+  .filters-container button {
+    width: 100%;
+  }
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .chart-card {
+    padding: 15px;
+  }
+  .bar-chart {
+    height: 150px;
+  }
+  .bar {
+    width: 30px;
+  }
+  .bar-value,
+  .bar-label {
+    font-size: 9px;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  .status-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .export-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .reports-header {
+    padding: 10px 15px;
+  }
+  .reports-main-title {
+    font-size: 20px;
+  }
+  .report-tabs .mat-mdc-tab {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  .report-content {
+    padding: 15px 10px;
+  }
+  .report-panel-title {
+    font-size: 18px;
+  }
+  .sub-tabs .mat-mdc-tab {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+  .summary-card {
+    padding: 15px;
+  }
+  .card-value {
+    font-size: 24px;
+  }
+  .card-description {
+    font-size: 11px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+    margin: 0;
+  }
+  .reports-section {
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+  }
+  .reports-header,
+  .report-tabs,
+  .sub-tabs,
+  .export-button,
+  .filters-container,
+  .print-controls {
+    display: none !important; /* Hide navigation and buttons */
+  }
+  .report-content {
+    padding: 15px; /* Adjust padding for print */
+  }
+  .report-panel-title {
+    text-align: left;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+    font-size: 20px;
+  }
+  .summary-grid {
+    grid-template-columns: 1fr 1fr; /* Keep some grid for print */
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .summary-card,
+  .chart-card,
+  .table-section {
+    box-shadow: none;
+    border: 1px solid #eee; /* Add light border for clarity */
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  .card-title,
+  .table-title,
+  .chart-card .card-title {
+    color: #333 !important;
+    font-size: 14px;
+  }
+  .card-value {
+    font-size: 20px;
+  }
+  .card-description {
+    font-size: 10px;
+  }
+  .bar-chart {
+    height: 120px; /* Smaller charts for print */
+  }
+  .bar-value,
+  .bar-label {
+    font-size: 8px;
+  }
+  .data-table th,
+  .data-table td {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+  .status-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  /* Ensure all panels are visible for printing */
+  .report-panel,
+  .sub-tab-content {
+    display: block !important;
+    page-break-before: auto; /* Allow page breaks between sections */
+  }
+  .report-panel:not(:first-child),
+  .sub-tab-content:not(:first-child) {
+    margin-top: 30px; /* Space between different report types */
+    page-break-before: always; /* Force new page for each main report section */
+  }
+  .report-panel-title {
+    page-break-after: avoid;
+  }
+  .table-section {
+    page-break-inside: avoid; /* Try to keep tables on one page */
+  }
+}

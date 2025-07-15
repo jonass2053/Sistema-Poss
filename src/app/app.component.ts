@@ -15,7 +15,6 @@ export class AppComponent {
   constructor(private usuario : UsuarioService, private information : InformationService, private turnoService : ShiftsService){
 
      usuario.usuarioLogueado = JSON.parse(document.defaultView?.localStorage.getItem('user')!);
-     console.log(usuario.usuarioLogueado)
      if(usuario.usuarioLogueado){
       information.idEmpresa =  usuario.usuarioLogueado.data.sucursal.idEmpresa;
       information.idSucursal = usuario.usuarioLogueado.data.sucursal.idSucursal;
@@ -24,7 +23,7 @@ export class AppComponent {
       information.tipoDocumento  = localStorage.getItem('tipoDocumento')!; 
       information.mySucursal = usuario.usuarioLogueado.data.sucursal;  
       information.isPos = (localStorage.getItem('isPos')!)=="true"? true: false; 
-
+      alert("app component")
       turnoService.getTurnoActualExeq();
      }
   

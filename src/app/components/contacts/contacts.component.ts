@@ -13,12 +13,14 @@ import { InformationService } from 'src/app/services/information.service';
 import { NumeracionService } from 'src/app/services/numeracion.service';
 import { TerminosService } from 'src/app/services/terminos.service';
 import { VendedoresService } from 'src/app/services/vendedores.service';
+import { NodataComponent } from '../nodata/nodata.component';
 
 @Component({
   selector: 'app-contacts',
   standalone: true,
   imports: [
-    importaciones
+    importaciones,
+     NodataComponent
   ],
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.scss'
@@ -68,6 +70,7 @@ export class ContactsComponent {
     { nombre: "Cedula" },
     { nombre: "Pasaporte" },
   ]
+  noData : boolean = false;
   dataListVendedor: iVendedor[] = [];
   dataListTerminos: iTermino[] = [];
   dataListTipoNumeracion: idNumeracion[] = [];
@@ -86,7 +89,10 @@ export class ContactsComponent {
  displayedColumnsProveedores: string[] = ['idContacto', 'tipoIdentificacion','rnc', 'nombreRazonSocial', 'celular', 'correo', 'acciones'];
 
 
-
+  setNoData(value: boolean) {
+    this.noData = value;
+    this.cargando=false;
+  }
   insert() {
     console.log(this.miFormulario.value)
     this.alertaService.ShowLoading();
@@ -145,14 +151,7 @@ export class ContactsComponent {
     this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: any) => {
       this.dataList = data.data.filter((c: iContactoPos) => c.idTipoContacto == 1);
       this.dataListProveedores = data.data.filter((c: iContactoPos) => c.idTipoContacto == 2);
-      if (this.dataList.length > 0) {
-        this.sinRegistros = false
-        this.cargando = false;
-      }
-      else {
-        this.sinRegistros = true;
-        this.cargando = false;
-      }
+      this.setNoData(data.data.length>0?false:true);
     })
   }
   
@@ -165,14 +164,8 @@ export class ContactsComponent {
       this.contactoService.getAllFilter(filtro, this.informationService.idEmpresa).subscribe((data: any) => {
         this.dataList = data.data.filter((c: iContactoPos) => c.idTipoContacto == 1);
         this.dataListProveedores = data.data.filter((c: iContactoPos) => c.idTipoContacto == 2);
-        if (this.dataList.length > 0) {
-          this.sinRegistros = false
-          this.cargando = false;
-        }
-        else {
-          this.sinRegistros = true;
-          this.cargando = false;
-        }
+        this.setNoData(data.data.length>0?false:true);
+
       })
     }
 

@@ -16,7 +16,7 @@ export class ShiftsService {
 
   url: string = `${baseUrl}/Turno`;
 
-  isOpen!: iTurno | undefined;
+  public isOpen!: iTurno | undefined;
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
@@ -61,12 +61,14 @@ export class ShiftsService {
   getById(idTurno: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/${idTurno}`)
   }
-  getTurnoActual(idUsuario: number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}`)
+  getTurnoActual(idUsuario: number, idSucursal : number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}/${idSucursal}`)
   }
 
-  getTurnoActualExeq() {
-    this.getTurnoActual(this.informartionService.idUsuario).subscribe((data: ServiceResponse) => {
+    getTurnoActualExeq() {
+     this.getTurnoActual(this.informartionService.idUsuario, this.informartionService.idSucursal).subscribe((data: ServiceResponse) => {
+      alert(this.informartionService.idUsuario);
+      alert(this.informartionService.idSucursal);
       if (data.statusCode == 200) {
         this.isOpen = data.data == null ? undefined : data.data;
         let userLocal = localStorage.getItem('user');

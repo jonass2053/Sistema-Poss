@@ -25,6 +25,7 @@ import { InvoiceReportComponent } from 'src/app/reports/invoice-report/invoice-r
 import { NumeracionService } from 'src/app/services/numeracion.service';
 import { NodataComponent } from '../nodata/nodata.component';
 import { ContactosService } from 'src/app/services/contactos.service';
+import { PrintServiceService } from 'src/app/services/print-service.service';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -51,7 +52,7 @@ export class SaleslistComponent implements OnInit {
   imprimiendo: boolean = false;
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.document = this.informacion.tipoDocumento;
+    this.document = this.informacionService.tipoDocumento;
 
   }
   color: ThemePalette = 'primary'; // Puede ser 'primary', 'accent', 'warn'
@@ -69,17 +70,18 @@ export class SaleslistComponent implements OnInit {
     private sso: ScrollStrategyOptions,
     private pagoService: PagosService,
     private reportService: GeneratePDFService,
-    private informacion: InformationService,
+    private informacionService: InformationService,
     private numeracionService: NumeracionService,
     private contactoService: ContactosService,
-    private informationService: InformationService
+    private informationService: InformationService,
+    private printService : PrintServiceService
 
 
   ) {
 
     this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
     facturaService.facturaEdit = undefined;
-    this.doc = informacion.tipoDocumento;
+    this.doc = informacionService.tipoDocumento;
     this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
     this.getAllNumeraciones();
     this.getAllEstadoFactura();
@@ -107,14 +109,16 @@ export class SaleslistComponent implements OnInit {
   montoPagado: number = 0;
   montoPorPagar: number = 0;
   pagosVencido: number = 0;
-  displayedColumns: string[] = ['Numero', 'Cliente', 'Tipo', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
+  totalFacturado : number = 0;
+  displayedColumns: string[] = ['Cliente', 'Tipo', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
   dialog = inject(MatDialog);
   facturaForPrint: any;
   doc: string = "";
   data = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`);
   nombreAuthor = 'Juan Perez';
   fechaNow = new Date().toLocaleDateString();
-  dateNowServer = new Date();
+  dateNowServer : string ='';
+  fechaActualServer : string="";
 
 
   openDialog(factura: iFactura) {
@@ -218,6 +222,7 @@ export class SaleslistComponent implements OnInit {
   }
 
   convertirAFactura(Factura: iFactura) {
+    this.informacionService.isPos=false;
     this.cargando = true;
     this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
       this.facturaService.facturaEdit = data.data;
@@ -226,7 +231,7 @@ export class SaleslistComponent implements OnInit {
   }
 
   verFactura(idFactura: number) {
-    if (this.informacion.tipoDocumento === 'Cotización') {
+    if (this.informacionService.tipoDocumento === 'Cotización') {
       this.router.navigateByUrl(`sales/newprice/view/${idFactura}/6`);
     }
     else {
@@ -261,20 +266,21 @@ export class SaleslistComponent implements OnInit {
 
   getAll(pageNumber: number, pageSize: number, tipoDocumento: string = "") {
     this.cargando = true;
-    this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, this.informacion.tipoDocumento === "Cotización" ? 2 : 1).subscribe((data: ServiceResponse) => {
+    this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, this.informacionService.tipoDocumento === "Cotización" ? 2 : 1).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
       this.totalItems = data.totalItems; // Asume que la API también devuelve el total de items
       this.pageSize = pageSize;
+      this.cargando=false;
       // if (this.paginator) {
       //   this.paginator.length = this.totalItems;  // Establecer el total de registros
       //   this.paginator.pageIndex = pageNumber;   // Establecer el índice de la página actual
       // }
       this.resetMontosResumen();
-      this.setResumenMontos();
+      this.setResumenMontos(data);
       if (this.dataList.length > 0) {
         this.sinRegistros = false
         this.cargando = false;
-        this.dateNowServer = data.dateNow;
+        
       }
       else {
         this.sinRegistros = true;
@@ -290,30 +296,29 @@ export class SaleslistComponent implements OnInit {
     const { noFactura, desde, hasta, idNumeracion, idContacto, idEstado } = this.miFormulario.value;
     this.cargando = true;
     this.setFormatDate();
-
     // Verificar si todos están vacíos, y solo así ejecutar getAll
     const todosVacios = [noFactura, desde, hasta, idNumeracion, idContacto, idEstado].every(
       valor => valor === undefined || valor === null || (typeof valor === 'string' && valor.trim() === '')
     );
-    console.log(this.miFormulario.value)
     if (todosVacios) {
       this.getAll(this.pageNumber, this.pageSize, 'Factura');
     }
     else {
+      alert(this.informacionService.tipoDocumento)
       this.cargando = true;
       this.facturaService.getAllFilter(
-        this.informacion.idSucursal,
-        this.informacion.tipoDocumento === "Cotización" ? 6 : 1,
+        this.informacionService.idSucursal,
+        this.informacionService.tipoDocumento === "Cotización" ? 6 : 1,
         this.pageNumber,
         this.pageSize,
         this.miFormulario.value
       ).subscribe((data: any) => {
         this.dataList = data.data;
-        this.dataSource.data = data.data;
+        this.dataSource.data = data.data; 
         this.dateNowServer = data.dateNow;
         this.resetMontosResumen();
         this.cargando = false;
-        this.setResumenMontos();
+        this.setResumenMontos(data);
 
         if (this.dataList.length > 0) {
           this.sinRegistros = false
@@ -361,10 +366,7 @@ export class SaleslistComponent implements OnInit {
       }
     })
   }
-  printMe() {
-
-  }
-
+ 
 
   // printFactura() {
   //   const customPrintOptions: PrintOptions = new PrintOptions({
@@ -409,8 +411,8 @@ export class SaleslistComponent implements OnInit {
   // }
 
   addNewDocument(idDocument: number, isPos: boolean) {
-    this.informacion.isPos = isPos;
-    if (this.facturaService.document === "Cotización") {
+    this.informacionService.isPos = isPos;
+    if (this.facturaService.document === "Cotización" && isPos==false) {
       this.router.navigate([`sales/newprice/${idDocument}/6`]);
     }
     else {
@@ -564,15 +566,23 @@ export class SaleslistComponent implements OnInit {
     });
   }
 
-  setResumenMontos() {
-    this.dataSource.data.forEach(c => {
-      this.montoPagado += c.montoPagado;
-      this.montoPorPagar += c.montoPorPagar;
-      if (new Date(this.dateNowServer) > new Date(c.vencimiento)) {
-        this.pagosVencido += c.montoPorPagar;
-      }
+  setResumenMontos(response : ServiceResponse) {
+    let fecha =`${new Date(response.dateNow).getDate()}/${new Date(response.dateNow).getMonth()}/${new Date(response.dateNow).getFullYear()}`
+    this.fechaActualServer = fecha;
+    this.dateNowServer = fecha
+    this.totalFacturado = response.totalFacturado;
+    this.montoPagado = response.totalMontoPagado;
+    this.montoPorPagar=response.totalMontoPorPagar;
+    this.pagosVencido = response.totalMontoPorPagar ;
+    // this.fechaActualServer= response.dateNow.toDateString();
+    // this.dataSource.data.forEach(c => {
+    //   this.montoPagado += c.montoPagado;
+    //   this.montoPorPagar += c.montoPorPagar;
+    //   if (new Date(this.dateNowServer) > new Date(c.vencimiento)) {
+    //     this.pagosVencido += c.montoPorPagar;
+    //   }
 
-    });
+    // });
   }
 
   resetMontosResumen() {
@@ -604,9 +614,12 @@ export class SaleslistComponent implements OnInit {
   getAllEstadoFactura(){
     this.facturaService.getEstadoFacturas().subscribe((response : ServiceResponse)=>{
       if(response){
-        console.log(response)
         this.dataListEstadosFactura = response.data;
       }
     })
+  }
+
+   printRportVentas(){
+    this.printService.printReportVentas(this.dataSource.data, this.totalFacturado, this.montoPagado, this.montoPorPagar, this.pagosVencido, this.fechaActualServer);
   }
 }

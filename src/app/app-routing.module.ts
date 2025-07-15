@@ -47,6 +47,8 @@ import { CashManagementComponent } from './components/cash-management/cash-manag
 import { ReportTicketInvoiceComponent } from './components/saleslist/report-ticket-invoice/report-ticket-invoice.component';
 import { SettingInventaryComponent } from './components/settings/components/setting-inventary/setting-inventary.component';
 import { ConfiguracionesGeneralesComponent } from './components/settings/components/configuraciones-generales/configuraciones-generales.component';
+import { ReportesComponent } from './components/reportes/reportes.component';
+import { ReportsComponent } from './components/reports/reports.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -104,6 +106,8 @@ const routes: Routes = [
       {path:"sales/payment", component : PaymentComponent},
       {path:"payment/newpay", component : NewPayComponent},
       {path:"cash-management", component : CashManagementComponent},
+      {path:"reports", component : ReportsComponent},
+
 
       {path:"alerts", component:AlertsComponent},
       {path:"forms", component:FormsComponent},

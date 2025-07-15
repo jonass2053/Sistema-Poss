@@ -551,7 +551,11 @@ mat-paginator {
   width: 100%;
   min-height: 500px;
   // border: 1px solid silver;
- 
+  // border: 1px solid red;
+  height: 75vh;
+  overflow: hidden;
+
+
 }
 
 .itemPos {
@@ -598,9 +602,9 @@ mat-paginator {
 
 }
 
-.product-card{
-  width: 150px;
-  height: 185px;
+.product-card {
+  width: 130px;
+  height: 175px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -608,8 +612,14 @@ mat-paginator {
   transition: transform 0.2s ease;
   font-family: Arial, sans-serif;
   margin: 10px;
-  padding: 10px;
-  border: 1px solid silver;
+  display: flex;
+  flex-direction: column;
+}
+.product-card .containerimg {
+width: 100%;
+display: flex;
+justify-content: center;
+min-height: 100px;
 }
 
 .product-card:hover {
@@ -617,8 +627,7 @@ mat-paginator {
 }
 
 .product-image {
-  width: 100%;
-  height: 100px;
+  width: 50%;
   object-fit: cover;
   display: block;
 }
@@ -645,29 +654,35 @@ mat-paginator {
 }
 
 
-.containerItemPost {
-  display: flex;
-  // justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
+
+.containerCategory{
+  height: 100px;
+  overflow: hidden;
+
 }
+.stock{
+  
+}
+
 .containerItemPost .containerItem {
   width: 100%;
   overflow: auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   border-radius: 5px;
   align-items: start;
   max-height: 550px
 }
 
 .detalleVenta {
-  width: 65%;
+  width: 37VW;
   // border: 1px solid red;
   padding: 10px;
   // background-color: white;
   overflow: hidden;
+  position: fixed;
+  right: 20px;
+  height: 87vh;
 
 }
 
@@ -688,11 +703,12 @@ mat-paginator {
 
 .detalleVenta .body {
   font-size: 20px;
-  height: 35vh;
-  border: 3px dotted silver;
+  height: 40vh;
+  // border: 3px dotted silver;
   max-height: 500px;
   overflow: auto;
   border-radius: 5px;
+  
 
 }
 
@@ -768,8 +784,11 @@ mat-paginator {
 }
 
 .buscadorItems {
-  width: 70%;
+  width: 57%;
   padding: 10px;
+  height: 87vh;
+  // border: 1px solid red;
+  overflow: hidden;
 }
 
 .containerPost {
@@ -777,6 +796,7 @@ mat-paginator {
   width: 100%;
   height: 90vh;
   overflow: auto;
+  position: fixed;
 
 }
 
@@ -801,8 +821,14 @@ mat-paginator {
   font-size: 11px;
   align-items: center;
   padding: 5px;
-  background-color: rgb(232, 229, 229);
   border-bottom: 1px solid silver;
+
+}
+
+.containercarditem{
+  // border: 5px solid green;
+  height: 33vh;
+  overflow: auto;
 }
 
 .cardItem label {
@@ -860,6 +886,10 @@ mat-paginator {
 
   font-size: 15px;
   flex-direction: column;
+  // border: 1px solid red;
+  position: absolute;
+  bottom: 0;
+  width: 95%;
 
 
 }
@@ -870,6 +900,7 @@ mat-paginator {
   flex-direction: column;
   padding: 5px;
   margin-top: -20px;
+  
 
 
 }
@@ -877,7 +908,7 @@ mat-paginator {
 .footer .acciones .containerbtns {
   display: flex;
   flex-direction: row;
-  
+
 }
 
 .footer .acciones div {
@@ -892,16 +923,16 @@ mat-paginator {
 // }
 .btnAcc1 {
   margin: 5px;
-  padding: 5px;
+
   background-color: #28a745;
   border-radius: 5px;
   color: white;
-  font-size: 15px;
+  font-size: 10px;
   font-weight: 800;
 }
 
 .btnAcc1:hover {
- 
+
   background-color: #34a14d;
   cursor: pointer;
 }
@@ -917,7 +948,7 @@ mat-paginator {
 }
 
 .btnAcc2:hover {
-  
+
   background-color: #8f1e39;
   cursor: pointer;
 }
@@ -926,13 +957,18 @@ mat-paginator {
   background-color: #145c25;
 
 }
+
 .btnA {
- height: 50px;
+  height: 50px;
+  border-radius: 50px;
+  padding: 10px;
 }
+
 .btnA .monto {
   font-size: 25px;
 }
-.btnA section{
+
+.btnA section {
   display: flex;
   align-items: center;
 }
@@ -946,7 +982,7 @@ mat-paginator {
   border: 1px solid red;
 }
 
-.nodataSales{
+.nodataSales {
   width: 95%;
   height: 99.7%;
   display: flex;
@@ -957,23 +993,38 @@ mat-paginator {
   font-size: 13px;
 }
 
-.btnremover:hover{
+.btnremover:hover {
   cursor: pointer;
 }
 
-.categorias{
+.categorias {
   width: 100%;
   display: flex;
   overflow: auto;
 }
-.categorias .itemCategoria{
+
+.categorias .itemCategoria {
   padding: 10px;
-  box-shadow: 1px 5px 5px silver;
+  // box-shadow: 1px 5px 5px silver;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 20px;
   margin: 3px;
   border: none;
-  background-color: #145c25;
-  color: white;
+  background-color: rgb(223, 222, 222);
+  color: rgb(69, 69, 69);
 }
 
+.btndescuento {
+  background-color: rgb(223, 222, 222);
+  color: rgb(69, 69, 69);
+  border-radius: 20px;
+  font-size: 15px;
+  text-align: center;
+  padding: 4px;
+  cursor: pointer;
+  margin: 5PX;
+}
+.btndescuento:hover {
+  background-color: rgb(192, 192, 192);
+
+}

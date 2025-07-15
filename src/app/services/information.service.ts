@@ -17,6 +17,8 @@ export class InformationService {
   idTurno! : number;
   mySucursal! : iSucursal;
 
-
- 
+  setTipoDocumento(tD : string){
+    this.tipoDocumento = tD;
+    localStorage.setItem("tipoDocumento", tD)
+  } 
 }

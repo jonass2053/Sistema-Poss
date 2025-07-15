@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
 
-
 .headerNavCard {
   display: flex;
   justify-content: space-between;
@@ -10,7 +9,7 @@
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 10px;
-  background-color: rgb(227, 227, 227);
+  // background-color: rgb(227, 227, 227);
   border-left: 0px;
 
 }
@@ -408,8 +407,8 @@ h4 {
 
 
 .sidenav {
-  background-color: #111827;
-  color: #D1D5DB;
+  background-color: #ffffff;
+  color: #979797;
 
 }
 
@@ -423,7 +422,7 @@ h4 {
 .toolbar {
   position: fixed;
   z-index: 999;
-  background-color: #111827 !important;
+  background-color: #ffffff !important;
   color: #FFFFFF;
 
 }
@@ -494,3 +493,80 @@ padding: 0px !important;
 i{
   margin-right: 10px;
 }
+.filterandbutton{
+  display: flex;
+  // justify-content: center;
+  // align-items: center;
+}
+
+ .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            background-color: rgb(237, 237, 237);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 10px;
+            // padding: 10px;
+            // box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            // border-left: 4px solid #6c757d;
+            // height: 80px;
+            border: 1px solid silver;
+            font-size: 15px;
+            // display: flex;
+            // justify-content: space-between;
+            // align-items: center;
+
+            display: grid;
+            grid-template-columns: 60% 40%;
+
+        }
+
+        .summary-card .header-card {
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            // border: 1px solid red;
+        }
+
+        .summary-card .icon {
+            background: #6c757d;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .summary-card .title {
+            font-weight: 500;
+            color: #495057;
+            
+        }
+
+        .summary-card .amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            // margin-bottom: 5px;
+            font-size: 15px;
+            padding: 10px;
+            background-color: #495057;
+            color: white;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .summary-card .transactions {
+            font-size: 0.8rem;
+            color: #6c757d;
+            
+        }

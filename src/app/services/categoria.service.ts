@@ -34,8 +34,8 @@ export class CategoriaService {
   delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`)
   }
-  getAll(): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}`)
+  getAll(idEmpresa : number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/getCategorias/${idEmpresa}`)
   }
 
 }

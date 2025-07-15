@@ -1,0 +1,326 @@
+<div class="sales-reports-container">
+  <!-- Breadcrumb usando mat-toolbar -->
+  <mat-toolbar class="breadcrumb-toolbar">
+    <span class="breadcrumb-nav">
+      <span class="breadcrumb-item">Reportes</span>
+      <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+      <span class="breadcrumb-item">Ventas</span>
+      <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+      <span class="breadcrumb-item active">Ventas generales</span>
+    </span>
+  </mat-toolbar>
+
+  <!-- Header Card -->
+  <mat-card class="header-card">
+    <mat-card-content>
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="page-title">
+            <mat-icon class="title-icon">assessment</mat-icon>
+            Ventas generales
+          </h1>
+          <p class="page-description">
+            Obtén una visión detallada de tus ventas y devoluciones para diseñar estrategias comerciales.
+          </p>
+        </div>
+        <div class="header-actions">
+          <button mat-icon-button (click)="exportReport()" matTooltip="Exportar">
+            <mat-icon>download</mat-icon>
+          </button>
+          <button mat-icon-button (click)="printReport()" matTooltip="Imprimir">
+            <mat-icon>print</mat-icon>
+          </button>
+          <button mat-icon-button (click)="shareReport()" matTooltip="Compartir">
+            <mat-icon>share</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Filtros principales -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtros de Búsqueda
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="filtersForm" class="filters-form">
+        <div class="filters-row">
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>Fecha Inicio *</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate" required>
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>Fecha Fin *</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate" required>
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Almacén</mat-label>
+            <mat-select formControlName="warehouse">
+              <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse">
+                {{warehouse}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>warehouse</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Numeración</mat-label>
+            <mat-select formControlName="numbering">
+              <mat-option *ngFor="let numbering of numberings" [value]="numbering">
+                {{numbering}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>format_list_numbered</mat-icon>
+          </mat-form-field>
+
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="generateReport()"
+            [disabled]="isLoading"
+            class="generate-btn">
+            <mat-icon *ngIf="!isLoading">play_arrow</mat-icon>
+            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            Generar Reporte
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Gráfico comparativo -->
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>show_chart</mat-icon>
+        Gráfico comparativo entre períodos
+      </mat-card-title>
+      <mat-card-subtitle>
+        Comparación de ventas entre diferentes períodos
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-container">
+        <div class="chart-legend">
+          <mat-chip-listbox>
+            <mat-chip-option class="legend-2024">
+              <mat-icon matChipAvatar>circle</mat-icon>
+              2024
+            </mat-chip-option>
+            <mat-chip-option class="legend-2025">
+              <mat-icon matChipAvatar>circle</mat-icon>
+              2025
+            </mat-chip-option>
+          </mat-chip-listbox>
+        </div>
+        <div class="chart-placeholder">
+          <mat-icon class="chart-icon">insert_chart</mat-icon>
+          <p>Gráfico de líneas comparativo</p>
+          <small>(Integrar con ng2-charts o Chart.js)</small>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Métricas de ventas -->
+  <div class="metrics-section">
+    <mat-grid-list cols="4" rowHeight="120px" gutterSize="16px">
+      <mat-grid-tile *ngFor="let metric of salesMetrics">
+        <mat-card class="metric-card" [ngClass]="'metric-' + metric.color">
+          <mat-card-content class="metric-content">
+            <div class="metric-header">
+              <mat-icon [color]="metric.color" class="metric-icon">{{metric.icon}}</mat-icon>
+              <span class="metric-value">{{metric.currency}}</span>
+            </div>
+            <div class="metric-label">{{metric.label}}</div>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <!-- Filtros adicionales -->
+  <mat-card class="additional-filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>tune</mat-icon>
+        Filtros Adicionales
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="additionalFiltersForm" class="additional-filters-form">
+        <div class="additional-filters-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de documento</mat-label>
+            <mat-select formControlName="documentType">
+              <mat-option *ngFor="let type of documentTypes" [value]="type">
+                {{type}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>description</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>NCF/Número</mat-label>
+            <input matInput formControlName="ncfNumber" placeholder="Ingrese NCF o número">
+            <mat-icon matPrefix>confirmation_number</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="state">
+              <mat-option *ngFor="let state of states" [value]="state">
+                {{state}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>flag</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cliente</mat-label>
+            <input matInput formControlName="client" placeholder="Nombre del cliente">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de creación</mat-label>
+            <input matInput [matDatepicker]="creationPicker" formControlName="creationDate">
+            <mat-datepicker-toggle matIconSuffix [for]="creationPicker"></mat-datepicker-toggle>
+            <mat-datepicker #creationPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        
+        <div class="filter-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="filterResults()"
+            [disabled]="isLoading">
+            <mat-icon>search</mat-icon>
+            Filtrar listado
+          </button>
+          <button 
+            mat-stroked-button 
+            (click)="clearFilters()">
+            <mat-icon>clear</mat-icon>
+            Limpiar filtros
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de resultados -->
+  <mat-card class="results-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>table_view</mat-icon>
+        Resultados de Ventas
+      </mat-card-title>
+      <mat-card-subtitle>
+        Lista detallada de documentos de venta
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="documents" class="results-table">
+          <!-- Tipo de documento Column -->
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef>Tipo de documento</th>
+            <td mat-cell *matCellDef="let doc">{{doc.tipo}}</td>
+          </ng-container>
+
+          <!-- NCF/Número Column -->
+          <ng-container matColumnDef="ncfNumero">
+            <th mat-header-cell *matHeaderCellDef>NCF/Número</th>
+            <td mat-cell *matCellDef="let doc">{{doc.ncfNumero}}</td>
+          </ng-container>
+
+          <!-- Almacén Column -->
+          <ng-container matColumnDef="almacen">
+            <th mat-header-cell *matHeaderCellDef>Almacén</th>
+            <td mat-cell *matCellDef="let doc">{{doc.almacen}}</td>
+          </ng-container>
+
+          <!-- Centro de costos Column -->
+          <ng-container matColumnDef="centroCostos">
+            <th mat-header-cell *matHeaderCellDef>Centro de costos</th>
+            <td mat-cell *matCellDef="let doc">{{doc.centroCostos}}</td>
+          </ng-container>
+
+          <!-- Estado Column -->
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let doc">
+              <mat-chip [color]="doc.estado === 'Completado' ? 'primary' : 'accent'">
+                {{doc.estado}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Cliente Column -->
+          <ng-container matColumnDef="cliente">
+            <th mat-header-cell *matHeaderCellDef>Cliente</th>
+            <td mat-cell *matCellDef="let doc">{{doc.cliente}}</td>
+          </ng-container>
+
+          <!-- Identificación Column -->
+          <ng-container matColumnDef="identificacion">
+            <th mat-header-cell *matHeaderCellDef>Identificación</th>
+            <td mat-cell *matCellDef="let doc">{{doc.identificacion}}</td>
+          </ng-container>
+
+          <!-- Creación Column -->
+          <ng-container matColumnDef="creacion">
+            <th mat-header-cell *matHeaderCellDef>Creación</th>
+            <td mat-cell *matCellDef="let doc">{{doc.creacion | date:'short'}}</td>
+          </ng-container>
+
+          <!-- Subtotal Column -->
+          <ng-container matColumnDef="subtotal">
+            <th mat-header-cell *matHeaderCellDef>Subtotal</th>
+            <td mat-cell *matCellDef="let doc">{{doc.subtotal | currency:'USD':'symbol':'1.2-2'}}</td>
+          </ng-container>
+
+          <!-- Descuento Column -->
+          <ng-container matColumnDef="descuento">
+            <th mat-header-cell *matHeaderCellDef>Descuento</th>
+            <td mat-cell *matCellDef="let doc">{{doc.descuento | currency:'USD':'symbol':'1.2-2'}}</td>
+          </ng-container>
+
+          <!-- Antes de impuestos Column -->
+          <ng-container matColumnDef="antesImpuestos">
+            <th mat-header-cell *matHeaderCellDef>Antes de impuestos</th>
+            <td mat-cell *matCellDef="let doc">{{doc.antesImpuestos | currency:'USD':'symbol':'1.2-2'}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!-- Estado vacío -->
+        <div *ngIf="documents.length === 0" class="no-data">
+          <mat-icon class="no-data-icon">inbox</mat-icon>
+          <h3>¡No tienes documentos en este período!</h3>
+          <p>Ajusta los filtros para ver más resultados</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando datos...</p>
+  </div>
+</div>

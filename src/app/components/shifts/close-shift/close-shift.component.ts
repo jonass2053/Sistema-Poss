@@ -188,7 +188,7 @@ export class CloseShiftComponent {
       this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.turnoOpen!.resumen.entradaCaja + this.totalMontoTickets) - this.turnoOpen!.resumen.salidaCaja;
     }
 
-    this.turnoService.getTurnoActual(this.informationService.idUsuario).subscribe((data: ServiceResponse) => {
+    this.turnoService.getTurnoActual(this.informationService.idUsuario, this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       if (data.statusCode == 200) {
         this.turnoOpen = data.data;
         this.turnoService.isOpen = this.turnoOpen;

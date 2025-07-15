@@ -390,7 +390,7 @@
     <!-- dise1@ post -->
     <div class="containerPost" *ngIf="informationService.isPos">
 
-         <div class="buscadorItems">
+        <div class="buscadorItems">
             <div class="input-group mb-3">
                 <button class="btnitem" (click)="seelctMetodFilter(2)" matTooltip="Buscar producto" type="button">
                     <mat-icon>search</mat-icon></button>
@@ -405,16 +405,16 @@
             </div>
             <div class="containerItemPost">
                 <!-- Buscar por categoria de los producto     -->
-                <div>
+                <div class="containerCategory">
                     <label>Buscar por categoria</label>
                     <div class="categorias">
-                        <button class="itemCategoria" (click)="getAllProduct()">Todos</button>
+                        <button class="itemCategoria"
+                            (click)="getAllProduct()">Todos({{dataListProductosSearch.length}})</button>
                         @for (categoria of dataListCategorias; track $index)
                         {
                         <button (click)="getProductByIdCategoria(categoria.idCategoria)"
-                            class="itemCategoria">{{categoria.nombre}}</button>
+                            class="itemCategoria">{{categoria.nombre}} ({{categoria.cantProduct}})</button>
                         }
-
                     </div>
                 </div>
 
@@ -429,11 +429,16 @@
                     @for (producto of dataListProductosSearch; track $index)
                     {
                     <div class="product-card" (click)="seletProductPos($event, producto)">
-                        <img src="{{producto.imagen}}" alt="Producto" class="product-image">
+                        <div class="containerimg">
+                            <img src="{{producto.imagen}}" alt="Producto" class="product-image">
+                        </div>
+
                         <div class="product-info">
                             <p class="product-name">{{producto.nombre}}</p>
                             <p class="product-price">${{producto.precioBase| number : '1.2-5'}}</p>
                         </div>
+                    <!-- <div class="stock">{{producto.cantInicial}}</div> -->
+
                     </div>
                     }
                 </div>
@@ -443,14 +448,9 @@
         <!-- Detalles -->
         <div class="detalleVenta">
             <div class="header">
-                <div class="titulo">
-                    <div class="centerall">
-                        <mat-icon>description</mat-icon>
-                        Factura de venta
-                    </div>
-                    <!-- <mat-icon matTooltip="Agregar nuevo contacto" (click)="addContactDialo()" matSuffix>person_add</mat-icon> -->
-                    <mat-icon *ngIf="dataListDetalleFactura.length>0" matTooltip="Aplicar descuento"
-                        (click)="habilitarDescuentos()">pie_chart</mat-icon>
+                <div *ngIf="dataListDetalleFactura.length>0" (click)="habilitarDescuentos()" class="btndescuento">
+                    <i class="fa-solid fa-tag"></i>
+                    APLICAR DESCUENTO
                 </div>
 
                 <mat-divider></mat-divider>
@@ -502,44 +502,44 @@
                         <mat-icon>shopping_cart</mat-icon>
                         Selecciona productos para agregar a la venta
                     </div>
-
-
                     <div class="headerTitulos" *ngIf="dataListDetalleFactura.length>0">
                         <section class="nombreItem">Item</section>
                         <section class="cant">Cant.</section>
-                        <section class="cant">Precio</section>
+                        <!-- <section class="cant">Precio</section> -->
                         <section class="desc" *ngIf="desc">Desc. %</section>
                         <section class="montod" *ngIf="desc" matTooltip="Monto descuento">M. Desc</section>
                         <section class="montototal">SubTotal</section>
                         <section class="montototal">Total</section>
 
                     </div>
-                    <div *ngFor="let item of dataListDetalleFactura; let i = index" class="cardItem">
+                    <div class="containercarditem" *ngIf="dataListDetalleFactura.length>0">
+                        <div *ngFor="let item of dataListDetalleFactura; let i = index" class="cardItem">
+                            <label class="nombreItem">{{item.nombre | slice : 0:30 }} {{moneda.simbolo}}{{item.precio | number :
+                                '1.2-5' }} </label>
+                            <input type="number" (input)="changeCant($event, item.idProducto)" class="form-control cant"
+                                style="text-align: center; font-size: 13px;" min="1" [value]="item.cantidad">
+                            <!-- <label class="cant">{{item.precio | number : '1.2-5'}}</label> -->
+                            <select *ngIf="desc" (change)="aplyDesc($event, item.idProducto)" class="form-select desc"
+                                aria-label="Default select example" style="font-size: 13px;">
+                                <option select value=0>Selec..</option>
+                                <option value=5>Dec. 5%</option>
+                                <option value=10>Dec. 10%</option>
+                                <option value=15>Dec. 15%</option>
+                            </select>
+                            <section *ngIf="desc" class="montod">- {{item.descuento| number : '1.2-5'}}
+                            </section>
+                            <div class="montototal">
+                                {{item.subTotal | number : '1.2-5'}}
+                            </div>
+                            <div class="montototal">
+                                {{item.total | number : '1.2-5'}}
+                                <mat-icon class="btnremover" (click)="removeItem(i,item)">close</mat-icon>
 
-                        <label class="nombreItem">{{item.nombre | slice : 0:30 }}</label>
-                        <input type="number" (input)="changeCant($event, item.idProducto)" class="form-control cant"
-                            style="text-align: center; font-size: 13px;" min="1" [value]="item.cantidad">
-                        <label class="cant">{{item.precio | number : '1.2-5'}}</label>
-                        <select *ngIf="desc" (change)="aplyDesc($event, item.idProducto)" class="form-select desc"
-                            aria-label="Default select example" style="font-size: 13px;">
-                            <option select value=0>Selec..</option>
-                            <option value=5>Dec. 5%</option>
-                            <option value=10>Dec. 10%</option>
-                            <option value=15>Dec. 15%</option>
-                        </select>
-                        <section *ngIf="desc" class="montod">- {{item.descuento| number : '1.2-5'}}
-                        </section>
-                        <div class="montototal">
-                            {{item.subTotal | number : '1.2-5'}}
+                            </div>
+
                         </div>
-                        <div class="montototal">
-                            {{item.total | number : '1.2-5'}}
-                            <mat-icon class="btnremover" (click)="removeItem(i,item)">close</mat-icon>
-
-                        </div>
-
+                        <mat-divider></mat-divider>
                     </div>
-                    <mat-divider></mat-divider>
 
                 </div>
 
@@ -583,14 +583,5 @@
             </div>
 
         </div>
-       
-
     </div>
-
-
-
-
-
-
-
 </form>

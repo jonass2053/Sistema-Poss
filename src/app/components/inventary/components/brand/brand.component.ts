@@ -5,6 +5,7 @@ import { importaciones } from 'src/app/Core/utilities/material/material';
 import { iCategoria, iMarcaget } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { CategoriaService } from 'src/app/services/categoria.service';
+import { InformationService } from 'src/app/services/information.service';
 import { MarcasService } from 'src/app/services/marcas.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class BrandComponent {
     private fb: FormBuilder,
     private alertaService: AlertServiceService,
     private marcaSwervice: MarcasService,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private informationService : InformationService
   ) {
     this.getAll();
     this.getAllCategorias();
@@ -113,7 +115,7 @@ export class BrandComponent {
   }
 
   getAllCategorias() {
-    this.categoriaService.getAll().subscribe((data: ServiceResponse) => {
+    this.categoriaService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
       this.dataListCategorias = data.data;
     })
   }

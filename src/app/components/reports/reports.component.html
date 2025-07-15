@@ -1,0 +1,951 @@
+<mat-card class="reports-section">
+  <mat-card-header class="reports-header">
+    <mat-card-title class="reports-main-title">Centro de Reportes</mat-card-title>
+    <nav class="report-tabs">
+      <mat-tab-group mat-stretch-tabs="false" [(selectedIndex)]="selectedMainTab" (selectedTabChange)="onMainTabChange($event)">
+        <mat-tab label="Ventas"></mat-tab>
+        <mat-tab label="Productos"></mat-tab>
+        <mat-tab label="Pagos"></mat-tab>
+      </mat-tab-group>
+    </nav>
+  </mat-card-header>
+
+  <mat-card-content class="report-content">
+    <!-- Reporte de Ventas -->
+    <div *ngIf="selectedMainTab === 0" class="report-panel active">
+      <h2 class="report-panel-title">Reportes de Ventas</h2>
+      <nav class="sub-tabs">
+        <mat-tab-group mat-stretch-tabs="false" [(selectedIndex)]="selectedSalesSubTab" (selectedTabChange)="onSubTabChange($event, 'sales')">
+          <mat-tab label="Resumen"></mat-tab>
+          <mat-tab label="Ventas Diarias"></mat-tab>
+          <mat-tab label="Por Categoría"></mat-tab>
+          <mat-tab label="Por Empleado"></mat-tab>
+          <mat-tab label="Facturas Vencidas"></mat-tab>
+          <mat-tab label="Devoluciones"></mat-tab>
+          <mat-tab label="Clientes Top"></mat-tab>
+        </mat-tab-group>
+      </nav>
+
+      <!-- Sub-Reporte: Resumen de Ventas -->
+      <div *ngIf="selectedSalesSubTab === 0" class="sub-tab-content active">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <div class="summary-grid">
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Ventas Netas</mat-card-title>
+              <mat-icon class="card-icon">attach_money</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ salesSummary.netSales | currency:'USD':'symbol':'1.2-2' }}</div>
+              <p class="card-description">Total de ingresos por ventas</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Órdenes Completadas</mat-card-title>
+              <mat-icon class="card-icon">check_circle</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ salesSummary.completedOrders }}</div>
+              <p class="card-description">Número de transacciones exitosas</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Venta Promedio</mat-card-title>
+              <mat-icon class="card-icon">trending_up</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ salesSummary.averageSale | currency:'USD':'symbol':'1.2-2' }}</div>
+              <p class="card-description">Monto promedio por transacción</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <mat-card class="chart-card">
+          <mat-card-title class="card-title">Tendencia de Ventas (Últimos 6 Meses)</mat-card-title>
+          <mat-card-content>
+            <div class="bar-chart">
+              <div *ngFor="let item of salesTrendData" class="bar-chart-item" [style.height]="(item.value / 16500 * 100) + '%'">
+                <div class="bar" [style.height]="'100%'"></div>
+                <span class="bar-value">{{ item.value / 1000 }}K</span>
+                <span class="bar-label">{{ item.month }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Ventas Diarias -->
+      <div *ngIf="selectedSalesSubTab === 1" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerDailySales">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerDailySales"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerDailySales></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Ventas Diarias (Enero 2024)</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Ventas Diarias')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="dailySales" class="data-table">
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+              </ng-container>
+              <ng-container matColumnDef="netSales">
+                <th mat-header-cell *matHeaderCellDef> Ventas Netas </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.netSales | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="transactions">
+                <th mat-header-cell *matHeaderCellDef> Transacciones </th>
+                <td mat-cell *matCellDef="let element"> {{element.transactions}} </td>
+              </ng-container>
+              <ng-container matColumnDef="averagePerTransaction">
+                <th mat-header-cell *matHeaderCellDef> Promedio por Transacción </th>
+                <td mat-cell *matCellDef="let element"> {{element.averagePerTransaction | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="dailySalesDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: dailySalesDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Ventas por Categoría -->
+      <div *ngIf="selectedSalesSubTab === 2" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Categoría</mat-label>
+            <mat-select [formControl]="salesCategoryFilter">
+              <mat-option value="">Todas</mat-option>
+              <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerSalesCategory">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerSalesCategory"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerSalesCategory></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="chart-card">
+          <mat-card-title class="card-title">Ventas por Categoría de Producto</mat-card-title>
+          <mat-card-content>
+            <div class="bar-chart">
+              <div *ngFor="let item of salesByCategory" class="bar-chart-item" [style.height]="(item.netSales / 50000 * 100) + '%'">
+                <div class="bar" [style.height]="'100%'" [style.background-color]="item.category === 'Electrónica' ? '#3498db' : item.category === 'Ropa' ? '#2ecc71' : item.category === 'Hogar' ? '#f1c40f' : '#e74c3c'"></div>
+                <span class="bar-value">{{ item.netSales / 1000 }}K</span>
+                <span class="bar-label">{{ item.category }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Detalle de Ventas por Categoría</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Ventas por Categoría')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="salesByCategory" class="data-table">
+              <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef> Categoría </th>
+                <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+              </ng-container>
+              <ng-container matColumnDef="netSales">
+                <th mat-header-cell *matHeaderCellDef> Ventas Netas </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.netSales | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="percentage">
+                <th mat-header-cell *matHeaderCellDef> % del Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.percentage}}% </td>
+              </ng-container>
+              <ng-container matColumnDef="productsSold">
+                <th mat-header-cell *matHeaderCellDef> Productos Vendidos </th>
+                <td mat-cell *matCellDef="let element"> {{element.productsSold}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="salesByCategoryDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: salesByCategoryDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Ventas por Empleado -->
+      <div *ngIf="selectedSalesSubTab === 3" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Empleado</mat-label>
+            <mat-select [formControl]="salesEmployeeFilter">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let employee of employees" [value]="employee">{{employee}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerSalesEmployee">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerSalesEmployee"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerSalesEmployee></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Rendimiento de Ventas por Empleado</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Ventas por Empleado')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="salesByEmployee" class="data-table">
+              <ng-container matColumnDef="employee">
+                <th mat-header-cell *matHeaderCellDef> Empleado </th>
+                <td mat-cell *matCellDef="let element"> {{element.employee}} </td>
+              </ng-container>
+              <ng-container matColumnDef="netSales">
+                <th mat-header-cell *matHeaderCellDef> Ventas Netas </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.netSales | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="transactions">
+                <th mat-header-cell *matHeaderCellDef> Transacciones </th>
+                <td mat-cell *matCellDef="let element"> {{element.transactions}} </td>
+              </ng-container>
+              <ng-container matColumnDef="averagePerSale">
+                <th mat-header-cell *matHeaderCellDef> Promedio por Venta </th>
+                <td mat-cell *matCellDef="let element"> {{element.averagePerSale | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="salesByEmployeeDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: salesByEmployeeDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Facturas Vencidas -->
+      <div *ngIf="selectedSalesSubTab === 4" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Estado</mat-label>
+            <mat-select [formControl]="overdueStatusFilter">
+              <mat-option value="">Todas</mat-option>
+              <mat-option value="overdue">Vencida</mat-option>
+              <mat-option value="pending">Pendiente</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha Vencimiento</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerOverdue">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerOverdue"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerOverdue></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <div class="summary-grid">
+          <mat-card class="summary-card" style="border-left-color: #e74c3c;">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title" style="color: #e74c3c;">Total Vencido</mat-card-title>
+              <mat-icon class="card-icon" style="color: #e74c3c;">warning</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value amount-cell overdue">{{ 8500.00 | currency:'USD':'symbol':'1.2-2' }}</div>
+              <p class="card-description">Monto total de facturas pendientes</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card" style="border-left-color: #e74c3c;">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title" style="color: #e74c3c;">Facturas Vencidas</mat-card-title>
+              <mat-icon class="card-icon" style="color: #e74c3c;">calendar_today</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">5</div>
+              <p class="card-description">Número de facturas con pago atrasado</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card" style="border-left-color: #e74c3c;">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title" style="color: #e74c3c;">Días Promedio Atraso</mat-card-title>
+              <mat-icon class="card-icon" style="color: #e74c3c;">timer</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">15</div>
+              <p class="card-description">Promedio de días de atraso</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Facturas de Venta Vencidas</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Facturas Vencidas')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="overdueInvoices" class="data-table">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID Factura </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="client">
+                <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                <td mat-cell *matCellDef="let element"> {{element.client}} </td>
+              </ng-container>
+              <ng-container matColumnDef="dueDate">
+                <th mat-header-cell *matHeaderCellDef> Fecha Vencimiento </th>
+                <td mat-cell *matCellDef="let element"> {{element.dueDate}} </td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Monto Vencido </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell overdue"> {{element.amount | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="daysOverdue">
+                <th mat-header-cell *matHeaderCellDef> Días Atraso </th>
+                <td mat-cell *matCellDef="let element"> {{element.daysOverdue}} </td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let element"> <span class="status-badge {{element.status}}">{{element.status === 'overdue' ? 'Vencida' : ''}}</span> </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="overdueInvoicesDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: overdueInvoicesDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Devoluciones -->
+      <div *ngIf="selectedSalesSubTab === 5" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Motivo</mat-label>
+            <mat-select [formControl]="returnsReasonFilter">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let reason of returnReasons" [value]="reason">{{reason}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerReturns">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerReturns"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerReturns></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <div class="summary-grid">
+          <mat-card class="summary-card" style="border-left-color: #e67e22;">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title" style="color: #e67e22;">Total Devuelto</mat-card-title>
+              <mat-icon class="card-icon" style="color: #e67e22;">undo</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value amount-cell overdue">{{ -1500.00 | currency:'USD':'symbol':'1.2-2' }}</div>
+              <p class="card-description">Monto total de productos devueltos</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card" style="border-left-color: #e67e22;">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title" style="color: #e67e22;"># Devoluciones</mat-card-title>
+              <mat-icon class="card-icon" style="color: #e67e22;">sync</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">3</div>
+              <p class="card-description">Número de transacciones de devolución</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card" style="border-left-color: #e67e22;">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title" style="color: #e67e22;">Tasa de Devolución</mat-card-title>
+              <mat-icon class="card-icon" style="color: #e67e22;">trending_down</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">0.3%</div>
+              <p class="card-description">Porcentaje de ventas devueltas</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Detalle de Devoluciones</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Devoluciones')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="returnsData" class="data-table">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID Devolución </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+              </ng-container>
+              <ng-container matColumnDef="client">
+                <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                <td mat-cell *matCellDef="let element"> {{element.client}} </td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Monto </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell overdue"> {{element.amount | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef> Producto </th>
+                <td mat-cell *matCellDef="let element"> {{element.product}} </td>
+              </ng-container>
+              <ng-container matColumnDef="reason">
+                <th mat-header-cell *matHeaderCellDef> Motivo </th>
+                <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="returnsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: returnsDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Clientes Top -->
+      <div *ngIf="selectedSalesSubTab === 6" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerTopClients">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerTopClients"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerTopClients></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Top 10 Clientes por Gasto</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Clientes Top')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="topClients" class="data-table">
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef> Posición </th>
+                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+              </ng-container>
+              <ng-container matColumnDef="client">
+                <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                <td mat-cell *matCellDef="let element"> {{element.client}} </td>
+              </ng-container>
+              <ng-container matColumnDef="totalSales">
+                <th mat-header-cell *matHeaderCellDef> Ventas Totales </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.totalSales | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="purchases">
+                <th mat-header-cell *matHeaderCellDef> # Compras </th>
+                <td mat-cell *matCellDef="let element"> {{element.purchases}} </td>
+              </ng-container>
+              <ng-container matColumnDef="lastPurchase">
+                <th mat-header-cell *matHeaderCellDef> Última Compra </th>
+                <td mat-cell *matCellDef="let element"> {{element.lastPurchase}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="topClientsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: topClientsDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Reporte de Productos -->
+    <div *ngIf="selectedMainTab === 1" class="report-panel">
+      <h2 class="report-panel-title">Reportes de Productos</h2>
+      <nav class="sub-tabs">
+        <mat-tab-group mat-stretch-tabs="false" [(selectedIndex)]="selectedProductsSubTab" (selectedTabChange)="onSubTabChange($event, 'products')">
+          <mat-tab label="Resumen"></mat-tab>
+          <mat-tab label="Estado de Inventario"></mat-tab>
+          <mat-tab label="Top Vendidos"></mat-tab>
+          <mat-tab label="Bajo Stock"></mat-tab>
+        </mat-tab-group>
+      </nav>
+
+      <!-- Sub-Reporte: Resumen de Productos -->
+      <div *ngIf="selectedProductsSubTab === 0" class="sub-tab-content active">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Categoría</mat-label>
+            <mat-select [formControl]="productCategoryFilter">
+              <mat-option value="">Todas</mat-option>
+              <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Estado de Stock</mat-label>
+            <mat-select [formControl]="productStockStatusFilter">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let status of productStatusOptions" [value]="status">{{status === 'in-stock' ? 'En Stock' : status === 'low-stock' ? 'Bajo Stock' : 'Sin Stock'}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Buscar Producto</mat-label>
+            <input matInput [formControl]="productSearchFilter" placeholder="Ej. Laptop">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <div class="summary-grid">
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Total Productos</mat-card-title>
+              <mat-icon class="card-icon">inventory_2</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ productSummary.totalProducts }}</div>
+              <p class="card-description">SKUs únicos en inventario</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Bajo Stock</mat-card-title>
+              <mat-icon class="card-icon">warning</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ productSummary.lowStock }}</div>
+              <p class="card-description">Productos que necesitan reabastecimiento</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Más Vendido</mat-card-title>
+              <mat-icon class="card-icon">emoji_events</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ productSummary.topSelling }}</div>
+              <p class="card-description">Producto con mayores ventas</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <!-- <mat-card class="chart-card">
+          <mat-card-title class="card-title">Top 5 Productos Más Vendidos</mat-card-title>
+          <mat-card-content>
+            <div class="bar-chart">
+              <div *ngFor="let item of topSellingProducts" class="bar-chart-item" [style.height]="(item.stock / 150 * 100) + '%'">
+                <div class="bar" [style.height]="'100%'" [style.background-color]="item.product === 'Laptop Pro X' ? '#3498db' : item.product === 'Monitor 27\" 4K' ? '#2ecc71' : item.product === 'Teclado Mecánico' ? '#f1c40f' : item.product === 'Mouse Gaming' ? '#e74c3c' : '#9b59b6'"></div>
+                <span class="bar-value">{{ item.stock }} U.</span>
+                <span class="bar-label">{{ item.product }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card> -->
+      </div>
+
+      <!-- Sub-Reporte: Estado de Inventario -->
+      <div *ngIf="selectedProductsSubTab === 1" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Categoría</mat-label>
+            <mat-select [formControl]="productCategoryFilter">
+              <mat-option value="">Todas</mat-option>
+              <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Estado de Stock</mat-label>
+            <mat-select [formControl]="productStockStatusFilter">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let status of productStatusOptions" [value]="status">{{status === 'in-stock' ? 'En Stock' : status === 'low-stock' ? 'Bajo Stock' : 'Sin Stock'}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Buscar Producto</mat-label>
+            <input matInput [formControl]="productSearchFilter" placeholder="Ej. Laptop">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Inventario Completo de Productos</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Inventario de Productos')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="productInventory" class="data-table">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef> Producto </th>
+                <td mat-cell *matCellDef="let element"> {{element.product}} </td>
+              </ng-container>
+              <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef> Categoría </th>
+                <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+              </ng-container>
+              <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef> Stock </th>
+                <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
+              </ng-container>
+              <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef> Precio </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.price | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let element"> <span class="status-badge {{element.status}}">{{element.status === 'in-stock' ? 'En Stock' : element.status === 'low-stock' ? 'Bajo Stock' : 'Sin Stock'}}</span> </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="productInventoryDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: productInventoryDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Top Vendidos -->
+      <div *ngIf="selectedProductsSubTab === 2" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerTopSelling">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerTopSelling"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerTopSelling></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Productos Más Vendidos por Unidades</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Productos Más Vendidos')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="topSellingProducts" class="data-table">
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef> Producto </th>
+                <td mat-cell *matCellDef="let element"> {{element.product}} </td>
+              </ng-container>
+              <ng-container matColumnDef="unitsSold">
+                <th mat-header-cell *matHeaderCellDef> Unidades Vendidas </th>
+                <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
+              </ng-container>
+              <ng-container matColumnDef="revenueGenerated">
+                <th mat-header-cell *matHeaderCellDef> Ingresos Generados </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.stock * element.price | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="topSellingProductsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: topSellingProductsDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Bajo Stock -->
+      <div *ngIf="selectedProductsSubTab === 3" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Categoría</mat-label>
+            <mat-select [formControl]="productCategoryFilter">
+              <mat-option value="">Todas</mat-option>
+              <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Productos con Bajo Nivel de Stock</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Productos Bajo Stock')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="lowStockProducts" class="data-table">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef> Producto </th>
+                <td mat-cell *matCellDef="let element"> {{element.product}} </td>
+              </ng-container>
+              <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef> Categoría </th>
+                <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+              </ng-container>
+              <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef> Stock Actual </th>
+                <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
+              </ng-container>
+              <ng-container matColumnDef="minThreshold">
+                <th mat-header-cell *matHeaderCellDef> Umbral Mínimo </th>
+                <td mat-cell *matCellDef="let element"> {{element.minThreshold}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="lowStockProductsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: lowStockProductsDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Reporte de Pagos -->
+    <div *ngIf="selectedMainTab === 2" class="report-panel">
+      <h2 class="report-panel-title">Reportes de Pagos</h2>
+      <nav class="sub-tabs">
+        <mat-tab-group mat-stretch-tabs="false" [(selectedIndex)]="selectedPaymentsSubTab" (selectedTabChange)="onSubTabChange($event, 'payments')">
+          <mat-tab label="Resumen"></mat-tab>
+          <mat-tab label="Pagos Diarios"></mat-tab>
+          <mat-tab label="Por Método"></mat-tab>
+          <mat-tab label="Reembolsos"></mat-tab>
+        </mat-tab-group>
+      </nav>
+
+      <!-- Sub-Reporte: Resumen de Pagos -->
+      <div *ngIf="selectedPaymentsSubTab === 0" class="sub-tab-content active">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerPaymentsOverview">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerPaymentsOverview"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerPaymentsOverview></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <div class="summary-grid">
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Total Pagos</mat-card-title>
+              <mat-icon class="card-icon">credit_card</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ paymentSummary.totalPayments | currency:'USD':'symbol':'1.2-2' }}</div>
+              <p class="card-description">Monto total de pagos procesados</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Pagos Completados</mat-card-title>
+              <mat-icon class="card-icon">done_all</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ paymentSummary.completedPayments }}</div>
+              <p class="card-description">Número de pagos exitosos</p>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="summary-card">
+            <mat-card-header class="card-header">
+              <mat-card-title class="card-title">Pagos Pendientes</mat-card-title>
+              <mat-icon class="card-icon">hourglass_empty</mat-icon>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="card-value">{{ paymentSummary.pendingPayments }}</div>
+              <p class="card-description">Pagos en espera de confirmación</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <mat-card class="chart-card">
+          <mat-card-title class="card-title">Distribución de Métodos de Pago</mat-card-title>
+          <mat-card-content>
+            <div class="bar-chart">
+              <div *ngFor="let item of paymentMethodDistribution" class="bar-chart-item" [style.height]="item.percentage + '%'">
+                <div class="bar" [ngClass]="item.colorClass" [style.height]="'100%'"></div>
+                <span class="bar-value">{{ item.percentage }}%</span>
+                <span class="bar-label">{{ item.method }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Pagos Diarios -->
+      <div *ngIf="selectedPaymentsSubTab === 1" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerDailyPayments">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerDailyPayments"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerDailyPayments></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Pagos Recibidos Diariamente (Enero 2024)</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Pagos Diarios')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="dailyPayments" class="data-table">
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+              </ng-container>
+              <ng-container matColumnDef="totalAmount">
+                <th mat-header-cell *matHeaderCellDef> Monto Total </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.netSales | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="numPayments">
+                <th mat-header-cell *matHeaderCellDef> # Pagos </th>
+                <td mat-cell *matCellDef="let element"> {{element.transactions}} </td>
+              </ng-container>
+              <ng-container matColumnDef="averagePerPayment">
+                <th mat-header-cell *matHeaderCellDef> Promedio por Pago </th>
+                <td mat-cell *matCellDef="let element"> {{element.averagePerTransaction | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="dailyPaymentsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: dailyPaymentsDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Pagos por Método -->
+      <div *ngIf="selectedPaymentsSubTab === 2" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Método de Pago</mat-label>
+            <mat-select [formControl]="paymentMethodFilter">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let method of paymentMethods" [value]="method">{{method}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerPaymentsMethod">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerPaymentsMethod"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerPaymentsMethod></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Detalle de Pagos por Método</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Pagos por Método')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="paymentsByMethod" class="data-table">
+              <ng-container matColumnDef="method">
+                <th mat-header-cell *matHeaderCellDef> Método de Pago </th>
+                <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+              </ng-container>
+              <ng-container matColumnDef="totalAmount">
+                <th mat-header-cell *matHeaderCellDef> Monto Total </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell"> {{element.netSales | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="numTransactions">
+                <th mat-header-cell *matHeaderCellDef> # Transacciones </th>
+                <td mat-cell *matCellDef="let element"> {{element.productsSold}} </td>
+              </ng-container>
+              <ng-container matColumnDef="percentage">
+                <th mat-header-cell *matHeaderCellDef> % del Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.percentage}}% </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="paymentsByMethodDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: paymentsByMethodDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sub-Reporte: Reembolsos -->
+      <div *ngIf="selectedPaymentsSubTab === 3" class="sub-tab-content">
+        <div class="filters-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Motivo</mat-label>
+            <mat-select [formControl]="returnsReasonFilter">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let reason of returnReasons" [value]="reason">{{reason}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Rango de Fechas</mat-label>
+            <mat-date-range-input [formGroup]="dateRange" [rangePicker]="pickerRefunds">
+              <input matStartDate formControlName="start" placeholder="Fecha Inicio">
+              <input matEndDate formControlName="end" placeholder="Fecha Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="pickerRefunds"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerRefunds></mat-date-range-picker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="applyFilters()">Aplicar Filtros</button>
+          <button mat-stroked-button (click)="resetFilters()">Limpiar Filtros</button>
+        </div>
+        <mat-card class="table-section">
+          <mat-card-header class="table-header">
+            <mat-card-title class="table-title">Transacciones Reembolsadas</mat-card-title>
+            <button mat-raised-button class="export-button" (click)="exportCsv('Reembolsos')">Exportar CSV</button>
+          </mat-card-header>
+          <mat-card-content style="overflow-x: auto;">
+            <table mat-table [dataSource]="refundsData" class="data-table">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID Reembolso </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Monto </th>
+                <td mat-cell *matCellDef="let element" class="amount-cell overdue"> -{{element.amount | currency:'USD':'symbol':'1.2-2'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="originalSaleId">
+                <th mat-header-cell *matHeaderCellDef> ID Venta Original </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="reason">
+                <th mat-header-cell *matHeaderCellDef> Motivo </th>
+                <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="refundsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: refundsDisplayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+
+
+  <mat-card-actions class="print-controls">
+    <button mat-raised-button color="accent" (click)="printReport()">Imprimir Reporte Completo</button>
+  </mat-card-actions>
+</mat-card>

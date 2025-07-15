@@ -115,7 +115,8 @@ export interface iEstadoFactura {
 
 export interface iCategoria {
   idCategoria?: number,
-  nombre: string
+  nombre: string,
+  cantProduct : number
 }
 
 export interface iAlmacen {
@@ -321,6 +322,7 @@ export interface iMetodoPago {
 export interface iPago {
   idPago?: number;
   idContacto: number;
+  contactoObj : iContactoPos;
   idBanco: number;
   bancoObj: iBanco,
   idMetodoPago: number;
@@ -331,6 +333,7 @@ export interface iPago {
   facturaObj: iFactura
   noTicket: string;
   fecha: string;
+  usuarioObj : IUsuario
   MultiPayment: {
     IdPago: number,
     IdFactura: number,

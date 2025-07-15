@@ -1,44 +1,33 @@
-<mat-card appearance="outlined">
+<div class="headerNavCard">
 
-  <div class="row">
-    <!-- Card column -->
-    <div class="col-12">
+  <div class="titulo">
+    <div class="centerall">
+      <mat-icon>description</mat-icon>Listado de {{document}} <span style="margin-left: 10px;"></span>
+    </div>
+    <div class="centerall">
+      <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
+        <mat-icon>add</mat-icon> nuevo</button>
+      <button color="primary" (click)="showFilter()" mat-raised-button class="me-8 mb-8">Filtrar
+        <mat-icon>manage_search</mat-icon></button>
+    </div>
 
-      <div class="demo-tab-content">
-        <!-- Daily Activity -->
-        <mat-card-content>
-          <div class="headerNavCard">
-
-            <div class="titulo">
-              <div class="centerall">
-                <mat-icon>description</mat-icon>Listado de {{document}} <span style="margin-left: 10px;"></span>
-              </div>
-
-
-              <div class="centerall">
-                <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
-                  <mat-icon>add</mat-icon> nuevo</button>
-                <button color="primary" (click)="showFilter()" mat-raised-button class="me-8 mb-8">Filtrar
-                  <mat-icon>manage_search</mat-icon></button>
-              </div>
-
-              <!-- <a>
+    <!-- <a>
                 <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
               </a> -->
-            </div>
-          </div>
-          
-            <div class="filterandbutton">
+  </div>
+</div>
+<mat-card>
+  <div class="filterandbutton" *ngIf="filters">
             <form [formGroup]="miFormulario">
-              <div class="containerfuncionesheader input-parent" *ngIf="filters">
-
+                  <h2 style="margin-top: 10px;">Filtros</h2>
+                  <hr>
+              <div class="containerfuncionesheader input-parent" >
                 <mat-form-field style="width: 10%;" appearance="fill" class="no-fill-background">
-                  <mat-label>No. Doc.  </mat-label>
+                  <mat-label>No. Doc. </mat-label>
                   <input matInput placeholder="Buscar" formControlName="noFactura">
                   <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
                 &nbsp;
-
                 <mat-form-field style="width: 16.6%;" appearance="fill" class="no-fill-background">
                   <mat-icon matSuffix>person_add</mat-icon>
                   <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
@@ -61,7 +50,7 @@
                   </mat-select>
                 </mat-form-field>
                 &nbsp;
-                 <mat-form-field class="no-fill-background" style="width: 10%;">
+                <mat-form-field class="no-fill-background" style="width: 10%;">
                   <mat-label>Estado</mat-label>
                   <mat-select formControlName="idEstado">
                     @for (estado of dataListEstadosFactura; track $index)
@@ -86,15 +75,38 @@
                   class="me-8 mb-8">
                   <mat-icon>search</mat-icon>Buscar</button>
 
-                <button style="width: 150px;" color="warn" (click)="resetFilters()" mat-raised-button
+                   <button style="width: 150px;" color="info" (click)="printRportVentas()" mat-raised-button
                   class="me-8 mb-8">
-                  <mat-icon>autorenew</mat-icon>Reset.</button> 
+                  <mat-icon>print</mat-icon>Imprimir</button>
+
+                <button style="width: 150px;" color="warn" (click)="resetFilters()" mat-raised-button class="me-8 mb-8">
+                  <mat-icon>autorenew</mat-icon>Reset.</button>
               </div>
 
             </form>
 
           </div>
+</mat-card>
+
+
+<mat-card >
+  <div class="row">
+    <!-- Card column -->
+    <div class="col-12">
+
+      <div class="demo-tab-content">
+        <!-- Daily Activity -->
+        <mat-card-content>
+          <label style="margin-left: 5px;">Resumen de montos</label>
           <div class="summary-grid" *ngIf="document!='Cotización'">
+            <div class="summary-card">
+              <div class="header-card">
+                <div class="icon">$</div>
+                <div class="title">Total Facturado</div>
+              </div>
+              <div class="amount">{{totalFacturado}}</div>
+              <!-- <div class="transactions">1025 transacciones</div> -->
+            </div>
             <div class="summary-card">
               <div class="header-card">
                 <div class="icon">$</div>
@@ -124,7 +136,7 @@
 
 
           </div>
-        
+
 
 
 
@@ -134,21 +146,21 @@
             <div class="mat-elevation-z8">
               <table aparence="fill" mat-table [dataSource]="dataSource">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                <!-- Position Column -->
-                <ng-container matColumnDef="Numero">
-                  <th mat-header-cell *matHeaderCellDef> No. </th>
-                  <td mat-cell *matCellDef="let element"> {{element.numeracion || ''}} </td>
-                </ng-container>
+             
 
                 <!-- Name Column -->
                 <ng-container matColumnDef="Cliente">
                   <th mat-header-cell *matHeaderCellDef> Cliente </th>
-                  <td mat-cell *matCellDef="let element"> {{element.contacto.nombreRazonSocial || ''}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.contacto.nombreRazonSocial || ''}}
+                  </td>
+
                 </ng-container>
 
                 <ng-container matColumnDef="Tipo">
                   <th mat-header-cell *matHeaderCellDef> Tipo </th>
-                  <td mat-cell *matCellDef="let element"> {{element.numeracionObj.nombre}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.numeracionObj.nombre}}
+                  <p class="mb-0 fw-normal op-5">{{element.numeracion || '' }}</p>
+                  </td>
                 </ng-container>
 
                 <!-- Weight Column -->
@@ -181,16 +193,17 @@
                 <ng-container matColumnDef="Estado">
                   <th mat-header-cell *matHeaderCellDef> Estado </th>
                   <td mat-cell *matCellDef="let element">
-                    <div *ngIf="document!='Cotización'" class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
+                    <div *ngIf="document!='Cotización'" class="badge rounded-pill"
+                      [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }}</div>
 
-                      <div *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"  class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
+                    <div   class="badge rounded-pill" *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"
+                       [style.background-color]="element.estadoFactura?.color">
                       SIN PAGOS APLICADOS </div>
-                      
-                      <div *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()!='POR PAGAR'"  class="badge rounded-pill" [style.background-color]="element.estadoFactura?.color">
-                        {{ (element.estadoFactura?.nombre || '').toUpperCase() }} </div>
 
-
+                    <div  class="badge rounded-pill"  *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()!='POR PAGAR'"
+                       [style.background-color]="element.estadoFactura?.color">
+                      {{ (element.estadoFactura?.nombre || '').toUpperCase() }} </div>
                   </td>
                 </ng-container>
 
@@ -267,7 +280,7 @@
 
             </div>
           </div>
-          <!-- <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator> -->
+          <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator>
 
         </mat-card-content>
 

@@ -1,0 +1,35 @@
+// .headerNavCard{
+//     width: 96vw;
+//     border: 1px solid red;
+//     display: flex;
+//     justify-content: space-between;
+// }
+
+.containerfuncionesheader{
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+}
+
+.example-container {
+  width: 100vw;
+  height: 100vh
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+    border-radius: 10px;
+
+}
+
+.btnacciones{
+    border: none;
+    background-color: transparent;
+}

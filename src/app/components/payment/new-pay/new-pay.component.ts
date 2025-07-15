@@ -126,9 +126,8 @@ export class NewPayComponent {
       this.miFormulario.patchValue({MultiPayment : this.montos.filter(c=>c.monto>0)})
       this.pagoService.insertMultyPayments(this.miFormulario.value).subscribe((data: ServiceResponse)=>{
        if(data.statusCode==200){
-        this.alertas.hideLoading();
+        this.alertas.successAlert(data.message);
         this.resetForm();
-         this.alertas.successAlert(data.message);
        }else{
          this.alertas.errorAlert(data.message);
        }

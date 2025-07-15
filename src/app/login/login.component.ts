@@ -23,9 +23,12 @@ export class LoginComponent {
     private usuario: UsuarioService,
     private fb: FormBuilder,
     private alertasService: AlertServiceService,
-    private information : InformationService) { }
+    private information : InformationService) { 
+      localStorage.clear();
+    }
     alerta : Boolean = false;
     mensaje : string = "";
+    
 
   miFormulario: FormGroup = this.fb.group(
     {
@@ -55,6 +58,7 @@ export class LoginComponent {
             this.information.idSucursal = data.data.sucursal.idSucursal;
             this.information.idTurno = data.data.idTurno;
             this.information.mySucursal = data.data.sucursal;
+            this.information.idUsuario = data.data.idUsuario;
             console.log(data.data.idTurno)
             localStorage.setItem('user', JSON.stringify(data))
             document.defaultView?.localStorage.setItem('token', JSON.stringify(data.token))
