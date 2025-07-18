@@ -75,7 +75,6 @@ const routes: Routes = [
         {path: 'role', component : RoleComponent},
         {path: 'inventary', component : SettingInventaryComponent},
         {path: 'generalsetting', component : ConfiguracionesGeneralesComponent}
-      
         ]
       }
       
