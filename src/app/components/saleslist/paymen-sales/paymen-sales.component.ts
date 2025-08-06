@@ -99,7 +99,6 @@ export class PaymenSalesComponent {
       this.miFormulario.patchValue({ totalRecibido: this.cashValue})
       this.dialogRef.close(this.miFormulario);
     } else {
-      alert('else')
       this.alertaService.errorAlert("Para procesar la transación debe saldar la deuda en su totalidad.")
     }
 
@@ -156,7 +155,7 @@ export class PaymenSalesComponent {
         this.dataListBanco = result.data;
       }
     })
-    
+
   }
 
 

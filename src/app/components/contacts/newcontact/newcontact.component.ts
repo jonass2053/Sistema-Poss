@@ -90,7 +90,6 @@ export class NewcontactComponent {
 
 
   insert() {
-    console.log(this.miFormulario.value)
     this.alertaService.ShowLoading();
     this.contactoService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
       setTimeout(() => {

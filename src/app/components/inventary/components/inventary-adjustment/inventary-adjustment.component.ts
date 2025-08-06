@@ -155,7 +155,7 @@ export class InventaryAdjustmentComponent {
         else {
         }
       })
-     
+
       this.loading();
     }
   }
@@ -187,7 +187,6 @@ export class InventaryAdjustmentComponent {
   //Filter de los ajustes
   getAllFilterAjustes(event: any) {
     const filtro = this.formularioFecha.value.filtro;
-    console.log(filtro)
     if (filtro == "") {
       this.getAllAjustes();
     }
@@ -228,7 +227,7 @@ export class InventaryAdjustmentComponent {
           break;
       }
     }
-  
+
   }
 
    formatearFecha(fecha: Date): string {

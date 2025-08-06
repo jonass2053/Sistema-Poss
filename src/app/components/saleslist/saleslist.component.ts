@@ -260,7 +260,7 @@ export class SaleslistComponent implements OnInit {
     this.pageSize = event.pageSize;
 
     // Llamar al backend con el número de página ajustado y el tamaño de la página
-  
+
     this.getAllFilter();
   }
 
@@ -280,7 +280,7 @@ export class SaleslistComponent implements OnInit {
       if (this.dataList.length > 0) {
         this.sinRegistros = false
         this.cargando = false;
-        
+
       }
       else {
         this.sinRegistros = true;
@@ -304,7 +304,6 @@ export class SaleslistComponent implements OnInit {
       this.getAll(this.pageNumber, this.pageSize, 'Factura');
     }
     else {
-      alert(this.informacionService.tipoDocumento)
       this.cargando = true;
       this.facturaService.getAllFilter(
         this.informacionService.idSucursal,
@@ -314,7 +313,7 @@ export class SaleslistComponent implements OnInit {
         this.miFormulario.value
       ).subscribe((data: any) => {
         this.dataList = data.data;
-        this.dataSource.data = data.data; 
+        this.dataSource.data = data.data;
         this.dateNowServer = data.dateNow;
         this.resetMontosResumen();
         this.cargando = false;
@@ -366,7 +365,7 @@ export class SaleslistComponent implements OnInit {
       }
     })
   }
- 
+
 
   // printFactura() {
   //   const customPrintOptions: PrintOptions = new PrintOptions({

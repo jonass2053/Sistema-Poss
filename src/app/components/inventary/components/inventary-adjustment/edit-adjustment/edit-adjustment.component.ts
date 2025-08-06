@@ -21,7 +21,7 @@ export class EditAdjustmentComponent {
     private dialogRef: MatDialogRef<EditAdjustmentComponent>,
     private productoService : ProductoService,
     private alertas : AlertServiceService
-    
+
   ) {
     this.miFormulario.reset(this.data);
 
@@ -32,7 +32,7 @@ export class EditAdjustmentComponent {
   closeModal(){
     this.dialogRef.close();
   }
- 
+
   miFormulario: FormGroup = this.fb.group({
     idAjuste: this.fb.control(null),
     idProducto: this.fb.control(''),
@@ -57,12 +57,11 @@ export class EditAdjustmentComponent {
 
   updateAjuste(){
     this.productoService.updateAjusteInventario(this.miFormulario.value).subscribe((data: ServiceResponse)=>{
-    console.log(data)
       if(data.status){
         this.alertas.successAlert(data.message)
         this.closeModal();
       }
-        
+
     })
   }
 

@@ -49,6 +49,7 @@ import { SettingInventaryComponent } from './components/settings/components/sett
 import { ConfiguracionesGeneralesComponent } from './components/settings/components/configuraciones-generales/configuraciones-generales.component';
 import { ReportesComponent } from './components/reportes/reportes.component';
 import { ReportsComponent } from './components/reports/reports.component';
+import { CashRegisterListComponentComponent } from './components/cash-register-list-component/cash-register-list-component.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -76,11 +77,9 @@ const routes: Routes = [
         {path: 'inventary', component : SettingInventaryComponent},
         {path: 'generalsetting', component : ConfiguracionesGeneralesComponent}
         ]
-      }
-      
-      
-      
-      ,
+      },
+
+
       {path:"settings/company", component : CompanyComponent},
       {path:"settings/role", component : RoleComponent},
       {path:"settings/paymentsterms", component : PaymentTermsComponent},
@@ -95,6 +94,7 @@ const routes: Routes = [
       {path:"inventary/product/:id", component : ProductsComponent},
       {path:"inventary/inventary-adjustment", component : InventaryAdjustmentComponent},
       {path:"shifts", component : ShiftsComponent},
+      {path:"cashregisterlist", component : CashRegisterListComponentComponent},
       {path:"sales/salelist", component : SaleslistComponent},
       {path:"sales/pricelist", component : SaleslistComponent},
       {path:"sales/newsale/:id/:idtipo", component : NewsalesComponent},

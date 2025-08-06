@@ -137,7 +137,6 @@ export class CashManagementComponent {
   save() {
     //  this.alertas.ShowLoading();
     this.cargarFormulario();
-    console.log(this.miFormulario.value)
     if (this.miFormulario.value.id != null) {
       this.update();
     } else {

@@ -85,7 +85,6 @@ export class ModelsComponent {
 
   save() {
     if (this.miFormulario.valid) {
-      console.log(this.miFormulario.value)
       this.miFormulario.get('idModelo')?.value === null ? this.insert() : this.update()
     }
   }
@@ -103,7 +102,6 @@ export class ModelsComponent {
     this.editando=true;
     this.miFormulario.patchValue(
       { 'idModelo': modelo.idModelo, 'idMarca': modelo.marca.idMarca, 'nombre': modelo.nombre, });
-    console.log(this.miFormulario.value)
   }
 
   resetForm() {

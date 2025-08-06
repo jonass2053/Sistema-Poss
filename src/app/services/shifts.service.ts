@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
@@ -8,12 +8,14 @@ import { catchError, Observable } from 'rxjs';
 import { Numberish } from 'primeng/ts-helpers';
 import { iTurno } from '../interfaces/iTermino';
 import { InformationService } from './information.service';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShiftsService {
-
+  private headers: HttpHeaders;
+  private header: { headers: HttpHeaders }
   url: string = `${baseUrl}/Turno`;
 
   public isOpen!: iTurno | undefined;
@@ -21,8 +23,13 @@ export class ShiftsService {
     private http: HttpClient,
     private fb: FormBuilder,
     private alertas: AlertServiceService,
-    private informartionService: InformationService
-  ) { }
+    private informartionService: InformationService,
+    private usuarioService: UsuarioService
+  ) {
+    const token = this.usuarioService?.usuarioLogueado?.token ?? '';
+    this.headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    this.header = { headers: this.headers };
+  }
   userLocal: any | undefined;
 
   resetTurno() {
@@ -37,7 +44,7 @@ export class ShiftsService {
   }
 
   insert(formulario: any): any {
-    return this.http.post<ServiceResponse>(`${this.url}`, formulario).pipe(catchError((error) => {
+    return this.http.post<ServiceResponse>(`${this.url}`, formulario, this.header).pipe(catchError((error) => {
       console.log(error);
       this.alertas.errorAlert(error);
       return error()
@@ -45,7 +52,7 @@ export class ShiftsService {
     )
   }
   update(formualrio: any): any {
-    return this.http.put<ServiceResponse>(`${this.url}/close_turno`, formualrio).pipe(catchError((error) => {
+    return this.http.put<ServiceResponse>(`${this.url}/close_turno`, formualrio, this.header).pipe(catchError((error) => {
       console.log(error);
       this.alertas.errorAlert(error);
       return error()
@@ -53,22 +60,22 @@ export class ShiftsService {
     )
   }
   delete(id: number): Observable<ServiceResponse> {
-    return this.http.delete<ServiceResponse>(`${this.url}/${id}`)
+    return this.http.delete<ServiceResponse>(`${this.url}/${id}`, this.header)
   }
   getAll(idSucursal: number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/get_by_idsucursal/${idSucursal}`)
+    return this.http.get<ServiceResponse>(`${this.url}/get_by_idsucursal/${idSucursal}`, this.header)
   }
   getById(idTurno: number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/${idTurno}`)
+    return this.http.get<ServiceResponse>(`${this.url}/${idTurno}`, this.header)
   }
-  getTurnoActual(idUsuario: number, idSucursal : number): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}/${idSucursal}`)
+  getTurnoActual(idUsuario: number, idSucursal: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/turno_actual${idUsuario}/${idSucursal}`, this.header)
   }
 
-    getTurnoActualExeq() {
-     this.getTurnoActual(this.informartionService.idUsuario, this.informartionService.idSucursal).subscribe((data: ServiceResponse) => {
-      alert(this.informartionService.idUsuario);
-      alert(this.informartionService.idSucursal);
+  getTurnoActualExeq() {
+    this.getTurnoActual(this.informartionService.idUsuario, this.informartionService.idSucursal).subscribe((data: ServiceResponse) => {
+      // alert(this.informartionService.idUsuario);
+      // alert(this.informartionService.idSucursal);
       if (data.statusCode == 200) {
         this.isOpen = data.data == null ? undefined : data.data;
         let userLocal = localStorage.getItem('user');

@@ -87,7 +87,6 @@ export class BrandComponent {
 
   save() {
     if (this.miFormulario.valid) {
-      console.log(this.miFormulario.value)
       this.miFormulario.get('idMarca')?.value === null ? this.insert() : this.update()
     }
   }
@@ -96,7 +95,6 @@ export class BrandComponent {
     this.cargando = true;
     this.marcaSwervice.getAll().subscribe((data: any) => {
       this.dataList = data.data;
-      console.log(data.data)
       this.dataList.length > 0 ? this.sinRegistros = false : this.sinRegistros = true;
       this.cargando = false;
     })
@@ -106,7 +104,6 @@ export class BrandComponent {
     this.editando=true;
     this.miFormulario.patchValue(
       { 'idMarca': marca.idMarca, 'idCategoria': marca.categoria.idCategoria, 'nombre': marca.nombre, });
-    console.log(this.miFormulario.value)
   }
 
   resetForm() {

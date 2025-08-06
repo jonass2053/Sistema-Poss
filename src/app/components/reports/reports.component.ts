@@ -206,9 +206,7 @@ export class ReportsComponent {
   }
 
   exportCsv(reportName: string): void {
-    console.log(`Exporting CSV for ${reportName}...`)
     // Implement CSV export logic here
-    alert(`Exportando CSV para: ${reportName}`)
   }
 
   printReport(): void {
