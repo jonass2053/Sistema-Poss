@@ -79,7 +79,6 @@ export class ProductsComponent {
     this.miFormulario.patchValue({ idSucursal: this.informationService.idSucursal })
     this.idProducto = this.route.snapshot.paramMap.get('id');
     if (this.idProducto !== '0' && this.idProducto != null) {
-      alert('entre')
       this.getById(this.idProducto);
     }
   }
@@ -164,7 +163,6 @@ export class ProductsComponent {
     this.miFormulario.patchValue({ 'idUnidad': producto.idUnidad })
     this.imageUrl = producto.imagen;
     this.miFormulario.patchValue({ impuestos: producto.impuestos[0] })
-    console.log(this.miFormulario.value)
     this.productoService.getAllUnidadesFilter(producto.idUnidad.toString()).subscribe((data: any) => {
       this.miFormulario.patchValue({ 'filterUnidades': data.data.find((c: any) => c.idUnidad == producto.idUnidad) })
     })
@@ -184,7 +182,6 @@ export class ProductsComponent {
 
 
   save() {
-    alert(this.miFormulario.value.barCode)
     this.formData.append('idSucursal', this.informationService.idSucursal.toString())
     this.formData.append('idEmpresa', this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa)
     this.formData.append('nombre', this.miFormulario.get('nombre')?.value);
@@ -344,7 +341,6 @@ export class ProductsComponent {
   getAllImpuesto() {
     this.impuestoService.getAll().subscribe((data: ServiceResponse) => {
       this.dataListImpuesto = data.data;
-      console.log(this.miFormulario.value.idProducto)
       if (this.miFormulario.value.idProducto === 0) {
         this.miFormulario.patchValue({ idImpuesto: data.data.find((c: iiMpuesto) => c.idImpuesto == 3).idImpuesto })
       }
@@ -355,7 +351,6 @@ export class ProductsComponent {
 
 
   setUnidad(event: any) {
-    console.log('editando')
     this.miFormulario.patchValue({ "idUnidad": event.option.value.idUnidad })
   }
 
@@ -394,7 +389,6 @@ export class ProductsComponent {
 
   getModelos(idMarca: number) {
     this.modeloService.getByIdMarca(idMarca).subscribe((data: ServiceResponse) => {
-      console.log(data)
       this.dataListModelos = data.data;
     })
   }

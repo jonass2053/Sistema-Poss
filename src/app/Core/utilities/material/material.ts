@@ -1,37 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterModule } from '@angular/router';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatCardModule} from '@angular/material/card';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatListModule} from '@angular/material/list';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatChipsModule} from '@angular/material/chips'
-import {MatTableModule} from '@angular/material/table';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatChipsModule } from '@angular/material/chips'
+import { MatTableModule } from '@angular/material/table';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { TableModule } from 'primeng/table'; // Importación de PrimeNG Table
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
 import { DatePicker } from 'primeng/datepicker';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 
@@ -39,7 +39,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 
 
 
- export const  material : any =[
+export const material: any = [
   MatFormFieldModule,
   CommonModule,
   MatIconModule,
@@ -56,11 +56,11 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   MatSlideToggleModule,
   MatCardModule,
   MatDatepickerModule,
-  
+
 
 ]
 
-export const  importaciones : any =[
+export const importaciones: any = [
   RouterLink,
   ReactiveFormsModule,
   CommonModule,
@@ -81,13 +81,15 @@ export const  importaciones : any =[
   MatTooltipModule,
   MatAutocompleteModule,
   MatStepperModule,
-  MatButtonModule, 
+  MatButtonModule,
   MatIconModule,
   MatListModule,
   MatDividerModule,
   MatTabsModule,
   MatPaginatorModule,
-  MatCardModule, MatChipsModule, MatProgressBarModule,
+  MatCardModule,
+  MatChipsModule,
+  MatProgressBarModule,
   MatTableModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
@@ -96,15 +98,16 @@ export const  importaciones : any =[
   MatButtonToggleModule,
   TableModule,
   Dialog,
-  ButtonModule, 
-  InputTextModule, 
+  ButtonModule,
+  InputTextModule,
   AvatarModule,
   DatePicker,
   MatSidenavModule,
   NgxPrintModule,
   FormsModule,
   RouterModule,
-  
+
+
 
 
 ]

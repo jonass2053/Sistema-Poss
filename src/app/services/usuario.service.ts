@@ -3,7 +3,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { ServiceResponse, ServiceResponseLogin } from '../interfaces/service-response-login';
 
 import { HandleErrorService } from './handle-error.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 import { baseUrl } from '../Core/utilities/enviroment.';
@@ -20,6 +20,7 @@ export class UsuarioService {
     private error: HandleErrorService,
     private alertas: AlertServiceService,
     private router : Router) {
+
   }
 
   token: any;
@@ -42,7 +43,7 @@ export class UsuarioService {
            localStorage.clear();
         this.router.navigate(['']);
         }, 2000);
-       
+
       }
   }
   insert(formualrio: any): any {

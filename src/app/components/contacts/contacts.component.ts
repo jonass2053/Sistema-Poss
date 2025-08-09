@@ -94,7 +94,6 @@ export class ContactsComponent {
     this.cargando=false;
   }
   insert() {
-    console.log(this.miFormulario.value)
     this.alertaService.ShowLoading();
     this.contactoService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
       setTimeout(() => {
@@ -154,7 +153,7 @@ export class ContactsComponent {
       this.setNoData(data.data.length>0?false:true);
     })
   }
-  
+
   getAllFilter(event: any) {
     const filtro = (event.target as HTMLInputElement).value;
     if (filtro === "") {
@@ -216,7 +215,6 @@ export class ContactsComponent {
   getAllVendedores() {
     this.vendedorService.getAll().subscribe((response: ServiceResponse) => {
       if (response.status) {
-        console.log(response)
         this.dataListVendedor = response.data;
       }
     })

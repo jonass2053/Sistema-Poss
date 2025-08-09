@@ -1,0 +1,311 @@
+<div class="cash-register-container">
+  <!-- Header -->
+  <mat-card class="header-card">
+    <mat-card-content>
+      <div class="header-content">
+        <div class="header-info">
+          <h1>Gestión de Cajas Registradoras</h1>
+          <p>Administra y controla todas las cajas del sistema</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="openCreateDialog()">
+          <mat-icon>add</mat-icon>
+          Nueva Caja
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>account_balance_wallet</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats.totalRegisters }}</h3>
+            <p>Total Cajas</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon success">
+            <mat-icon>lock_open</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3 class="text-success">{{ stats.openRegisters }}</h3>
+            <p>Cajas Abiertas</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon primary">
+            <mat-icon>today</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats.todayRegisters }}</h3>
+            <p>Cajas Hoy</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon accent">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ formatCurrency(stats.totalSales) }}</h3>
+            <p>Ventas Totales</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Filters and Table -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Lista de Cajas</mat-card-title>
+      <mat-card-subtitle>Gestiona todas las cajas registradoras</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Filters -->
+      <div class="filters-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar</mat-label>
+          <input matInput
+                 [(ngModel)]="searchTerm"
+                 (ngModelChange)="onSearchChange()"
+                 placeholder="Buscar por cajero o ID...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Filtrar</mat-label>
+          <mat-select [(value)]="selectedView" (selectionChange)="onViewChange()">
+            <mat-option value="all">Todas</mat-option>
+            <mat-option value="open">Abiertas</mat-option>
+            <mat-option value="closed">Cerradas</mat-option>
+            <mat-option value="today">Hoy</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Table -->
+      <div class="table-container">
+        <table mat-table [dataSource]="filteredRegisters" class="cash-register-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let register">
+              <strong>#{{ register.id.toString().padStart(3, '0') }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Cashier Column -->
+          <ng-container matColumnDef="cashier">
+            <th mat-header-cell *matHeaderCellDef>Cajero</th>
+            <td mat-cell *matCellDef="let register">
+              <div class="cashier-cell">
+                <mat-icon class="cashier-icon">person</mat-icon>
+                {{ register.cashier }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Date Column -->
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let register">
+              <div class="date-cell">
+                <mat-icon class="date-icon">calendar_today</mat-icon>
+                {{ formatDate(register.openDate) }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Shift Column -->
+          <ng-container matColumnDef="shift">
+            <th mat-header-cell *matHeaderCellDef>Turno</th>
+            <!-- <td mat-cell *matCellDef="let register">
+              <mat-chip-list>
+                <mat-chip>{{ register.shift }}</mat-chip>
+              </mat-chip-list>
+            </td> -->
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let register">
+              <!-- <mat-chip-list>
+                <mat-chip [ngClass]="register.status === 'Abierta' ? 'status-open' : 'status-closed'">
+                  <mat-icon matChipAvatar>
+                    {{ register.status === 'Abierta' ? 'lock_open' : 'lock' }}
+                  </mat-icon>
+                  {{ register.status }}
+                </mat-chip>
+              </mat-chip-list> -->
+            </td>
+          </ng-container>
+
+          <!-- Open Amount Column -->
+          <ng-container matColumnDef="openAmount">
+            <th mat-header-cell *matHeaderCellDef>Apertura</th>
+            <td mat-cell *matCellDef="let register">
+              {{ formatCurrency(register.openAmount) }}
+            </td>
+          </ng-container>
+
+          <!-- Close Amount Column -->
+          <ng-container matColumnDef="closeAmount">
+            <th mat-header-cell *matHeaderCellDef>Cierre</th>
+            <td mat-cell *matCellDef="let register">
+              {{ formatCurrency(register.closeAmount) }}
+            </td>
+          </ng-container>
+
+          <!-- Sales Column -->
+          <ng-container matColumnDef="sales">
+            <th mat-header-cell *matHeaderCellDef>Ventas</th>
+            <td mat-cell *matCellDef="let register">
+              <div class="sales-cell">
+                <div>{{ register.totalSales }} ventas</div>
+                <div class="sales-amount">{{ formatCurrency(register.salesAmount) }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Difference Column -->
+          <ng-container matColumnDef="difference">
+            <th mat-header-cell *matHeaderCellDef>Diferencia</th>
+            <td mat-cell *matCellDef="let register">
+              <span [ngClass]="getDifferenceColor(register.difference)">
+                <ng-container *ngIf="register.difference !== null">
+                  {{ register.difference > 0 ? '+' : '' }}{{ formatCurrency(register.difference) }}
+                </ng-container>
+                <ng-container *ngIf="register.difference === null">-</ng-container>
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let register">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="viewDetails(register)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Ver Detalles</span>
+                </button>
+                <button mat-menu-item
+                        (click)="manageRegister(register)"
+                        *ngIf="register.status === 'Abierta'">
+                  <mat-icon>edit</mat-icon>
+                  <span>Administrar</span>
+                </button>
+                <button mat-menu-item (click)="generateReport(register)">
+                  <mat-icon>description</mat-icon>
+                  <span>Reporte</span>
+                </button>
+                <button mat-menu-item (click)="exportData(register)">
+                  <mat-icon>download</mat-icon>
+                  <span>Exportar</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteRegister(register)" class="delete-action">
+                  <mat-icon>delete</mat-icon>
+                  <span>Eliminar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-grid">
+    <mat-card class="quick-actions-card">
+      <mat-card-header>
+        <mat-card-title>Acciones Rápidas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="quick-actions">
+          <button mat-stroked-button (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+            Crear Nueva Caja
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>description</mat-icon>
+            Reporte Consolidado
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>download</mat-icon>
+            Exportar Datos
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <mat-card-header>
+        <mat-card-title>Resumen del Día</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-items">
+          <div class="summary-item">
+            <span>Cajas Abiertas:</span>
+            <strong>{{ stats.openRegisters }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Total Ventas Hoy:</span>
+            <strong>{{ formatCurrency(425.5) }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Diferencias:</span>
+            <strong class="text-success">$0.00</strong>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="alerts-card">
+      <mat-card-header>
+        <mat-card-title>Alertas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="alerts">
+          <div class="alert warning">
+            <mat-icon>warning</mat-icon>
+            <span>Caja #002 lleva 6 horas abierta</span>
+          </div>
+          <div class="alert success">
+            <mat-icon>check_circle</mat-icon>
+            <span>Todas las cajas balanceadas</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

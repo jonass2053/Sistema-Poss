@@ -209,16 +209,12 @@ export class ReportesComponent {
     // Simular carga de datos inicial
     setTimeout(() => {
       this.isLoading = false
-      console.log("Datos iniciales cargados")
     }, 1000)
   }
 
   generateReport() {
     this.isLoading = true
     const filters = this.filtersForm.value
-
-    console.log("Generando reporte con filtros:", filters)
-
     setTimeout(() => {
       this.isLoading = false
       // this.snackBar.open("Reporte generado correctamente", "Cerrar", {
@@ -232,9 +228,6 @@ export class ReportesComponent {
   filterResults() {
     this.isLoading = true
     const additionalFilters = this.additionalFiltersForm.value
-
-    console.log("Filtrando resultados con:", additionalFilters)
-
     setTimeout(() => {
       this.isLoading = false
       // this.snackBar.open("Filtros aplicados correctamente", "Cerrar", {

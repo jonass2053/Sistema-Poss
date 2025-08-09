@@ -1,59 +1,56 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ServiceResponse } from '../interfaces/service-response-login';
 import { Observable, catchError } from 'rxjs';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 import { baseUrl } from '../Core/utilities/enviroment.';
+import { UsuarioService } from './usuario.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpresaService {
-  url : string = `${baseUrl}/Empresa`;
+  private headers: HttpHeaders;
+  private header: { headers: HttpHeaders }
+  url: string = `${baseUrl}/Empresa`;
   constructor(
-      private http : HttpClient,
-      private alertas : AlertServiceService
-     ) { }
-   
-  
-     insert(formualrio : any) : any
-     {
-        return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(catchError((error)=>
-        {
-          console.log(error);
-          this.alertas.errorAlert(error);
-          return error()
-        })
-         )
-     }
-     update(formualrio : any) : Observable<ServiceResponse>
-     {
-      return this.http.put<ServiceResponse>(`${this.url}`, formualrio)
-     }
-     delete(id : number) : Observable<ServiceResponse>
-     {
-      return this.http.delete<ServiceResponse>(`${this.url}/${id}`)
-     }
-     getById(id : number) : Observable<ServiceResponse>
-     {
-      return this.http.get<ServiceResponse>(`${this.url}/${id}`)
-     }
-     getAll() : Observable<ServiceResponse>
-     {
-      return this.http.get<ServiceResponse>(`${this.url}`)
-     }
-     getAllRegimen() : Observable<ServiceResponse>
-     {
-      return this.http.get<ServiceResponse>(`${this.url}/getall-regimen`)
-     }
-     getAllSectores() : Observable<ServiceResponse>
-     {
-      return this.http.get<ServiceResponse>(`${this.url}/getall-sectores`)
-     }
-     getAllMonedas() : Observable<ServiceResponse>
-     {
-      return this.http.get<ServiceResponse>(`${this.url}/getall-monedas`)
-     }
+    private http: HttpClient,
+    private alertas: AlertServiceService,
+    private usuarioService: UsuarioService
+  ) {
+    this.headers = new HttpHeaders({ 'Authorization': `Bearer ${usuarioService.usuarioLogueado.token}` });
+    this.header = { headers: this.headers };
+  }
+
+
+  insert(formulario: any): any {
+    return this.http.post<ServiceResponse>(`${this.url}`, formulario, this.header).pipe(catchError((error) => {
+      console.log(error);
+      this.alertas.errorAlert(error);
+      return error()
+    })
+    )
+  }
+  update(formulario: any): Observable<ServiceResponse> {
+    return this.http.put<ServiceResponse>(`${this.url}`, formulario, this.header)
+  }
+  delete(id: number): Observable<ServiceResponse> {
+    return this.http.delete<ServiceResponse>(`${this.url}/${id}`, this.header)
+  }
+  getById(id: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/${id}`, this.header)
+  }
+  getAll(): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}`, this.header)
+  }
+  getAllRegimen(): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/getall-regimen`, this.header)
+  }
+  getAllSectores(): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/getall-sectores`, this.header)
+  }
+  getAllMonedas(): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/getall-monedas`, this.header)
+  }
 }
-    

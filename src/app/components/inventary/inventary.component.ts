@@ -94,7 +94,7 @@ export class InventaryComponent {
 
       readonly dialog = inject(MatDialog);
 
- 
+
 
   goToNewProduct(idProducto: number) {
     this.router.navigate([`inventary/product/${idProducto}`]);
@@ -105,10 +105,9 @@ export class InventaryComponent {
     this.loading();
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: any) => {
       this.dataList = data.data;
-      console.log(this.dataList)
       if (this.dataList.length > 0) {
         this.loading();
-       
+
       }
       else {
         // this.sinRegistros = true;
@@ -154,7 +153,6 @@ export class InventaryComponent {
       reader.readAsDataURL(this.selectedFile);
       reader.onload = () => {
         this.imageUrl = reader.result;
-        console.log(this.imageUrl)
       };
     }
   }
@@ -200,7 +198,6 @@ export class InventaryComponent {
 
   getModelos(idMarca: number) {
     this.modeloService.getByIdMarca(idMarca).subscribe((data: ServiceResponse) => {
-      console.log(data)
       this.dataListModelos = data.data;
     })
   }
@@ -208,27 +205,24 @@ export class InventaryComponent {
   editar(producto: iProducto) {
     this.productoService.productoForEdit = producto;
     this.goToNewProduct(producto.idProducto!);
-    
+
   }
 
   loading() {
     if (this.cargando === false) {
       this.cargando = true;
-      console.log('if')
     }
     else {
       this.cargando = false;
-      console.log('else')
     }
-    
+
   }
 
   openDialogGenerateCodeBar(id : number) {
     const dialogRef = this.dialog.open(GetBarCodeComponent, { width : '500px', height : '350px', data : {id}});
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
-  
+
 }

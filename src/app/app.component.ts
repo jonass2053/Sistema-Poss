@@ -20,13 +20,12 @@ export class AppComponent {
       information.idSucursal = usuario.usuarioLogueado.data.sucursal.idSucursal;
       information.idUsuario = usuario.usuarioLogueado.data.idUsuario;
       information.idTurno = usuario.usuarioLogueado.data.idTurno;
-      information.tipoDocumento  = localStorage.getItem('tipoDocumento')!; 
-      information.mySucursal = usuario.usuarioLogueado.data.sucursal;  
-      information.isPos = (localStorage.getItem('isPos')!)=="true"? true: false; 
-      alert("app component")
+      information.tipoDocumento  = localStorage.getItem('tipoDocumento')!;
+      information.mySucursal = usuario.usuarioLogueado.data.sucursal;
+      information.isPos = (localStorage.getItem('isPos')!)=="true"? true: false;
       turnoService.getTurnoActualExeq();
      }
-  
+
   }
 }
 

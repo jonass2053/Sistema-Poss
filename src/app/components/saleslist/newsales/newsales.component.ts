@@ -30,7 +30,6 @@ import { CategoriaService } from 'src/app/services/categoria.service';
 import { PrintServiceService } from 'src/app/services/print-service.service';
 import { ConfiguracionesGeneralesComponent } from '../../settings/components/configuraciones-generales/configuraciones-generales.component';
 import { ConfiguracionesFactService } from 'src/app/services/configuraciones.service';
-
 declare var $: any;
 
 @Component({
@@ -50,6 +49,7 @@ declare var $: any;
   templateUrl: './newsales.component.html',
   styleUrl: './newsales.component.scss'
 })
+
 export class NewsalesComponent implements OnDestroy {
   @ViewChild('exampleModal') myModal!: ElementRef;
 
@@ -342,6 +342,8 @@ export class NewsalesComponent implements OnDestroy {
   getAllProduct() {
     this.showLoader();
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
+      console.log(data);
+
       if (data.status) {
         this.dataListProductosSearch = data.data;
         this.hidenLoader();
@@ -531,9 +533,13 @@ export class NewsalesComponent implements OnDestroy {
       this.dataListDetalleFactura.forEach(element => {
         element.descuento = 0;
         element.subTotal = (element.cantidad * element.precio);
+        element.total =  element.subTotal +  element.impuestos;
       });
+     this.calculoGeneral();
+
     }
   }
+
   aplyDesc(evento: any, idProducto: number) {
     this.dataListDetalleFactura.forEach(element => {
       if (element.idProducto == idProducto) {
@@ -671,7 +677,6 @@ export class NewsalesComponent implements OnDestroy {
     this.totalGeneral = e;
     this.totalApagar = e;
     this.impuestosGenerales = i;
-    console.log(this.miFormulario.value)
     if (this.dataListDetalleFactura.length < 1) {
       this.subTotalGeneral = 0;
       this.descuentoGeneral = 0;
@@ -950,10 +955,10 @@ export class NewsalesComponent implements OnDestroy {
           montoPagar: this.totalGeneral
         }
       }).afterClosed().subscribe(result => {
-        if (result != undefined) {         
+        if (result != undefined) {
           this.miFormulario.patchValue(
-            {idMetodoPago : result.value.idMetodoPago, 
-              cambio:  result.value.cambio, 
+            {idMetodoPago : result.value.idMetodoPago,
+              cambio:  result.value.cambio,
               totalRecibido:  result.value.cashReceived,
               montoPagado:  result.value.cashReceived ,
               idBanco : result.value.idBanco,
@@ -986,7 +991,8 @@ export class NewsalesComponent implements OnDestroy {
     })
   }
 
-
-
-
+  // metodo para cunado no llega una imagen valida
+  onImageError(event: Event) {
+  (event.target as HTMLImageElement).src = '../../../../assets/images/noimg.png';
+}
 }
