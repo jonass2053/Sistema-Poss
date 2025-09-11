@@ -1,149 +1,151 @@
-<mat-card appearance="raised">
-    <mat-card-content>
-        <div class="headerNavCard">
-            <h4 class="mb-56">Configuraciones generales de los usuarios</h4>
-            <a [routerLink]="['/settings']">
-                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
-            </a>
-        </div>
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-            <mat-card appearance="raised" class="cardForm">
-                <mat-card-content>
-                    <form class="formulario" [formGroup]="miFormulario">
-                        <div class="container">
-                            <div class="row">
+<!-- <mat-card appearance="raised">
+    <mat-card-content> -->
+<div class="headerNavCard">
+    <h4 class="mb-56">Configuraciones generales de los usuarios</h4>
+    <a [routerLink]="['/settings']">
+        <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
+    </a>
+</div>
+<div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+    <!-- <mat-card appearance="raised" class="cardForm">
+                <mat-card-content> -->
+    <form class="formulario" [formGroup]="miFormulario">
+        <div class="">
+            <div class="row">
+                <div class="col-12 col-md-12 col-sm-12 flex">
+                    <mat-form-field appearance="fill" hideRequiredMarker>
+                        <mat-label>Nombre</mat-label>
+                        <input matInput #message maxlength="256" class="control" placeholder="Escriba nombre"
+                            formControlName="nombre">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="example-full-width control">
+                        <mat-label>Apellidos</mat-label>
+                        <input matInput #message maxlength="256" class="control" placeholder="Escriba su apellido"
+                            formControlName="apellidos">
+                    </mat-form-field>
 
 
-                                <mat-form-field appearance="outline" hideRequiredMarker>
-                                    <mat-label>Nombre</mat-label>
-                                    <input matInput #message maxlength="256" class="control"
-                                        placeholder="Escriba nombre" formControlName="nombre">
-                                </mat-form-field>
-
-
-
-                                <mat-form-field appearance="outline" class="example-full-width control">
-                                    <mat-label>Apellidos</mat-label>
-                                    <input matInput #message maxlength="256" class="control"
-                                        placeholder="Escriba su apellido" formControlName="apellidos">
-                                </mat-form-field>
-
-
-                                <mat-form-field appearance="outline" class="example-full-width control">
-                                    <mat-label>Correo electrónico</mat-label>
-                                    <input matInput #message maxlength="256" class="control"
-                                        placeholder="Escriba su correo" formControlName="correo">
-                                </mat-form-field>
-
-                                <div class="row">
-                                    <div class="col-md-8 col-sm-12 col-xs-12">
-                                        <mat-form-field appearance="outline" class="select">
-                                            <mat-label>Rol/Cargo</mat-label>
-                                            <mat-select formControlName="idRol">
-                                                <mat-option style="z-index: 999;" *ngFor="let rol of roles"
-                                                    [value]="rol.idRol">{{rol.nombre}}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-
-                                    <div class="col-md-4 col-sm-12 col-xs-12" *ngIf="editando===false">
-                                        <mat-form-field appearance="outline" class="example-full-width control">
-                                            <mat-label>Contraseña</mat-label>
-                                            <input type="password" matInput #message minlength="8" class="control"
-                                                placeholder="Escriba su correo" formControlName="contrasena">
-                                            <!-- <mat-hint align="start"><strong></strong> </mat-hint> -->
-                                        </mat-form-field>
-                                    </div>
-                                </div>
+                </div>
 
 
 
-                                <!-- <mat-radio-group aria-label="Select an option">
+
+
+
+
+                <mat-form-field appearance="fill" class="example-full-width control">
+                    <mat-label>Correo electrónico</mat-label>
+                    <input matInput #message maxlength="256" class="control" placeholder="Escriba su correo"
+                        formControlName="correo">
+                </mat-form-field>
+
+                <div class="row">
+                    <div class="col-md-8 col-sm-12 col-xs-12">
+                        <mat-form-field appearance="fill" class="select">
+                            <mat-label>Rol/Cargo</mat-label>
+                            <mat-select formControlName="idRol">
+                                <mat-option style="z-index: 999;" *ngFor="let rol of roles"
+                                    [value]="rol.idRol">{{rol.nombre}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4 col-sm-12 col-xs-12" *ngIf="editando===false">
+                        <mat-form-field appearance="fill" class="example-full-width control">
+                            <mat-label>Contraseña</mat-label>
+                            <input type="password" matInput #message minlength="8" class="control"
+                                placeholder="Escriba una contraseña" formControlName="contrasena">
+                            <!-- <mat-hint align="start"><strong></strong> </mat-hint> -->
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+
+                <!-- <mat-radio-group aria-label="Select an option">
                                   <mat-radio-button formControlName="estado" value="1">Activo</mat-radio-button>
                                   <mat-radio-button formControlName="estado" value="0">Inactivo</mat-radio-button>
                                  </mat-radio-group> -->
 
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button mat-raised-button class="me-8 mb-8" color="primary"
-                                (click)="save()">Guardar</button>
-                            <button *ngIf="editando" mat-raised-button class="me-8 mb-8" color="warn"
-                                (click)="resetForm()">Cancelar</button>
-                        </div>
-                    </form>
-
-
-
-
-
-                </mat-card-content>
-            </mat-card>
-
-
-            <div class="container">
-                <!-- Daily Activity -->
-                <mat-card class="w-100 cardtable">
-                    <mat-card-content>
-                        <!-- <h4 class="mb-56">Listado de roles</h4> -->
-
-                        <div class="table-responsive">
-                            <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
-
-                                <!-- Id Column -->
-                                <ng-container matColumnDef="idUsuario">
-                                    <th mat-header-cell *matHeaderCellDef> Cod </th>
-                                    <td mat-cell class="fw-medium" *matCellDef="let element"> {{element.idUsuario}}
-                                    </td>
-                                </ng-container>
-
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="nombre">
-                                    <th mat-header-cell *matHeaderCellDef> nombre </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.nombre }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
-
-                                <!-- Assigned Column -->
-                                <ng-container matColumnDef="correo">
-                                    <th mat-header-cell *matHeaderCellDef> correo </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <p class="mb-0 fw-medium">{{ element.correo }}</p>
-                                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
-                                    </td>
-                                </ng-container>
-
-                                <!-- Project Column -->
-                                <ng-container matColumnDef="acciones">
-                                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <div class="mb-0 fw-medium op-5 acciones">
-                                            <!-- {{element.project}} -->
-
-                                            <button class="btnaccion" (click)="editar(element)"> <mat-icon
-                                                    class="editarcolor">edit</mat-icon></button>
-                                            <button class="btnaccion" (click)="delete(element)"> <mat-icon
-                                                    class="deletecolor">delete</mat-icon></button>
-
-                                        </div>
-                                    </td>
-                                </ng-container>
-
-                               
-
-
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
             </div>
+
         </div>
-    </mat-card-content>
-</mat-card>
+        <div class="modal-footer">
+            <button mat-raised-button class="me-8 mb-8" color="primary" (click)="save()">Guardar</button>
+            <button *ngIf="editando" mat-raised-button class="me-8 mb-8" color="warn"
+                (click)="resetForm()">Cancelar</button>
+        </div>
+    </form>
 
 
+
+
+    <!-- 
+                </mat-card-content>
+            </mat-card> -->
+
+
+    <div class="container">
+        <!-- Daily Activity -->
+        <!-- <mat-card class="w-100 cardtable">
+                    <mat-card-content> -->
+        <!-- <h4 class="mb-56">Listado de roles</h4> -->
+
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
+
+                <!-- Id Column -->
+                <ng-container matColumnDef="idUsuario">
+                    <th mat-header-cell *matHeaderCellDef> Cod </th>
+                    <td mat-cell class="fw-medium" *matCellDef="let element"> {{element.idUsuario}}
+                    </td>
+                </ng-container>
+
+                <!-- Assigned Column -->
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> nombre </th>
+                    <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{ element.nombre }}</p>
+                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                    </td>
+                </ng-container>
+
+                <!-- Assigned Column -->
+                <ng-container matColumnDef="correo">
+                    <th mat-header-cell *matHeaderCellDef> correo </th>
+                    <td mat-cell *matCellDef="let element">
+                        <p class="mb-0 fw-medium">{{ element.correo }}</p>
+                        <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                    </td>
+                </ng-container>
+
+                <!-- Project Column -->
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="mb-0 fw-medium op-5 acciones">
+                            <!-- {{element.project}} -->
+
+                            <button class="btnaccion" (click)="editar(element)"> <mat-icon
+                                    class="editarcolor">edit</mat-icon></button>
+                            <button class="btnaccion" (click)="delete(element)"> <mat-icon
+                                    class="deletecolor">delete</mat-icon></button>
+
+                        </div>
+                    </td>
+                </ng-container>
+
+
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <!-- </mat-card-content>
+                </mat-card> -->
+    </div>
+</div>
+<!-- </mat-card-content>
+</mat-card> -->

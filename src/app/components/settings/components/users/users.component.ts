@@ -15,44 +15,42 @@ import { TaxesComponent } from "../taxes/taxes.component";
   imports: [
     importaciones,
     TaxesComponent
-],
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
   constructor(
-    private fb : FormBuilder,
-    private validatorForm : ValidatorFormService,
-    private alertaService : AlertServiceService,
-    private usuarioService : UsuarioService ,
-    private rolService : RolesService
-  ){
+    private fb: FormBuilder,
+    private validatorForm: ValidatorFormService,
+    private alertaService: AlertServiceService,
+    private usuarioService: UsuarioService,
+    private rolService: RolesService
+  ) {
     this.getAllRoles();
     this.getAll();
   }
-  miFormulario : FormGroup = this.fb.group(
+  miFormulario: FormGroup = this.fb.group(
     {
       idUsuario: this.fb.control(null),
-      nombre : this.fb.control("", Validators.required),
-      apellidos : this.fb.control("", Validators.required),
-      correo : this.fb.control("", [Validators.email, Validators.required]),
-      idRol : this.fb.control("", Validators.required),
-      contrasena : this.fb.control("")
+      nombre: this.fb.control("", Validators.required),
+      apellidos: this.fb.control("", Validators.required),
+      correo: this.fb.control("", [Validators.email, Validators.required]),
+      idRol: this.fb.control("", Validators.required),
+      contrasena: this.fb.control("")
     }
 
   )
-  editando : boolean = false;
-  cargando : boolean = false;
+  editando: boolean = false;
+  cargando: boolean = false;
   displayedColumns: string[] = ['idUsuario', 'nombre', 'correo', 'acciones'];
 
 
-  dataList:IUsuario[] = [];
-  roles : iRol[]=[];
+  dataList: IUsuario[] = [];
+  roles: iRol[] = [];
 
-  getAllRoles()
-  {
-    this.rolService.getAll().subscribe((data: ServiceResponse)=>
-    {
+  getAllRoles() {
+    this.rolService.getAll().subscribe((data: ServiceResponse) => {
       this.roles = data.data;
       console.log(data)
     })
@@ -66,7 +64,7 @@ export class UsersComponent {
     this.alertaService.ShowLoading();
     console.log(this.miFormulario.value)
     this.usuarioService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-    console.log(data)
+      console.log(data)
       setTimeout(() => {
         this.alertaService.successAlert(data.message);
         if (data.status) {
@@ -76,29 +74,24 @@ export class UsersComponent {
       }, 1000);
     })
   }
-   async delete(usuario : IUsuario) 
-  {
-    if(await this.alertaService.questionDelete())
-      {
-        this.alertaService.ShowLoading();
-        this.usuarioService.delete(usuario.idUsuario!).subscribe(((data: ServiceResponse)=>
-        {
-            if(data.status)
-              {
-                this.alertaService.successAlert(data.message);
-                this.getAll();
-              }
-              else
-              {
-                this.alertaService.errorAlert(data.message)
-              }
-        }))
-      }
+  async delete(usuario: IUsuario) {
+    if (await this.alertaService.questionDelete()) {
+      this.alertaService.ShowLoading();
+      this.usuarioService.delete(usuario.idUsuario!).subscribe(((data: ServiceResponse) => {
+        if (data.status) {
+          this.alertaService.successAlert(data.message);
+          this.getAll();
+        }
+        else {
+          this.alertaService.errorAlert(data.message)
+        }
+      }))
+    }
 
 
 
-   }
-  
+  }
+
   update() {
     this.alertaService.ShowLoading();
     this.usuarioService.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
@@ -122,25 +115,25 @@ export class UsersComponent {
     this.cargando = true;
     this.usuarioService.getAll().subscribe((data: any) => {
       this.dataList = data.data;
-      this.cargando=false;
+      this.cargando = false;
       console.log(data.data)
     })
   }
 
   editar(usuario: IUsuario) {
-    this.editando=true;
+    this.editando = true;
     this.miFormulario.patchValue(
-      { 
-         'idUsuario': usuario.idUsuario,
-         'nombre': usuario.nombre ,
-         'apellidos' : usuario.apellidos,
-         'correo' : usuario.correo,
-         'idRol' : usuario.rol.idRol,
-        })
+      {
+        'idUsuario': usuario.idUsuario,
+        'nombre': usuario.nombre,
+        'apellidos': usuario.apellidos,
+        'correo': usuario.correo,
+        'idRol': usuario.rol.idRol,
+      })
   }
 
   resetForm() {
     this.miFormulario.reset();
-    this.editando=false;
+    this.editando = false;
   }
 }

@@ -16,6 +16,7 @@ export class InformationService {
   idUsuario! : number;
   idTurno! : number;
   mySucursal! : iSucursal;
+  idRol! : number;
 
   setTipoDocumento(tD : string){
     this.tipoDocumento = tD;

@@ -42,8 +42,8 @@ export class NumeracionService {
   delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`, this.header)
   }
-  getAll(): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}`, this.header)
+  getAll(idEmpresa : number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/getall/${idEmpresa}`, this.header)
   }
   getAllTipoDocumentos(): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/get-tipo-documentos`, this.header)

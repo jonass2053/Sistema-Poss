@@ -1,5 +1,4 @@
 <div class="headerNavCard">
-
   <div class="titulo">
     <div class="centerall">
       <mat-icon>description</mat-icon>Listado de {{document}} <span style="margin-left: 10px;"></span>
@@ -7,7 +6,7 @@
     <div class="centerall">
       <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
         <mat-icon>add</mat-icon> nuevo</button>
-      <button color="primary" (click)="showFilter()" mat-raised-button class="me-8 mb-8">Filtrar
+      <button color="primary" (click)="drawer.toggle()" mat-raised-button class="me-8 mb-8">Filtrar
         <mat-icon>manage_search</mat-icon></button>
     </div>
 
@@ -16,7 +15,7 @@
               </a> -->
   </div>
 </div>
-<mat-card>
+<!-- <mat-card>
   <div class="filterandbutton" *ngIf="filters">
             <form [formGroup]="miFormulario">
                   <h2 style="margin-top: 10px;">Filtros</h2>
@@ -86,68 +85,126 @@
             </form>
 
           </div>
-</mat-card>
+</mat-card> -->
 
 
-<mat-card >
-  <div class="row">
-    <!-- Card column -->
-    <div class="col-12">
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side" class="conteinerfiltros">
+    <form [formGroup]="miFormulario">
+      <h2 style="margin-top: 10px;">Filtros</h2>
+      <hr>
+      <div class="containerfuncionesheader input-parent">
+        <mat-form-field appearance="fill" class="no-fill-background">
+          <mat-label>No. Doc. </mat-label>
+          <input matInput placeholder="Buscar" formControlName="no">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="no-fill-background">
+          <mat-icon matSuffix>person_add</mat-icon>
+          <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
+          <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
+            (input)="searchContacto($event)">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selectContacto($event)">
+            <mat-option *ngFor="let contacto of dataListContactos" [value]="contacto">
+              {{ contacto.nombreRazonSocial }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="no-fill-background">
+          <mat-label>Tipo de factura</mat-label>
+          <mat-select formControlName="idNumeracion">
+            @for (numeracion of dataListNumeraciones; track $index)
+            {
+            <mat-option [value]="numeracion.idNumeracion">{{numeracion.nombre}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="no-fill-background">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="idEstado">
+            @for (estado of dataListEstadosFactura; track $index)
+            {
+            <mat-option [value]="estado.idEstadoFactura">{{estado.nombre}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="no-fill-background">
+          <mat-label>Selec. fecha</mat-label>
+          <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Fecha inicio" formControlName="desde">
+            <input matEndDate placeholder="Fecha fin" formControlName="hasta">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <button style="width: 150px;" color="primary" (click)="getAllFilter()" mat-raised-button class="me-8 mb-8">
+          <mat-icon>search</mat-icon>Buscar</button>
 
-      <div class="demo-tab-content">
-        <!-- Daily Activity -->
-        <mat-card-content>
-          <label style="margin-left: 5px;">Resumen de montos</label>
-          <div class="summary-grid" *ngIf="document!='Cotización'">
-            <div class="summary-card">
-              <div class="header-card">
-                <div class="icon">$</div>
-                <div class="title">Total Facturado</div>
+        <button style="width: 150px;" color="info" (click)="printRportVentas()" mat-raised-button class="me-8 mb-8">
+          <mat-icon>print</mat-icon>Imprimir</button>
+
+        <button style="width: 150px;" color="warn" (click)="resetFilters()" mat-raised-button class="me-8 mb-8">
+          <mat-icon>autorenew</mat-icon>Reset.</button>
+      </div>
+
+    </form>
+  </mat-drawer>
+ 
+  <mat-card>
+    <div>
+      <!-- Card column -->
+      <div>
+
+        <div class="demo-tab-content">
+          <!-- Daily Activity -->
+          <mat-card-content>
+            <label style="margin-left: 5px;">Resumen de opraciones</label>
+            <div class="summary-grid" *ngIf="document!='Cotización'">
+              <div class="summary-card">
+                <div class="header-card">
+                  <div class="icon">$</div>
+                  <div class="title">Total Facturado</div>
+                </div>
+                <div class="amount">{{totalFacturado | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
               </div>
-              <div class="amount">{{totalFacturado}}</div>
-              <!-- <div class="transactions">1025 transacciones</div> -->
-            </div>
-            <div class="summary-card">
-              <div class="header-card">
-                <div class="icon">$</div>
-                <div class="title">Monto Pagado</div>
+              <div class="summary-card">
+                <div class="header-card">
+                  <div class="icon">$</div>
+                  <div class="title">Monto Pagado</div>
+                </div>
+                <div class="amount">{{ montoPagado | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
               </div>
-              <div class="amount">{{ montoPagado | number:'1.2-2'}}</div>
-              <!-- <div class="transactions">1025 transacciones</div> -->
-            </div>
 
-            <div class="summary-card">
-              <div class="header-card">
-                <div class="icon">$</div>
-                <div matTooltip="Venta con tarjeta" class="title">Monto Por Pagar</div>
+              <div class="summary-card">
+                <div class="header-card">
+                  <div class="icon">$</div>
+                  <div matTooltip="Venta con tarjeta" class="title">Monto Por Pagar</div>
+                </div>
+                <div class="amount">{{ montoPorPagar | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
               </div>
-              <div class="amount">{{ montoPorPagar | number:'1.2-2'}}</div>
-              <!-- <div class="transactions">1025 transacciones</div> -->
-            </div>
 
-            <div class="summary-card">
-              <div class="header-card">
-                <div class="icon">$</div>
-                <div matTooltip="Venta con trasferencia" class="title">Pago Vencido</div>
+              <div class="summary-card">
+                <div class="header-card">
+                  <div class="icon">$</div>
+                  <div matTooltip="Venta con trasferencia" class="title">Pago Vencido</div>
+                </div>
+                <div class="amount">{{ pagosVencido | number:'1.2-2'}}</div>
+                <!-- <div class="transactions">1025 transacciones</div> -->
               </div>
-              <div class="amount">{{ pagosVencido | number:'1.2-2'}}</div>
-              <!-- <div class="transactions">1025 transacciones</div> -->
+
+
             </div>
 
 
-          </div>
 
 
+            <div class="table-responsive">
+              <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
 
-
-          <div class="table-responsive">
-            <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
-
-            <div class="mat-elevation-z8">
-              <table aparence="fill" mat-table [dataSource]="dataSource">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-             
-
+              <table mat-table [dataSource]="dataSource" class="text-nowrap w-100">
                 <!-- Name Column -->
                 <ng-container matColumnDef="Cliente">
                   <th mat-header-cell *matHeaderCellDef> Cliente </th>
@@ -159,7 +216,7 @@
                 <ng-container matColumnDef="Tipo">
                   <th mat-header-cell *matHeaderCellDef> Tipo </th>
                   <td mat-cell *matCellDef="let element"> {{element.numeracionObj.nombre}}
-                  <p class="mb-0 fw-normal op-5">{{element.numeracion || '' }}</p>
+                    <p class="mb-0 fw-normal op-5">{{element.numeracion || '' }}</p>
                   </td>
                 </ng-container>
 
@@ -197,12 +254,14 @@
                       [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }}</div>
 
-                    <div   class="badge rounded-pill" *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"
-                       [style.background-color]="element.estadoFactura?.color">
+                    <div class="badge rounded-pill"
+                      *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"
+                      [style.background-color]="element.estadoFactura?.color">
                       SIN PAGOS APLICADOS </div>
 
-                    <div  class="badge rounded-pill"  *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()!='POR PAGAR'"
-                       [style.background-color]="element.estadoFactura?.color">
+                    <div class="badge rounded-pill"
+                      *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()!='POR PAGAR'"
+                      [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }} </div>
                   </td>
                 </ng-container>
@@ -255,7 +314,8 @@
                           <mat-icon color="primary">transform</mat-icon>
                           <span>Convertir a factura</span>
                         </button>
-                        <button *ngIf="element.montoPagado==0 || document=='Cotización'"
+                        <button
+                          *ngIf="(element.montoPagado==0 || document=='Cotización') && informationService.idRol!=24 "
                           [ngClass]="{'disabled': element.montoPagado !== 0, 'inactivo': element.montoPagado !== 0}"
                           mat-menu-item (click)="editar(element)" mat-menu-item>
                           <mat-icon color="primary">edit</mat-icon>
@@ -275,24 +335,24 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
-              <app-nodata *ngIf="dataSource.data.length<1"></app-nodata>
+              <app-nodata *ngIf="dataSource.data.length<1 && cargando==false"></app-nodata>
+
 
 
             </div>
-          </div>
-          <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator>
+            <mat-paginator [length]="totalItems" [pageSize]="pageSize" (page)="pageChanged($event)"></mat-paginator>
 
-        </mat-card-content>
+          </mat-card-content>
+
+        </div>
+
+
+
 
       </div>
 
-
-
-
     </div>
+  </mat-card>
 
-  </div>
-</mat-card>
-
-<app-report-ticket-invoice [factura]="facturaForPrint" id="ticket" *ngIf="imprimiendo"></app-report-ticket-invoice>
-<app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo" id="factura"></app-invoice-report>
+  <app-report-ticket-invoice [factura]="facturaForPrint" id="ticket" *ngIf="imprimiendo"></app-report-ticket-invoice>
+  <app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo" id="factura"></app-invoice-report>

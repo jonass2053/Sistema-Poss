@@ -1,7 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones } from 'src/app/Core/utilities/material/material';
+import { ServiceResponse } from 'src/app/interfaces/service-response-login';
+import { BoxServiceService } from 'src/app/services/box-service.service';
+import { InformationService } from 'src/app/services/information.service';
 
 @Component({
   selector: 'app-cash-register',
@@ -11,7 +15,7 @@ import { importaciones } from 'src/app/Core/utilities/material/material';
   styleUrl: './cash-register.component.scss'
 })
 export class CashRegisterComponent {
-cashRegisterForm: FormGroup;
+  cashRegisterForm: FormGroup;
 
   cashiers = [
     { value: 'Juan Pérez', label: 'Juan Pérez' },
@@ -28,24 +32,78 @@ cashRegisterForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
+    private cajaService: BoxServiceService,
+    private informations: InformationService,
+    private alertaService: AlertServiceService,
     public dialogRef: MatDialogRef<CashRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.cashRegisterForm = this.fb.group({
-      cashier: ['', Validators.required],
-      shift: ['', Validators.required],
-      openAmount: [500.00, [Validators.required, Validators.min(0)]],
-      notes: ['']
+      id: this.fb.control(null),
+      nombre: this.fb.control('', Validators.required),
+      pin: this.fb.control(null, Validators.required),
+      idSucursal: this.fb.control(null)
     });
+
+
+    if (cajaService.cajaEdit != undefined) {
+      this.cashRegisterForm.reset(cajaService.cajaEdit);
+    }
   }
 
+  hide = signal(true);
+  clickEvent(event: MouseEvent) {
+    this.hide.set(!this.hide());
+    event.stopPropagation();
+  }
+
+
+  save() {
+    if (this.cajaService.cajaEdit == undefined) {
+      this.insert();
+    } else {
+      this.update();
+    }
+
+  }
+
+
+  insert() {
+    this.cashRegisterForm.patchValue({ idSucursal: this.informations.idSucursal });
+    this.cajaService.insert(this.cashRegisterForm.value).subscribe((result: ServiceResponse) => {
+      if (result.status) {
+        this.alertaService.successAlert(result.message);
+         this.resetForm();
+        this.dialogRef.close(this.cashRegisterForm.value);
+      } else {
+        this.alertaService.errorAlert(result.message);
+      }
+    })
+  }
+
+  update() {
+    this.cajaService.update(this.cashRegisterForm.value).subscribe((result: ServiceResponse) => {
+      if (result.status) {
+        this.alertaService.successAlert(result.message);
+        this.resetForm();
+       this.dialogRef.close(this.cashRegisterForm.value);
+      } else {
+        this.alertaService.errorAlert(result.message);
+      }
+    })
+  }
+
+  resetForm() {
+    this.cashRegisterForm.reset();
+    this.cajaService.cajaEdit = undefined;
+  }
   onCancel(): void {
     this.dialogRef.close();
   }
 
   onSubmit(): void {
     if (this.cashRegisterForm.valid) {
-      this.dialogRef.close(this.cashRegisterForm.value);
+      // this.dialogRef.close(this.cashRegisterForm.value);
     }
   }
 }

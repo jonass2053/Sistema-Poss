@@ -1,7 +1,6 @@
 <form [formGroup]="miFormulario">
   <mat-card appearance="outlined" *ngIf="!informationService.isPos">
     <mat-card-content>
-
       <div class="headerNavCard">
         <div class="titulo"> <mat-icon>description</mat-icon> {{document}} <span style="margin-left: 10px;"
             *ngIf="facturaForEdit!==undefined">{{facturaForEdit.numeracion}} </span> </div>
@@ -14,7 +13,6 @@
         </a>
       </div>
       <div class="row">
-
         <div class="col-12">
           <mat-card appearance="outlined">
             <mat-card-header>
@@ -83,7 +81,7 @@
 
 
             </mat-card-content>
-          </mat-card>
+        </mat-card>
 
         </div>
         <!-- Seleccion de los productos -->
@@ -102,7 +100,14 @@
                 <mat-autocomplete #prductoBuscador="matAutocomplete" [displayWith]="displayFnProducto"
                   (optionSelected)="selectProducto($event, 1)">
                   <mat-option *ngFor="let producto of dataListProductosSearch" [value]="producto">
-                    {{ producto.nombre }}
+                    <div class="buscadorProductos">
+                      <div> {{ producto.nombre }} <br>
+                        <div class="mb-0 fw-normal op-5">Stock: {{producto.cantInicial}}
+                          Precio:${{producto.precioFinal}} </div>
+                      </div>
+                      <div><img [src]="producto.imagen" alt=""> </div>
+                    </div>
+
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
@@ -284,29 +289,13 @@
 
           <mat-card appearance="outlined">
             <mat-card-content>
-              <div *ngIf="document!='Cotización'">
-                <p>Seleccione el metodo de pago de su preferencia</p>
-                <div class="" style="display: flex; justify-content: center;">
-                  <div class="color-box" [ngClass]="{'active': activeIndex === 0}"
-                    (click)="setMetodoPago(1,'EFECTIVO', 0)" class="icono">
-                    <div><mat-icon>payments</mat-icon> <br>EFECTIVO</div>
-                  </div>
-                  <div class="color-box" [ngClass]="{'active': activeIndex === 1}"
-                    (click)="setMetodoPago(2, 'TARJETA', 1)" class="icono">
-                    <div><mat-icon>credit_card</mat-icon> <br>TARGETA</div>
-                  </div>
-                  <div cclass="color-box" matTooltip="Trasnsferencia" [ngClass]="{'active': activeIndex === 2}"
-                    (click)="setMetodoPago(3, 'TRASNFERENCIA', 2)" class="icono">
-                    <div><mat-icon>account_balance</mat-icon> <br>TRANSF.</div>
-                  </div>
-                </div>
 
-              </div>
               <div *ngIf="metodoPagoSeleccionado==''"
                 style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
                 <button mat-raised-button color="primary" class="margin2"
+                  (click)="setMetodoPago(1,'EFECTIVO', 0)"><mat-icon>save</mat-icon> Pagar y guardar</button>
+                <button mat-raised-button color="primary" class="margin2"
                   (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar</button>
-
                 <button mat-raised-button color="warn" class="margin2"
                   (click)="resetData(2)"><mat-icon>clear_all</mat-icon> Cancelar y
                   limpiar</button>
@@ -365,6 +354,10 @@
     </mat-card-content>
   </mat-card>
 
+
+
+
+  
   <!-- dise1@ post -->
   <div class="containerPost" *ngIf="informationService.isPos">
 
@@ -404,34 +397,35 @@
           @for (producto of dataListProductosSearch; track $index)
           {
           <div class="product-card" (click)="seletProductPos($event, producto)">
+            <div class="stock-badge" *ngIf="!producto.venderSinUnidades">{{producto.cantInicial}} Disponibles</div>
+
             <div class="containerimg">
-              <div class="stock-badge" *ngIf="!producto.venderSinUnidades">{{producto.cantInicial}} Disponibles</div>
-              <img src="{{producto.imagen}}"  (error)="onImageError($event)" alt="Producto" class="product-image">
+              <img src="{{producto.imagen}}" (error)="onImageError($event)" alt="Producto" class="product-image">
             </div>
 
             <div class="product-info">
-              <p class="product-name">{{producto.nombre}}</p>
-              <p class="product-price">${{producto.precioBase| number : '1.2-5'}}</p>
+              <p class="product-name"> {{ producto.nombre.length > 15 ? (producto.nombre | slice:0:15) + '...' :
+                producto.nombre }} </p>
+              <section class="product-price">
+                ${{producto.precioBase| number : '1.2-5'}}
+              </section>
             </div>
-            <!-- <div class="stock">{{producto.cantInicial}}</div> -->
-
           </div>
           }
         </div>
 
       </div>
     </div>
-    <!-- Detalles -->
     <div class="detalleVenta">
       <div class="header">
         <div *ngIf="dataListDetalleFactura.length>0" (click)="habilitarDescuentos()" class="btndescuento">
           <i class="fa-solid fa-tag"></i>
-        <span *ngIf="desc==false">Aplicar impuesto</span>  
-        <span *ngIf="desc==true">Excluir impuesto</span>
+          <span *ngIf="desc==false">Aplicar descuento</span>
+          <span *ngIf="desc==true">Excluir impuesto</span>
         </div>
 
         <div style="display: flex;">
-      
+
           <mat-form-field appearance="fill" class="mini-input no-fill-background">
             <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
             <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
@@ -453,13 +447,6 @@
             <mat-hint align="end">Este campo es obligatorio</mat-hint>
           </mat-form-field>
 
-
-
-          <!-- <label for="exampleFormControlInput1" class="form-label">Condiciones de pago:</label>
-                <select class="form-select" aria-label="Default select example" formControlName="idTermino" (change)="setVencimiento($event)" >
-                    <option   *ngFor="let termino of dataListTerminos"  [value]=termino.idTermino>
-                        {{termino.nombre}}</option>
-                </select> -->
         </div>
 
         <div class="body">
@@ -468,9 +455,8 @@
             Selecciona productos para agregar a la venta
           </div>
           <div class="headerTitulos" *ngIf="dataListDetalleFactura.length>0">
-            <section class="nombreItem">{{dataListDetalleFactura.length}}  Item</section>
+            <section class="nombreItem">{{dataListDetalleFactura.length}} Item</section>
             <section class="cant">Cant.</section>
-            <!-- <section class="cant">Precio</section> -->
             <section class="desc" *ngIf="desc">Desc. %</section>
             <section class="montod" *ngIf="desc" matTooltip="Monto descuento">M. Desc</section>
             <section class="montototal">SubTotal</section>
@@ -483,7 +469,6 @@
                 '1.2-5' }} </label>
               <input type="number" (input)="changeCant($event, item.idProducto)" class="form-control cant"
                 style="text-align: center; font-size: 13px;" min="1" [value]="item.cantidad">
-              <!-- <label class="cant">{{item.precio | number : '1.2-5'}}</label> -->
               <select *ngIf="desc" (change)="aplyDesc($event, item.idProducto)" class="form-select desc"
                 aria-label="Default select example" style="font-size: 13px;">
                 <option select value=0>Selec..</option>
@@ -511,62 +496,43 @@
 
         <div class="">
           <div class="pos-wrapper">
-        <div class="cards-grid">
-            <div class="info-card">
+            <div class="cards-grid">
+              <div class="info-card">
                 <div class="card-label">Subtotal</div>
                 <div class="card-value">{{moneda.simbolo}} {{subTotalGeneral | number : '1.2-5'}}</div>
-            </div>
-            
-            <div class="info-card">
+              </div>
+
+              <div class="info-card">
                 <div class="card-label">ITBIS</div>
                 <div class="card-value">{{moneda.simbolo}} {{impuestosGenerales |number : '1.2-5'}}</div>
                 <div class="tax-note">18.00%</div>
-            </div>
-            
-            <div class="info-card">
+              </div>
+
+              <div class="info-card">
                 <div class="card-label">Descuento</div>
                 <div class="card-value">{{moneda.simbolo}} {{descuentoGeneral | number : '1.2-5'}}</div>
-            </div>
-        </div>
-        
-        <div class="total-section">
-            <div class="total-label">Total a Pagar</div>
-            <div class="total-value">{{moneda.simbolo}} {{totalGeneral| number : '1.2-5'}}</div>
-        </div>
-
-        <div class="actions-bar">
-            <button class="btn btn-cancel" (click)="resetData(2)">Cancelar</button>
-            <button class="btn btn-save" (click)="openModalPayCash()">Guardar</button>
-        </div>
-    </div>
-
-          <!-- <div class="acciones montos mb-3 mt-3">
-            <div>
-              <section>Subtotal</section>
-              <section>{{moneda.simbolo}} {{subTotalGeneral | number : '1.2-5'}}</section>
-            </div>
-            <div>
-              <section>ITBIS (18.00 %)</section>
-              <section>{{moneda.simbolo}} {{impuestosGenerales |number : '1.2-5'}}</section>
-            </div>
-            <mat-divider></mat-divider>
-            <div>
-              <section>Descuento</section>
-              <section>{{moneda.simbolo}} {{descuentoGeneral | number : '1.2-5'}}</section>
-            </div>
-
-          </div> -->
-          <!-- <div class="btnsaccionessales">
-              <div class="btnA btnAcc2" (click)="resetData(2)">
-                <section> <mat-icon>list</mat-icon> {{dataListDetalleFactura.length}} Productos
-                </section>
-                <section>Cancelar</section>
               </div>
-              <div class="btnA btnAcc1" (click)="openModalPayCash()">
-                <section><mat-icon>attach_money</mat-icon> Vender</section>
-                <section class="monto">{{moneda.simbolo}} {{totalGeneral| number : '1.2-5'}}</section>
+            </div>
+
+            <div class="total-section">
+              <div class="total-label">Total a Pagar</div>
+              <div class="total-value">{{moneda.simbolo}} {{totalGeneral| number : '1.2-5'}}</div>
+            </div>
+
+            <div class="actions-bar">
+
+              <div class="informacionturno" *ngIf="turnoService.isOpen==undefined">
+                <p>PARA PODER EMPEZAR A VENDER TIENEN QUE ABRIR UN TURNO EN LA CAJA</p>
               </div>
-          </div> -->
+              <div *ngIf="turnoService.isOpen!=undefined" style="display: flex;">
+                <button class="btn btn-cancel" (click)="resetData(2)">Cancelar</button>
+                <button class="btn btn-save" (click)="openModalPayCash()">Guardar</button>
+              </div>
+
+            </div>
+          </div>
+
+
         </div>
       </div>
     </div>

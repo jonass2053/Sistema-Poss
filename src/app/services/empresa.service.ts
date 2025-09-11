@@ -5,22 +5,27 @@ import { Observable, catchError } from 'rxjs';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 import { baseUrl } from '../Core/utilities/enviroment.';
 import { UsuarioService } from './usuario.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpresaService {
-  private headers: HttpHeaders;
-  private header: { headers: HttpHeaders }
+  private headers!: HttpHeaders;
+  private header!: { headers: HttpHeaders }
   url: string = `${baseUrl}/Empresa`;
   constructor(
     private http: HttpClient,
     private alertas: AlertServiceService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private router: Router
   ) {
-    this.headers = new HttpHeaders({ 'Authorization': `Bearer ${usuarioService.usuarioLogueado.token}` });
-    this.header = { headers: this.headers };
+
+    if (this.router.url !== '/login' && this.router.url !== '/') {
+      this.headers = new HttpHeaders({ 'Authorization': `Bearer ${usuarioService.usuarioLogueado.token}` });
+      this.header = { headers: this.headers };
+    }
+
   }
 
 
@@ -32,6 +37,15 @@ export class EmpresaService {
     })
     )
   }
+  createAccount(formulario: any): any {
+    return this.http.post<ServiceResponse>(`${this.url}/create_acount`, formulario, this.header).pipe(catchError((error) => {
+      console.log(error);
+      this.alertas.errorAlert(error.error.message);
+      return error()
+    })
+    )
+  }
+
   update(formulario: any): Observable<ServiceResponse> {
     return this.http.put<ServiceResponse>(`${this.url}`, formulario, this.header)
   }

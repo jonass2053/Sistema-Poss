@@ -6,6 +6,7 @@ import { iImpuestoProductoCodigo, iProducto } from '../interfaces/iTermino';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 import { baseUrl } from '../Core/utilities/enviroment.';
 import { UsuarioService } from './usuario.service';
+import { InformationService } from './information.service';
 
 
 @Injectable({
@@ -18,8 +19,8 @@ export class ProductoService {
   constructor(
     private http: HttpClient,
     private alertas: AlertServiceService,
-
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private informatinService : InformationService
   ) {
     this.headers = new HttpHeaders({ 'Authorization': `Bearer ${usuarioService.usuarioLogueado.token}` });
     this.header = { headers: this.headers };
@@ -63,10 +64,11 @@ export class ProductoService {
     return this.http.get<ServiceResponse>(`${this.url}/getunidades/${filter}`, this.header)
   }
   getAllCuentas(): Observable<ServiceResponse> {
+
     return this.http.get<ServiceResponse>(`${this.url}/getcuentas`, this.header)
   }
   getAllCategorias(): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${baseUrl}/Categoria`, this.header)
+    return this.http.get<ServiceResponse>(`${baseUrl}/Categoria/getCategorias/${this.informatinService.idEmpresa}`, this.header)
   }
   getAllMarcas(idCategoria: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${baseUrl}/Categoria`, this.header)
@@ -79,11 +81,11 @@ export class ProductoService {
   insertImpuestos(impuestos: iImpuestoProductoCodigo[]): Observable<ServiceResponse> {
     return this.http.post<ServiceResponse>(`${this.url}/addimpuestos`, impuestos, this.header)
   }
-  getAllFilter(valor: string): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/filter/${valor}`, this.header)
+  getAllFilter(valor: string, idSucursal : number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/filter/${valor}/${idSucursal}`, this.header)
   }
-  getAllFilterForDocument(valor: string): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/filter-for-document/${valor}`, this.header)
+  getAllFilterForDocument(valor: string,  idSucursal : number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/filter-for-document/${valor}/${idSucursal}`, this.header)
   }
 
   insertAjusteInventario(formulario: any): Observable<ServiceResponse> {
@@ -106,16 +108,16 @@ export class ProductoService {
     return this.http.get<ServiceResponse>(`${this.url}/movimientos/${pageNumber}/${pageSize}/${idSucursal}`, this.header)
   }
 
-  getAllFilterMovimientos(valor: string, desde?: Date, hasta?: Date): Observable<ServiceResponse> {
+  getAllFilterMovimientos(valor: string,  idSucursal : number, desde?: Date, hasta?: Date): Observable<ServiceResponse> {
     if (desde != null)
-      return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}?desde=${desde}&hasta=${hasta}`, this.header)
-    return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}`, this.header)
+      return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}/${idSucursal}?desde=${desde}&hasta=${hasta}`, this.header)
+    return this.http.get<ServiceResponse>(`${this.url}/filter_movimientos/${valor}/${idSucursal}`, this.header)
   }
 
-  getAllFilterAjustes(valor: string, desde?: Date, hasta?: Date): Observable<ServiceResponse> {
+  getAllFilterAjustes(valor: string, idSucursal : number, desde?: Date, hasta? : Date): Observable<ServiceResponse> {
     if (desde != null)
-      return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}?desde=${desde}&hasta=${hasta}`, this.header)
-    return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}`, this.header)
+      return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}/${idSucursal}?desde=${desde}&hasta=${hasta}`, this.header)
+    return this.http.get<ServiceResponse>(`${this.url}/filter_ajustes/${valor}/${idSucursal}`, this.header)
   }
 
   generateBarCode(idProducto: number): Observable<ServiceResponse> {

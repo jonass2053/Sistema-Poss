@@ -42,7 +42,7 @@ export class ViewSalesComponent {
     private pagosService: PagosService,
     private printService: NgxPrintService,
     private router: Router,
-    private informationService : InformationService
+    public informationService : InformationService
 
   ) {
     route.paramMap.subscribe((params: any) => {

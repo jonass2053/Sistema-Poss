@@ -129,7 +129,7 @@
                                 <ng-container matColumnDef="descripcion">
                                     <th mat-header-cell *matHeaderCellDef> Descripción</th>
                                     <td mat-cell class="mb-0 fw-medium op-5" *matCellDef="let element">
-                                        {{element.nombre}} </td>
+                                        {{element.nombre.length>20? (element.nombre | slice:0:20)+ '...' : element.nombre}} </td>
                                 </ng-container>
 
 
@@ -256,7 +256,7 @@
                                     <th scope="col">Método de pago</th>
                                     <th scope="col">Monto</th>
                                     <th scope="col">Referencia</th>
-                                    <th scope="col">Acciones</th>
+                                    <th  *ngIf="informationService.idRol!=24" scope="col">Acciones</th>
 
 
                                     <!-- <th class="cargandoTableIcono">
@@ -282,7 +282,7 @@
                                     <td>
                                         <div>{{pago.notaPago}}</div>
                                     </td>
-                                    <td>
+                                    <td  *ngIf="informationService.idRol!=24">
                                         <button matTooltip="Eliminar pago" class="btnaccion"
                                             (click)="deletPago(pago.idPago!)" data-target="#exampleModal"><mat-icon
                                                 class="btnEliminar" data-toggle="modal">delete</mat-icon></button>

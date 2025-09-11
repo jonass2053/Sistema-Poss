@@ -31,7 +31,12 @@ export class FacturaService {
 
 
   insert(formualrio: any): Observable<ServiceResponse> {
-    return this.http.post<ServiceResponse>(`${this.url}`, formualrio, this.header)
+    return this.http.post<ServiceResponse>(`${this.url}`, formualrio, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {;
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
   }
   update(formualrio: any): Observable<ServiceResponse> {
     return this.http.put<ServiceResponse>(`${this.url}`, formualrio, this.header)
@@ -47,7 +52,7 @@ export class FacturaService {
         this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
         return throwError(() => error);
       })
-    );
+  );
 }
   getAllFacturasPendientes(idSucursal: number, idCliente: number, pageNumber: number, pageSize: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/getallFacturasPendientesByIdCliente/${idSucursal}/${idCliente}/${pageNumber}/${pageSize}`, this.header)
@@ -70,6 +75,10 @@ export class FacturaService {
   getEstadoFacturas(): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/estados_document`, this.header, )
   }
+
+  getResumen(idSucursal : number, desde : string, hasta : string): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/getresumenventasbyidsucursal/${idSucursal}/${desde}/${hasta}`, this.header, )
+  } 
 
 
 

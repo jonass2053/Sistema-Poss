@@ -8,7 +8,7 @@ import { importaciones } from 'src/app/Core/utilities/material/material';
   selector: 'app-settings',
   standalone: true,
   imports: [
-    importaciones,
+    importaciones
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './settings.component.html',

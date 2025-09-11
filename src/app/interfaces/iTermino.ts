@@ -1,82 +1,82 @@
 import { IUsuario } from "./i-usuario"
 
 export interface iTermino {
-  idTermino: number,
-  nombre: string,
-  dias: number,
+  idTermino: number;
+  nombre: string;
+  dias: number;
   predeterminado: boolean
 }
 
 export interface idNumeracion {
-  idNumeracion: number,
-  idTipoDocumento: Number,
-  idTipoNumeracion: Number,
-  nombre: string,
-  predeterminada: boolean,
-  vigencia: Date,
-  prefijo: string,
-  numeracionInicial: string,
-  contador: string,
-  numeracionFinal: string,
+  idNumeracion: number;
+  idTipoDocumento: Number;
+  idTipoNumeracion: Number;
+  nombre: string;
+  predeterminada: boolean;
+  vigencia: Date;
+  prefijo: string;
+  numeracionInicial: string;
+  contador: string;
+  numeracionFinal: string;
   estado: boolean
 }
 
 export interface iTipoDocumento {
-  idTipoDocumento: number,
+  idTipoDocumento: number;
   nombre: string
 
 }
 export interface iTipoNumeracion {
-  idTipoNumeracion: number,
-  idTipoDocumento: number,
-  nombre: string,
-  prefijo: string,
+  idTipoNumeracion: number;
+  idTipoDocumento: number;
+  nombre: string;
+  prefijo: string;
 
 }
 
 export interface iVendedor {
-  idVendedor?: number,
-  nombre: string,
-  rnc: string,
+  idVendedor?: number;
+  nombre: string;
+  rnc: string;
   observaciones: string
 }
 
 
 export interface iConfiguracionFac {
-  idConfiguracion?: number,
-  terminos: string,
+  idConfiguracion?: number;
+  terminos: string;
   notas: string
 }
 
 
 export interface iEmpresa {
-  idEmpresa?: number,
-  razonSocial: string,
-  nombreComercial: string,
-  rnc: string,
-  telefono: string,
-  direccion: string,
-  correo: string,
-  web: string,
-  idRegimen: number,
-  idSector: number,
-  facturacionElectronica: boolean,
-  numEmpleados: string,
-  logo: string,
+  idEmpresa?: number;
+  razonSocial: string;
+  nombreComercial: string;
+  rnc: string;
+  telefono: string;
+  direccion: string;
+  correo: string;
+  web: string;
+  idRegimen: number;
+  idSector: number;
+  facturacionElectronica: boolean;
+  numEmpleados: string;
+  logo: string;
   idMoneda: number
 
 }
 export interface iRegimen {
-  idRegimen?: number,
+  idRegimen?: number;
   nombre: string
 }
 
 export interface iSector {
-  idSector?: number,
+  idSector?: number;
   nombre: string
 }
 export interface iNumEmpleados {
-  value: string,
+  value: string;
   name: string
 }
 
@@ -95,116 +95,116 @@ export interface iContactoPos {
   limiteCredito: number
   idTermino: number
   idVendedor: number
-  incluirEstadoCuenta: boolean,
-  predeterminado : boolean
+  incluirEstadoCuenta: boolean;
+  predeterminado: boolean
 }
 
 export interface idTipoContacto {
-  idTipoContacto: number,
+  idTipoContacto: number;
   nombre: string
 }
 export interface iEstado {
-  id: number,
+  id: number;
   estado: string
 }
 export interface iEstadoFactura {
-  idEstadoFactura: number,
-  nombre: string,
+  idEstadoFactura: number;
+  nombre: string;
   color: string
 }
 
 export interface iCategoria {
-  idCategoria?: number,
-  nombre: string,
-  cantProduct : number
+  idCategoria?: number;
+  nombre: string;
+  cantProduct: number
 }
 
 export interface iAlmacen {
-  idAlmacen?: number,
-  nombre: string,
+  idAlmacen?: number;
+  nombre: string;
   observaciones: string
 }
 
 export interface iProducto {
-  idProducto?: number,
-  isProduct: boolean,
-  nombre: string,
-  idUnidad: number,
-  costoInicial: number,
-  precioBase: number,
-  precioFinal: number,
-  descripcion: string,
-  idAlmacen: number,
-  cantInicial: number,
-  cantMinima: number,
-  cantMaxima: number,
-  idCuentaContableParaVenta: number,
-  imagen: string,
-  venderSinUnidades?: boolean,
-  idCategoria: number,
-  categoriaObj : iCategoria,
+  idProducto?: number;
+  isProduct: boolean;
+  nombre: string;
+  idUnidad: number;
+  costoInicial: number;
+  precioBase: number;
+  precioFinal: number;
+  descripcion: string;
+  idAlmacen: number;
+  cantInicial: number;
+  cantMinima: number;
+  cantMaxima: number;
+  idCuentaContableParaVenta: number;
+  imagen: string;
+  venderSinUnidades?: boolean;
+  idCategoria: number;
+  categoriaObj: iCategoria;
   idEmpresa: number
   impuestos: iiMpuesto[]
   ImpuestosObj: iiMpuesto[]
-  idMarca: number,
-  marcaObj : iMarca,
-  idModelo: number,
-  modeloObj : iModelo,
-  diferencia: number,
+  idMarca: number;
+  marcaObj: iMarca;
+  idModelo: number;
+  modeloObj: iModelo;
+  diferencia: number;
   razonAjuste: string
-  stockAjustado: number,
-  estado : boolean,
-  barCode : string,
-  imgBarCode : any
-  
+  stockAjustado: number;
+  estado: boolean;
+  barCode: string;
+  imgBarCode: any
+
 
 
 }
 
 export interface iCuentas {
-  idCuentaContableParaVenta: number,
+  idCuentaContableParaVenta: number;
   nombre: string
 }
 export interface iUnidades {
-  idUnidad: number,
+  idUnidad: number;
   nombre: string
 }
 
 export interface iiMpuesto {
-  idImpuesto?: number,
-  idProducto: number,
-  nombre: string,
-  porcentaje: number,
-  impuestoAcreditable: boolean,
-  descripcion: string,
-  porcentajeCalculado: number,
-  monto: number,
-  idCuentaContableParaCompra: number,
+  idImpuesto?: number;
+  idProducto: number;
+  nombre: string;
+  porcentaje: number;
+  impuestoAcreditable: boolean;
+  descripcion: string;
+  porcentajeCalculado: number;
+  monto: number;
+  idCuentaContableParaCompra: number;
   idCuentaContableParaVenta: number
 
 }
 
 export interface iCategoria {
-  idCategoria?: number,
+  idCategoria?: number;
   nombre: string
 }
 export interface iMarca {
-  idMarca?: number,
-  idCategoria: number,
+  idMarca?: number;
+  idCategoria: number;
   nombre: string
 }
 export interface iMarcaget {
-  idMarca?: number,
+  idMarca?: number;
   categoria: iCategoria
   nombre: string
 }
 export interface iModelo {
-  idModelo?: number,
-  idMarca: number,
+  idModelo?: number;
+  idMarca: number;
   nombre: string
 }
 export interface iModeloGet {
-  idModelo?: number,
+  idModelo?: number;
   marca: iMarcaget
   nombre: string
 }
@@ -215,85 +215,85 @@ export class iImpuestoProductoCodigo {
 }
 
 export interface iMoneda {
-  idMoneda: number,
-  nombre: string,
-  abreviatura: string,
+  idMoneda: number;
+  nombre: string;
+  abreviatura: string;
   simbolo: string
 
 }
 
 export interface iFactura {
-  idFactura?: number,
-  idTermino: number,
-  terminoObj: iTermino,
-  idNumeracion: number,
-  numeracionObj: idNumeracion,
-  numeracion: string,
-  idContacto: number,
-  contacto: iContactoPos,
-  idTipoDocumento: number,
-  idBanco : number
-  idSucursal: number,
+  idFactura?: number;
+  idTermino: number;
+  terminoObj: iTermino;
+  idNumeracion: number;
+  numeracionObj: idNumeracion;
+  numeracion: string;
+  idContacto: number;
+  contacto: iContactoPos;
+  idTipoDocumento: number;
+  idBanco: number
+  idSucursal: number;
   sucursalObj:
   {
-    idSucursal: number,
-    idEmpresa: number,
-    empresa?: iEmpresa,
-    nombre?: string,
-    direccion?: string,
-    telefono1?: string,
-    telefono2?: string,
-  },
-  idUsuario: number,
-  usuario: IUsuario,
-  idVendedor: number,
-  subTotal: number,
-  descuento: number,
+    idSucursal: number;
+    idEmpresa: number;
+    empresa?: iEmpresa;
+    nombre?: string;
+    direccion?: string;
+    telefono1?: string;
+    telefono2?: string;
+  };
+  idUsuario: number;
+  usuario: IUsuario;
+  idVendedor: number;
+  subTotal: number;
+  descuento: number;
   itbis: number
-  totalGeneral: number,
-  totalRecibido: number,
-  cambio: number,
-  idEmpresa: number,
+  totalGeneral: number;
+  totalRecibido: number;
+  cambio: number;
+  idEmpresa: number;
   empresaObj: iEmpresa
-  vencimiento: string,
-  comentario: string,
-  fechaCreacion?: Date,
-  montoPagado: number,
-  montoPorPagar: number,
-  estadoFactura: { idDetalleFactura: number, nombre: string, color: string },
+  vencimiento: string;
+  comentario: string;
+  fechaCreacion?: Date;
+  montoPagado: number;
+  montoPorPagar: number;
+  estadoFactura: { idDetalleFactura: number; nombre: string; color: string };
   tipoDocumentoObj: iTipoDocumento
-  idDocumento : number
+  idDocumento: number
   detalle: iDetalleFactura[];
 }
 
 export interface iDetalleFactura {
-  idDetalleFactura?: number,
-  idFactura?: number,
-  idProducto: number,
-  nombre: string,
-  cantidad: number,
-  precio: number,
-  descuento: number,
-  descuentoProcentual: number,
-  impuestos: number,
-  subTotal: number,
-  total: number,
-  productoObj: any,
-  producto: any,
+  idDetalleFactura?: number;
+  idFactura?: number;
+  idProducto: number;
+  nombre: string;
+  cantidad: number;
+  precio: number;
+  descuento: number;
+  descuentoProcentual: number;
+  impuestos: number;
+  subTotal: number;
+  total: number;
+  productoObj: any;
+  producto: any;
   IdImpuesto?: number
   impuestoObj?: iiMpuesto
 }
 
-export interface iSucursal{
+export interface iSucursal {
 
-    idSucursal: number,
-    idEmpresa: number,
-    empresa?: iEmpresa,
-    nombre?: string,
-    direccion?: string,
-    telefono1?: string,
-    telefono2?: string,
-  
+  idSucursal: number;
+  idEmpresa: number;
+  empresa?: iEmpresa;
+  nombre?: string;
+  direccion?: string;
+  telefono1?: string;
+  telefono2?: string;
+
 }
 
 export interface iTiopCuentaBanck {
@@ -306,7 +306,7 @@ export interface iTiopCuentaBanck {
 export interface iBanco {
   idBanco?: number;
   idTipoCuenta: number;
-  tipoCuenta: iTiopCuentaBanck,
+  tipoCuenta: iTiopCuentaBanck;
   nombreCuenta: string;
   numerCuenta: string;
   saldoInicial: number;
@@ -322,31 +322,31 @@ export interface iMetodoPago {
 export interface iPago {
   idPago?: number;
   idContacto: number;
-  contactoObj : iContactoPos;
+  contactoObj: iContactoPos;
   idBanco: number;
-  bancoObj: iBanco,
+  bancoObj: iBanco;
   idMetodoPago: number;
-  metodoPagoObj: iMetodoPago,
+  metodoPagoObj: iMetodoPago;
   monto: number;
   notaPago: string;
   idFactura: number;
   facturaObj: iFactura
   noTicket: string;
   fecha: string;
-  usuarioObj : IUsuario
+  usuarioObj: IUsuario
   MultiPayment: {
-    IdPago: number,
-    IdFactura: number,
+    IdPago: number;
+    IdFactura: number;
     Monto: number
   }
 
 }
 
 export interface iResumenFacturas {
-  totalVentas: number,
-  totalVentasCobradas: number,
-  cantTotalVentasCobradas: number,
-  totalVentasPorCobrar: number,
+  totalVentas: number;
+  totalVentasCobradas: number;
+  cantTotalVentasCobradas: number;
+  totalVentasPorCobrar: number;
   cantTotalVentasPorCobrar: number
 }
 
@@ -400,69 +400,119 @@ export interface iTurno {
   totalTurno: number
   dineroEsperadoCaja: number
   dineroRealEnCaja: number
-  ticketsEsperadoCaja : number
-  ticketsRealCaja : number
+  ticketsEsperadoCaja: number
+  ticketsRealCaja: number
   isOpen: true
+  idCaja: number
+  cajaObj: iCaja
   idUsuario: number
-  usuarioObj : IUsuario
+  usuarioObj: IUsuario
   idSucursal: number
   descripcion: string
   comentarion: string
-  faltante : number
-  denominacion : iDenominacion,
+  faltante: number
+  denominacion: iDenominacion;
   resumen: {
-    baseInicial : number,
-    vefec : number,
-    vt : number,
-    vtransf : number,
-    entradaCaja : number,
-    salidaCaja : number
+    baseInicial: number;
+    vefec: number;
+    vt: number;
+    vtransf: number;
+    entradaCaja: number;
+    salidaCaja: number
   }
 }
 
 
-export interface iDenominacion{
-    idDenominacion: number,
-    d2000: number,
-    d1000: number,
-    d500: number,
-    d200: number,
-    d100: number,
-    d50: number,
-    d25: number,
-    d10: number,
-    d5: number,
-    d1: number,
+export interface iCaja {
+  id: number
+  nombre: string
+  pin: number
+  idSucursal: number
+  sucursalObj: iSucursal
+  turnos: iTurno[]
+  isOpen: boolean
 }
 
-export interface iComprobante{
-  numeracion : string,
-  monto : number
+export interface iDenominacion {
+  idDenominacion: number;
+  d2000: number;
+  d1000: number;
+  d500: number;
+  d200: number;
+  d100: number;
+  d50: number;
+  d25: number;
+  d10: number;
+  d5: number;
+  d1: number;
 }
 
-export interface iCash{
-  id: number,
-  idTurno : number,
-  turnoObj : iTurno,
-  fecha : string,
-  ingreso : boolean,
-  monto : number,
-  descripcion : string,
-  referencia : string,
-  idUsuario : number,
-  usuarioObj : IUsuario
+export interface iComprobante {
+  numeracion: string;
+  monto: number
+}
+
+export interface iCash {
+  id: number;
+  idTurno: number;
+  turnoObj: iTurno;
+  fecha: string;
+  ingreso: boolean;
+  monto: number;
+  descripcion: string;
+  referencia: string;
+  idUsuario: number;
+  usuarioObj: IUsuario
 
 }
 
-export interface iCashResumen{
-  cantEntradas: number,
-  montoTotalEntradas : number,
-  cantCantSalidas : number,
-  montoTotalSalidas : number,
-  balance : number
+export interface iCashResumen {
+  cantEntradas: number;
+  montoTotalEntradas: number;
+  cantCantSalidas: number;
+  montoTotalSalidas: number;
+  balance: number
 }
 
-export interface iConfiguracion{
-  id : number,
-  impresionAutomatica : boolean
+export interface iConfiguracion {
+  id: number;
+  impresionAutomatica: boolean
+}
+
+export interface iCajaReporteConsolidado {
+  desde  : any;
+  hasta : any;
+  cajaNombre : string;
+  totalInicial : number;
+  totalEfectivo : number;
+  totalTarjetas : number;
+  totalTrasferencias: number;
+  totalEntradas : number;
+  totalSalidas : number;
+  totalGeneral: number;
+  totalFaltante : number;
+}
+
+export interface  iResumen
+{
+  totalVentas: number;
+  totalVentasCobradas: number;
+  cantTotalVentasCobradas: number;
+  totalVentasPorCobrar: number;
+  cantTotalVentasPorCobrar: number;
+  cantTotalProductosVendidos : number;
+  cuentaPorCobrar :[ 
+  {
+    contacto : iContactoPos,
+    monto : number,
+    vencimiento : string,
+    vencido : boolean, 
+    noFactura : string
+  }],
+  ventasPorMes : iVentasPorMes[]
+}
+
+export interface iVentasPorMes{
+  mes: number,
+  montoTotal : number
 }

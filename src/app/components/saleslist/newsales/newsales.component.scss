@@ -9,7 +9,6 @@
   font-size: 10px;
   border-radius: 5px;
   flex-direction: row;
-
 }
 
 
@@ -24,10 +23,6 @@
   justify-content: center;
   align-items: center;
 }
-
-// .color-box.active {
-//   background-color: #09184d;
-// }
 
 .StylePayment {
   display: flex;
@@ -74,19 +69,7 @@
 }
 
 .barraResumen {
-  // width: 100%;
-  // display: flex;
-  // height: 100px;
-  // margin-top: 10px;
-  // margin-bottom: 10px;
-  // // justify-content: space-between;
-  // align-items: center;
-  // background-color: var(--color-supersuave);
-  // border-radius: 5px;
-  // padding: 20px;
-  // border-left: 10px solid rgba(0, 0, 0, 0.2);
-  // border-right: 10px solid rgba(0, 0, 0, 0.2);
-  // flex-direction: column;
+
 }
 
 ::ng-deep .cdk-overlay-connected-position-bounding-box {
@@ -263,25 +246,7 @@
 
 }
 
-// .icono
-// {
-//     height: 100px;
-//     width: 100px;
-//     border: 1px solid silver;
-//     margin: 10px;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     font-size: 10px;
-//     border-radius: 5px;
-//     flex-direction: row;
 
-// }
-/* .modal-dialog
-{
-   width:  !important;
-   border: 50px solid red;
-} */
 
 .color-box {
   width: 200px;
@@ -550,12 +515,8 @@ mat-paginator {
 .containerItemPost {
   width: 100%;
   min-height: 500px;
-  // border: 1px solid silver;
-  // border: 1px solid red;
-  height: 75vh;
+  height: 80vh;
   overflow: hidden;
-
-
 }
 
 .itemPos {
@@ -572,13 +533,6 @@ mat-paginator {
 
 }
 
-//  .itemPos h6{
-//   margin-top: 10px;
-// margin: 0;
-// padding: 0;
-// font-size: 14px;
-
-// }
 
 .itemPos div img {
 
@@ -586,13 +540,11 @@ mat-paginator {
   height: auto;
   border-radius: 5px;
   object-fit: contain;
-  /* mantiene proporción, se ajusta sin recortarse */
 
 
 }
 
 .itemPos .imagen {
-  // height: 50%;
   border: 1px solid silver;
   border-radius: 5px;
   display: flex;
@@ -603,29 +555,32 @@ mat-paginator {
 }
 
 .product-card {
-  width: 180px;
-  height: 185px;
+  width: 130px;
+  height: 140px;
   border-radius: 12px;
-  // overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   transition: transform 0.2s ease;
   font-family: Arial, sans-serif;
   margin: 10px;
-  // display: flex;
-  // flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
 }
 
 .product-card .containerimg {
   width: 100%;
   display: flex;
   justify-content: center;
-  min-height: 100px;
+  min-height: 10px;
+  margin-top: 20px;
 }
 
 .containerimg {
   width: 100%;
-  min-height: 100px;
+  min-height: 50px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -636,13 +591,12 @@ mat-paginator {
 .product-image {
   width: 100%;
   height: auto;
-  // object-fit: contain;
 }
 
 .stock-badge {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: -13px;
+  right: 0px;
   background-color: #666;
   color: white;
   font-size: 10px;
@@ -665,12 +619,8 @@ mat-paginator {
 .product-name {
   font-size: 14px;
   font-weight: 500;
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  height: 2.4em; /* para mantener el alto de 2 líneas */
+ margin: 0;
 }
 
 .product-price {
@@ -696,7 +646,6 @@ mat-paginator {
 
 .product-name {
   font-size: 14px;
-  margin: 0 0 8px;
   color: #333;
   line-height: 1.25;
 }
@@ -705,9 +654,8 @@ mat-paginator {
   font-size: 15px;
   color: #28a745;
   font-weight: bold;
-  // border: 1px solid red;
-  margin: 0px;
-  margin-top: -8px;
+ 
+  
 }
 
 
@@ -718,7 +666,6 @@ mat-paginator {
 
 }
 
-// .stock {}
 
 .containerItemPost .containerItem {
   width: 100%;
@@ -727,42 +674,30 @@ mat-paginator {
   flex-wrap: wrap;
   border-radius: 5px;
   align-items: start;
-  max-height: 700px
+  max-height: 700px;
 }
 
-// .detalleVenta {
-//   width: 90%;
-//   // border: 1px solid red;
-//   // padding: 10px;
-//   // background-color: white;
-//   // overflow: hidden;
-//   // position: fixed;
-//   // right: 20px;
-//   height: 87vh;
-// }
+
 
 .detalleVenta .header .titulo {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
   margin-bottom: 8px;
-
 }
-
-
 
 
 .detalleVenta .header {
   font-size: 20px;
   padding: 5px;
   width: 100%;
+  height: 100%;
 
 }
 
 .detalleVenta .body {
   font-size: 20px;
   height: 40vh;
-  // border: 3px dotted silver;
   max-height: 500px;
   overflow: auto;
   border-radius: 5px;
@@ -774,10 +709,9 @@ mat-paginator {
   font-size: 12px;
   display: flex;
   justify-content: space-between !important;
-  background-color: #111827;
+  background-color: #2c3e50;
   color: #FFFFFF;
   padding: 5px;
-  // width: 100%;
 
 }
 
@@ -830,12 +764,7 @@ mat-paginator {
 
 }
 
-// .headerTitulos  {
-//   border: 1px solid silver;
-//   display: flex;
-//   width: 100px;
 
-// }
 
 .acc {
   width: 5%;
@@ -846,17 +775,11 @@ mat-paginator {
   padding: 10px;
   box-sizing: border-box;
   height: 87vh;
-  // border: 1px solid red;
-  // overflow: hidden;
 }
 
 .containerPost {
   display: grid;
   grid-template-columns: 60% 40%;
-  // // width: 100%;
-  // height: 90vh;
-  // border: 5px solid purple;
-
 }
 
 .clientePos {
@@ -875,7 +798,6 @@ mat-paginator {
 
 .cardItem {
   display: flex;
-  // // border: 1px solid silver;
   justify-content: space-between;
   font-size: 11px;
   align-items: center;
@@ -885,7 +807,6 @@ mat-paginator {
 }
 
 .containercarditem {
-  // border: 5px solid green;
   height: 33vh;
   overflow: auto;
 }
@@ -905,12 +826,6 @@ mat-paginator {
   margin-bottom: 0;
 }
 
-// .controlesItem {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 50%;
-// }
 
 .controlesItem input {
 
@@ -945,7 +860,7 @@ mat-paginator {
 
   font-size: 15px;
   flex-direction: column;
-  // border: 1px solid red;
+
   position: absolute;
   bottom: 0;
   width: 95%;
@@ -955,27 +870,25 @@ mat-paginator {
 
 .acciones {
   display: flex;
-  // flex-direction: row;
   flex-direction: row;
   padding: 5px;
   margin-top: -20px;
-  border : 1px solid red;
+
   width: 90%;
 
 }
-
+.content-header{
+  border: 1px solid red !important;
+}
 
 
 .footer .acciones div {
   display: flex;
   justify-content: space-between;
-  // flex-direction: row;
   width: 100%;
 }
 
-// .montos{
-//   background-color: #f4fff6;
-// }
+
 .btnAcc1 {
   margin: 5px;
 
@@ -1034,7 +947,7 @@ mat-paginator {
 }
 
 #cantidad {
-  border: 1px solid red;
+ 
 }
 
 .nodataSales {
@@ -1060,7 +973,6 @@ mat-paginator {
 
 .categorias .itemCategoria {
   padding: 10px;
-  // box-shadow: 1px 5px 5px silver;
   cursor: pointer;
   border-radius: 20px;
   margin: 3px;
@@ -1086,7 +998,6 @@ mat-paginator {
 }
 
 
-// estilos de lo totales de la venta
  .pos-wrapper {
             width: 100%;
             max-width: 700px; /* Ancho moderado */
@@ -1212,7 +1123,7 @@ mat-paginator {
         }
 
         .btn-save {
-            background-color: #2ecc71; /* Color verde para guardar */
+            background-color: #2c3e50; /* Color verde para guardar */
             color: white;
             border-color: #2ecc71;
         }
@@ -1289,4 +1200,36 @@ mat-paginator {
                 font-size: 0.85rem;
                 padding: 8px 15px;
             }
+        }
+
+
+        .informacionturno{
+          border: 2px solid rgb(255, 74, 74);
+          background-color: rgb(250, 213, 213);
+          color: rgb(72, 72, 72);
+          padding: 10px;
+          text-align: justify;
+          font-size: 15px;
+          font-weight: 500;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .buscadorProductos{
+          display: flex !important;
+          justify-content: space-between !important;
+          flex-direction: row;
+          width: 55vw;
+        }
+
+        
+        .buscadorProductos div img{
+          width: 50px;
+          border-radius: 10px;
+          border: 1px solid silver;
+          max-width: 50px;
+          max-height: 50px;
+          min-width: 50px;
+          min-height: 50px;
         }

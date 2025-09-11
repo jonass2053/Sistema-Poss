@@ -1,47 +1,130 @@
 <div class="container-fluit">
-<form [formGroup]="miFormulario">
-    <!-- <div class="logo">
-        <img src="../../assets/images/PAYNOVA LOGO PNG.png">
-    </div> -->
-    <mat-card class="example-card" appearance="outlined">
-        
-        <mat-card-header style="justify-content: center; margin-bottom: 7px; font-size: 30PX;">
-         Login
-        </mat-card-header>
-        <mat-divider></mat-divider>
 
-        <mat-card-content>
-            <mat-form-field>
-                <mat-label>Username</mat-label>
-                <input matInput formControlName="correo">
-                <mat-icon matSuffix>person</mat-icon>
+    <div class="example-card card" appearance="outlined" style="display: flex; justify-content: center;">
 
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Enter your password</mat-label>
-                <input matInput [type]="hide() ? 'password' : 'text'" formControlName="contrasena" />
-                <button
-                  mat-icon-button
-                  matSuffix
-                  (click)="clickEvent($event)"
-                  [attr.aria-label]="'Hide password'"
-                  [attr.aria-pressed]="hide()"
-                >
-                  <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-              </mat-form-field>
-            <div class="example-button-container">
-                <section>
-                    <div class="example-button-row">
-                        <button mat-stroked-button  (click)="login()"><div>Login <mat-spinner *ngIf="alerta"></mat-spinner></div></button>
+        <div class="jonas">
+            <mat-card-header style="justify-content: center; margin-bottom: 7px; font-size: 30PX;">
+                Bienvenido
+            </mat-card-header>
+            <p>Inicia sesión o crea una nueva cuenta</p>
+            <p>
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+                    <mat-button-toggle (click)="viewFormOne()" value="bold" checked="">Iniciar
+                        Sesión</mat-button-toggle>
+                    <mat-button-toggle (click)="viewFormTwo()" value="italic">Registrarse</mat-button-toggle>
+                </mat-button-toggle-group>
+            </p>
+        </div>
+        <form [formGroup]="miFormulario" *ngIf="formObne">
+            <mat-card-content>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="correo">
+                    <mat-icon matSuffix>mail</mat-icon>
 
-                        <p>{{mensaje}}</p>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="contrasena" />
+                    <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide()">
+                        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+                <div class="example-button-container">
+                    <section>
+                        <div class="example-button-row">
+                            <button mat-raised-button class="me-8 mb-8" color="primary" (click)="login()"
+                                class="btnIniciar">
+                                Iniciar Sesión
+                            </button>
+                            <p>{{mensaje}}</p>
+
+                        </div>
+                        <!-- <mat-spinner *ngIf="alerta"> Cargando..</mat-spinner> -->
+                    </section>
+                </div>
+            </mat-card-content>
+        </form>
+
+
+        <div class="formulario2 example-card" *ngIf="formTwo">
+            <form [formGroup]="miFormularioRegistro" style="width: 50vw;">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-6">
+                            <mat-form-field>
+                                <mat-label>Nombre</mat-label>
+                                <input matInput formControlName="nombre">
+                                <mat-icon matSuffix>domain</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Apellidos</mat-label>
+                                <input matInput formControlName="apellidos">
+                                <mat-icon matSuffix>domain</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Nombre del Negocio</mat-label>
+                                <input matInput formControlName="nombreNegocio">
+                                <mat-icon matSuffix>domain</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Correo Electronico</mat-label>
+                                <input matInput formControlName="correo">
+                                <mat-icon matSuffix>mail</mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <!-- <mat-form-field>
+                                <mat-label>Direccion</mat-label>
+                                <input matInput formControlName="direccion">
+                                <mat-icon matSuffix>mail</mat-icon>
+                            </mat-form-field> -->
+
+                            <mat-form-field>
+                                <mat-label>Contraseña</mat-label>
+                                <input matInput [type]="hide() ? 'password' : 'text'" formControlName="contrasena" />
+                                <button mat-icon-button matSuffix (click)="clickEvent($event)"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+                                    <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>Telefono</mat-label>
+                                <input matInput formControlName="telefono" placeholder="000-000-0000">
+                                <mat-icon matSuffix>phone</mat-icon>
+                            </mat-form-field>
+
+                            <mat-form-field>
+                                <mat-label>Dirección</mat-label>
+                                <input matInput formControlName="direccion" placeholder="Escribe tu dirección">
+                                <mat-icon matSuffix>add_home</mat-icon>
+                            </mat-form-field>
+
+                        </div>
+
+
 
                     </div>
-                </section>
-            </div>
-        </mat-card-content>
-      
-    </mat-card>
-</form>
+
+
+                    <div class="example-button-container">
+                        <section>
+                            <div class="example-button-row">
+                                <button mat-raised-button color="primary" (click)="createAccount()" class="btnIniciar">
+                                    Crear cuenta
+                                </button>
+
+                                <p>{{mensaje}}</p>
+
+                            </div>
+                            <!-- <mat-spinner *ngIf="alerta"> Cargando..</mat-spinner> -->
+                        </section>
+                    </div>
+                </mat-card-content>
+            </form>
+        </div>
+    </div>
 </div>

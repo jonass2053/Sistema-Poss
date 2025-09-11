@@ -30,6 +30,7 @@ import { CategoriaService } from 'src/app/services/categoria.service';
 import { PrintServiceService } from 'src/app/services/print-service.service';
 import { ConfiguracionesGeneralesComponent } from '../../settings/components/configuraciones-generales/configuraciones-generales.component';
 import { ConfiguracionesFactService } from 'src/app/services/configuraciones.service';
+import { ShiftsService } from 'src/app/services/shifts.service';
 declare var $: any;
 
 @Component({
@@ -87,7 +88,8 @@ export class NewsalesComponent implements OnDestroy {
     public informationService: InformationService,
     private categoriasService: CategoriaService,
     private printService: PrintServiceService,
-    private configuracionesServices: ConfiguracionesFactService
+    private configuracionesServices: ConfiguracionesFactService,
+    public turnoService: ShiftsService
   ) {
     this.document = informationService.tipoDocumento;
     if (this.usuarioService.usuarioLogueado != undefined) {
@@ -95,7 +97,6 @@ export class NewsalesComponent implements OnDestroy {
     }
     this.miFormulario.patchValue({ fecha: new Date(), cantidad: 1 })
     this.getAllTerminos();
-    this.getAllNumeracion();
     this.getAllVendedores();
     this.getTipoDocumentos();
     this.getAllBancos();
@@ -103,10 +104,14 @@ export class NewsalesComponent implements OnDestroy {
     this.getAllContactos();
     this.getAllCategorias();
     this.getConfiguraciones();
+    this.getAllNumeracion();
+
+
 
     this.idFactura = this.route.snapshot.paramMap.get('id');
     this.idTipoDocumento = this.route.snapshot.paramMap.get('idtipo');
     this.document = informationService.tipoDocumento;
+    alert(this.document)
     if (this.idFactura !== '0' && this.idFactura !== 0) {
       this.getById(this.idFactura);
     }
@@ -167,7 +172,7 @@ export class NewsalesComponent implements OnDestroy {
     idSucursal: this.fb.control("", Validators.required),
     idEmpresa: this.fb.control("", Validators.required),
     idTermino: this.fb.control("", Validators.required),
-    idMetodoPago :  this.fb.control(null),
+    idMetodoPago: this.fb.control(null),
     idUsuario: this.fb.control("", Validators.required),
     idVendedor: this.fb.control(null),
     identificacion: this.fb.control({ value: "", disabled: true }),
@@ -341,9 +346,8 @@ export class NewsalesComponent implements OnDestroy {
   }
   getAllProduct() {
     this.showLoader();
+    this.dataListProductosSearch = [];
     this.productoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
-      console.log(data);
-
       if (data.status) {
         this.dataListProductosSearch = data.data;
         this.hidenLoader();
@@ -352,6 +356,7 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getProductByIdCategoria(idCategoria: number | any) {
+    this.dataListProductosSearch = [];
     this.showLoader();
     this.productoService.getProductosByIdCategoria(idCategoria, this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
       if (data.status) {
@@ -373,7 +378,7 @@ export class NewsalesComponent implements OnDestroy {
     this.showLoader();
     let valor = (event.target as HTMLInputElement).value;
     if (valor.length > 0) {
-      this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value).subscribe((data: ServiceResponse) => {
+      this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value, this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
         this.dataListProductosSearch = data.data;
         this.hidenLoader();
       })
@@ -393,7 +398,7 @@ export class NewsalesComponent implements OnDestroy {
   getAllCategorias() {
     this.categoriasService.getAll(this.informationService.idEmpresa).subscribe((c: ServiceResponse) => {
       if (c.status) {
-        this.dataListCategorias = c.data;
+        this.dataListCategorias = c.data.filter((c: iCategoria) => c.cantProduct > 0);
       }
     })
   }
@@ -404,7 +409,7 @@ export class NewsalesComponent implements OnDestroy {
   searchProductoEdit(valor: string, cant: number) {
 
     if (valor.length > 0) {
-      this.productoService.getAllFilterForDocument(valor).subscribe((data: ServiceResponse) => {
+      this.productoService.getAllFilterForDocument(valor, this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
         this.dataListProductosSearch = data.data;
         this.impuestoProduct = Math.round((data.data[0].precioFinal - data.data[0].precioBase) * 100) / 100;
         this.miFormulario.patchValue({ producto: data.data[0], impuesto: this.impuestoProduct * cant })
@@ -422,12 +427,20 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getTipoDocumentos() {
+           
     this.numeracionService.getAllTipoDocumentos().subscribe((data: ServiceResponse) => {
       if (data.status && this.informationService.tipoDocumento !== "Cotización") {
         this.miFormulario.patchValue({
           idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("FACTURA DE VENTA")).idTipoDocumento,
 
         })
+      }
+      else if (data.status && this.informationService.tipoDocumento ==="Conduce") {
+        this.miFormulario.patchValue(
+          {
+            idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("CONDUCE")).idTipoDocumento,
+            idNumeracion: 11
+          })
       }
       else {
         this.miFormulario.patchValue(
@@ -436,10 +449,7 @@ export class NewsalesComponent implements OnDestroy {
             idNumeracion: 11
           })
       }
-
     })
-
-
   }
 
   selectContacto(event: any, valor?: any) {
@@ -533,9 +543,9 @@ export class NewsalesComponent implements OnDestroy {
       this.dataListDetalleFactura.forEach(element => {
         element.descuento = 0;
         element.subTotal = (element.cantidad * element.precio);
-        element.total =  element.subTotal +  element.impuestos;
+        element.total = element.subTotal + element.impuestos;
       });
-     this.calculoGeneral();
+      this.calculoGeneral();
 
     }
   }
@@ -613,10 +623,10 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getAllNumeracion() {
-    this.numeracionService.getAll().subscribe((data: ServiceResponse) => {
+    this.numeracionService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
       this.dataListNumeracion = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1);
       if (this.facturaServcie.facturaEdit == undefined) {
-        // this.miFormulario.patchValue({ "idNumeracion": (data.data.find((c: idNumeracion) => c.predeterminada == true)).idNumeracion })
+        this.miFormulario.patchValue({ "idNumeracion": (data.data.find((c: idNumeracion) => c.predeterminada == true)).idNumeracion })
       }
     })
   }
@@ -736,7 +746,9 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   setMiFormulario() {
-
+    
+    let numeracionesCompany =  this.dataListNumeracion.find(c=>c.nombre.includes(this.document))
+    alert(this.document);
     this.miFormulario.patchValue({
       detalle: this.dataListDetalleFactura,
       idEmpresa: this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa,
@@ -756,50 +768,51 @@ export class NewsalesComponent implements OnDestroy {
 
   guardarFactura() {
     this.setMiFormulario();
-    if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
-      this.alertaService.ShowLoading();
-      if (this.miFormulario.value.idFactura !== null && this.miFormulario.value.idDocumento == undefined) {
-        this.facturaServcie.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-          if (data.status) {
-            this.alertaService.successAlert(data.message);
-            this.resetHeader();
-            this.resetDetails();
-            this.resetFormPago()
-            this.setDefaultContacto();
-          }
-          else {
-            this.alertaService.errorAlert(data.message);
-          }
-        })
-      }
-      else {
-        this.facturaServcie.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-          if (data.statusCode == 200) {
-            this.alertaService.successAlert(data.message);
-            this.resetHeader();
-            this.resetDetails();
-            this.resetFormPago();
-            this.setDefaultContacto();
-            //Realizamos el get de la factura para poder imprimir
-            if (this.configuraciones.impresionAutomatica && this.miFormulario.value.montoPagado!=0) {
-              this.facturaServcie.getById(data.data.idFactura).subscribe((response: ServiceResponse) => {
-                if (response.status) {
-                  setTimeout(() => {
-                  this.printService.printTicketFactura(response.data);
-                  }, 600);
-                }
-              })
-            }
-          }
-          else {
-            this.alertaService.errorAlert(data.message);
-          }
-        })
-      }
-    }
-    else {
-      this.alertaService.warnigAlert("Debe completar todos para poder guardar el documento");
-    }
+    console.log(this.miFormulario.value)
+    // if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
+    //   this.alertaService.ShowLoading();
+    //   if (this.miFormulario.value.idFactura !== null && this.miFormulario.value.idDocumento == undefined) {
+    //     this.facturaServcie.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
+    //       if (data.status) {
+    //         this.alertaService.successAlert(data.message);
+    //         this.resetHeader();
+    //         this.resetDetails();
+    //         this.resetFormPago()
+    //         this.setDefaultContacto();
+    //       }
+    //       else {
+    //         this.alertaService.errorAlert(data.message);
+    //       }
+    //     })
+    //   }
+    //   else {
+    //     this.facturaServcie.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
+    //       if (data.statusCode == 200) {
+    //         this.alertaService.successAlert(data.message);
+    //         this.resetHeader();
+    //         this.resetDetails();
+    //         this.resetFormPago();
+    //         this.setDefaultContacto();
+    //         //Realizamos el get de la factura para poder imprimir
+    //         if (this.configuraciones.impresionAutomatica && this.miFormulario.value.montoPagado!=0) {
+    //           this.facturaServcie.getById(data.data.idFactura).subscribe((response: ServiceResponse) => {
+    //             if (response.status) {
+    //               setTimeout(() => {
+    //               this.printService.printTicketFactura(response.data);
+    //               }, 600);
+    //             }
+    //           })
+    //         }
+    //       }
+    //       else {
+    //         this.alertaService.errorAlert(data.message);
+    //       }
+    //     })
+    //   }
+    // }
+    // else {
+    //   this.alertaService.warnigAlert("Debe completar todos para poder guardar el documento");
+    // }
   }
 
 
@@ -957,14 +970,15 @@ export class NewsalesComponent implements OnDestroy {
       }).afterClosed().subscribe(result => {
         if (result != undefined) {
           this.miFormulario.patchValue(
-            {idMetodoPago : result.value.idMetodoPago,
-              cambio:  result.value.cambio,
-              totalRecibido:  result.value.cashReceived,
-              montoPagado:  result.value.cashReceived ,
-              idBanco : result.value.idBanco,
-              observacionPago : result.value.observacionPago,
-              noComprobante : result.value.noComprobante
-              })
+            {
+              idMetodoPago: result.value.idMetodoPago,
+              cambio: result.value.cambio,
+              totalRecibido: result.value.cashReceived,
+              montoPagado: result.value.cashReceived,
+              idBanco: result.value.idBanco,
+              observacionPago: result.value.observacionPago,
+              noComprobante: result.value.noComprobante
+            })
           this.guardarFactura();
 
         }
@@ -993,6 +1007,6 @@ export class NewsalesComponent implements OnDestroy {
 
   // metodo para cunado no llega una imagen valida
   onImageError(event: Event) {
-  (event.target as HTMLImageElement).src = '../../../../assets/images/noimg.png';
-}
+    (event.target as HTMLImageElement).src = '../../../../assets/images/noimg.png';
+  }
 }

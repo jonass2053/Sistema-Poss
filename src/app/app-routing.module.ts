@@ -95,12 +95,20 @@ const routes: Routes = [
       {path:"inventary/inventary-adjustment", component : InventaryAdjustmentComponent},
       {path:"shifts", component : ShiftsComponent},
       {path:"cashregisterlist", component : CashRegisterListComponentComponent},
+     // Vista del listado
       {path:"sales/salelist", component : SaleslistComponent},
       {path:"sales/pricelist", component : SaleslistComponent},
+      {path:"sales/conducelist", component : SaleslistComponent},
+      // Vista de creacion
       {path:"sales/newsale/:id/:idtipo", component : NewsalesComponent},
       {path:"sales/newprice/:id/:idtipo", component : NewsalesComponent},
+      {path:"sales/newconduce/:id/:idtipo", component : NewsalesComponent},
+
+      // Vista de detalle
       {path:"sales/newsales/view/:id/:idtipo", component : ViewSalesComponent},
       {path:"sales/newprice/view/:id/:idtipo", component : ViewSalesComponent},
+      {path:"sales/newconduce/view/:id/:idtipo", component : ViewSalesComponent},
+
 
       {path:"sales/payment", component : PaymentComponent},
       {path:"payment/newpay", component : NewPayComponent},

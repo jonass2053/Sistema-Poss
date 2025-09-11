@@ -19,7 +19,7 @@ export class UsuarioService {
     private http: HttpClient,
     private error: HandleErrorService,
     private alertas: AlertServiceService,
-    private router : Router) {
+    private router: Router) {
 
   }
 
@@ -27,24 +27,27 @@ export class UsuarioService {
   usuarioLogueado: any;
   login(credenciales: any): any {
     return this.http.post<ServiceResponseLogin>(`${baseUrl}/User/login`, credenciales).pipe(catchError((error) => {
-      this.alertas.errorAlert('Lo sentimos, no pudimos procesar tu solicitud en este momento. Por favor, inténtalo de nuevo más tarde o ponte en contacto con el soporte técnico para obtener ayuda. Código de error: 500 Internal Server Error')
+      if (error != undefined) {
+        this.alertas.errorAlert(`${error.error.message}`);
+      } else {
+        this.alertas.errorAlert('Lo sentimos, no pudimos procesar tu solicitud en este momento. Por favor, inténtalo de nuevo más tarde o ponte en contacto con el soporte técnico para obtener ayuda. Código de error: 500 Internal Server Error')
+      }
       let e: HttpErrorResponse = error;
-      console.log(e.status)
       return error;
     }));
   }
 
   url: string = `${baseUrl}/User`;
 
- chekSesion(statusCode : number){
-      if(statusCode==401 || statusCode==0){
-        this.alertas.warnigAlert("La sesión a caducado.");
-        setTimeout(() => {
-           localStorage.clear();
+  chekSesion(statusCode: number) {
+    if (statusCode == 401 || statusCode == 0) {
+      this.alertas.warnigAlert("La sesión a caducado.");
+      localStorage.clear();
+      setTimeout(() => {
         this.router.navigate(['']);
-        }, 2000);
+      }, 2000);
 
-      }
+    }
   }
   insert(formualrio: any): any {
     return this.http.post<ServiceResponse>(`${this.url}`, formualrio).pipe(catchError((error) => {

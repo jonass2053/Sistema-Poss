@@ -34,7 +34,7 @@
                 </mat-autocomplete>
               </mat-form-field>
 
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="fill">
                 <mat-label>Fecha</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="fecha">
                 <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
@@ -45,7 +45,7 @@
 
 
               <div class="controlespago">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="fill">
                   <mat-label>Método de pago</mat-label>
                   <mat-select formControlName="idMetodoPago">
                     <mat-option (click)="selectMetodo(metodo)" *ngFor="let metodo of dataListMetodoPago"
@@ -55,7 +55,7 @@
                   </mat-select>
                 </mat-form-field>
                 &nbsp;
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="fill">
                   <mat-label>Banco</mat-label>
                   <mat-select formControlName="idBanco">
                     <mat-option *ngFor="let tipo of dataListBanco" [value]="tipo.idBanco">
@@ -64,14 +64,14 @@
                   </mat-select>
                 </mat-form-field>
                 &nbsp;
-                <mat-form-field class="example-full-width" appearance="outline">
+                <mat-form-field class="example-full-width" appearance="fill">
                   <mat-label>No. Ticket</mat-label>
                   <input matInput placeholder="No.Ticket" formControlName="noTicket">
                 </mat-form-field>
               </div>
             </div>
             <div class="col-4">
-              <mat-form-field class="fullwidth" appearance="outline">
+              <mat-form-field class="fullwidth" appearance="fill">
                 <mat-label>Nota del pago</mat-label>
                 <textarea matInput formControlName="notaPago" rows="8"></textarea>
               </mat-form-field>
@@ -116,7 +116,6 @@
                             <!-- <th class="cargandoTableIcono">
                                                 <div *ngIf="cargando" class="loaderTable"></div>
                                             </th>    -->
-
                           </tr>
                         </thead>
                         <tbody>

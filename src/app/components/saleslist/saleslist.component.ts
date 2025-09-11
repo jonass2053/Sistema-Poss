@@ -73,8 +73,8 @@ export class SaleslistComponent implements OnInit {
     private informacionService: InformationService,
     private numeracionService: NumeracionService,
     private contactoService: ContactosService,
-    private informationService: InformationService,
-    private printService : PrintServiceService
+    public informationService: InformationService,
+    private printService: PrintServiceService
 
 
   ) {
@@ -92,9 +92,9 @@ export class SaleslistComponent implements OnInit {
     idNumeracion: this.fb.control(null),
     desde: this.fb.control(null),
     hasta: this.fb.control(null),
-    noFactura: this.fb.control(null),
+    no: this.fb.control(null),
     idContacto: this.fb.control(null),
-    idEstado : this.fb.control(null),
+    idEstado: this.fb.control(null),
     nombreClienteCompleto: this.fb.control(''),
   });
   filters: boolean = false;
@@ -105,11 +105,11 @@ export class SaleslistComponent implements OnInit {
 
   dataListContactos: iContactoPos[] = [];
   dataListNumeraciones: idNumeracion[] = [];
-  dataListEstadosFactura : iEstadoFactura[]=[];
+  dataListEstadosFactura: iEstadoFactura[] = [];
   montoPagado: number = 0;
   montoPorPagar: number = 0;
   pagosVencido: number = 0;
-  totalFacturado : number = 0;
+  totalFacturado: number = 0;
   displayedColumns: string[] = ['Cliente', 'Tipo', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
   dialog = inject(MatDialog);
   facturaForPrint: any;
@@ -117,8 +117,8 @@ export class SaleslistComponent implements OnInit {
   data = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`);
   nombreAuthor = 'Juan Perez';
   fechaNow = new Date().toLocaleDateString();
-  dateNowServer : string ='';
-  fechaActualServer : string="";
+  dateNowServer: string = '';
+  fechaActualServer: string = "";
 
 
   openDialog(factura: iFactura) {
@@ -196,6 +196,7 @@ export class SaleslistComponent implements OnInit {
     // }
     // else {
     this.cargando = true;
+    this.informacionService.isPos = false;
     this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
       this.facturaService.facturaEdit = data.data;
       if (this.document == 'Cotización') {
@@ -222,7 +223,7 @@ export class SaleslistComponent implements OnInit {
   }
 
   convertirAFactura(Factura: iFactura) {
-    this.informacionService.isPos=false;
+    this.informacionService.isPos = false;
     this.cargando = true;
     this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
       this.facturaService.facturaEdit = data.data;
@@ -270,7 +271,7 @@ export class SaleslistComponent implements OnInit {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
       this.totalItems = data.totalItems; // Asume que la API también devuelve el total de items
       this.pageSize = pageSize;
-      this.cargando=false;
+      this.cargando = false;
       // if (this.paginator) {
       //   this.paginator.length = this.totalItems;  // Establecer el total de registros
       //   this.paginator.pageIndex = pageNumber;   // Establecer el índice de la página actual
@@ -293,11 +294,11 @@ export class SaleslistComponent implements OnInit {
 
 
   getAllFilter() {
-    const { noFactura, desde, hasta, idNumeracion, idContacto, idEstado } = this.miFormulario.value;
+    const { no, desde, hasta, idNumeracion, idContacto, idEstado } = this.miFormulario.value;
     this.cargando = true;
     this.setFormatDate();
     // Verificar si todos están vacíos, y solo así ejecutar getAll
-    const todosVacios = [noFactura, desde, hasta, idNumeracion, idContacto, idEstado].every(
+    const todosVacios = [no, desde, hasta, idNumeracion, idContacto, idEstado].every(
       valor => valor === undefined || valor === null || (typeof valor === 'string' && valor.trim() === '')
     );
     if (todosVacios) {
@@ -385,7 +386,7 @@ export class SaleslistComponent implements OnInit {
 
   }
 
-  resetFilters(){
+  resetFilters() {
     this.miFormulario.reset();
   }
 
@@ -408,11 +409,14 @@ export class SaleslistComponent implements OnInit {
   //   window.open(url, '_blank');
   // });
   // }
-
+ 
   addNewDocument(idDocument: number, isPos: boolean) {
     this.informacionService.isPos = isPos;
-    if (this.facturaService.document === "Cotización" && isPos==false) {
+    if (this.facturaService.document === "Cotización" && isPos == false) {
       this.router.navigate([`sales/newprice/${idDocument}/6`]);
+    }
+    else if (this.facturaService.document === "Conduce" && isPos == false) {
+      this.router.navigate([`sales/newsale/${idDocument}/8`]);
     }
     else {
       this.router.navigate([`sales/newsale/${idDocument}/1`]);
@@ -565,14 +569,14 @@ export class SaleslistComponent implements OnInit {
     });
   }
 
-  setResumenMontos(response : ServiceResponse) {
-    let fecha =`${new Date(response.dateNow).getDate()}/${new Date(response.dateNow).getMonth()}/${new Date(response.dateNow).getFullYear()}`
+  setResumenMontos(response: ServiceResponse) {
+    let fecha = `${new Date(response.dateNow).getDate()}/${new Date(response.dateNow).getMonth()}/${new Date(response.dateNow).getFullYear()}`
     this.fechaActualServer = fecha;
     this.dateNowServer = fecha
     this.totalFacturado = response.totalFacturado;
     this.montoPagado = response.totalMontoPagado;
-    this.montoPorPagar=response.totalMontoPorPagar;
-    this.pagosVencido = response.totalMontoPorPagar ;
+    this.montoPorPagar = response.totalMontoPorPagar;
+    this.pagosVencido = response.totalMontoPorPagar;
     // this.fechaActualServer= response.dateNow.toDateString();
     // this.dataSource.data.forEach(c => {
     //   this.montoPagado += c.montoPagado;
@@ -593,7 +597,7 @@ export class SaleslistComponent implements OnInit {
   desde: any = null;
   hasta: any = null;
   getAllNumeraciones() {
-    this.numeracionService.getAll().subscribe((data: ServiceResponse) => {
+    this.numeracionService.getAll(this.informacionService.idEmpresa).subscribe((data: ServiceResponse) => {
       if (data.status) {
         this.dataListNumeraciones = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1);
       }
@@ -610,15 +614,15 @@ export class SaleslistComponent implements OnInit {
 
   }
 
-  getAllEstadoFactura(){
-    this.facturaService.getEstadoFacturas().subscribe((response : ServiceResponse)=>{
-      if(response){
+  getAllEstadoFactura() {
+    this.facturaService.getEstadoFacturas().subscribe((response: ServiceResponse) => {
+      if (response) {
         this.dataListEstadosFactura = response.data;
       }
     })
   }
 
-   printRportVentas(){
+  printRportVentas() {
     this.printService.printReportVentas(this.dataSource.data, this.totalFacturado, this.montoPagado, this.montoPorPagar, this.pagosVencido, this.fechaActualServer);
   }
 }

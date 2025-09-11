@@ -140,13 +140,14 @@ export class InventaryAdjustmentComponent {
 
   // Este es el filter de los productos para realizar el ajuste pertinentes
   getAllFilter(event: any) {
+    alert(this.informationService.idSucursal)
     const filtro = (event.target as HTMLInputElement).value;
     if (filtro == "") {
       this.getAll();
     }
     else {
       this.loading();
-      this.productoService.getAllFilter(filtro).subscribe((data: any) => {
+      this.productoService.getAllFilter(filtro, this.informationService.idSucursal).subscribe((data: any) => {
         this.dataList = data.data;
         if (this.dataList.length > 0) {
           this.getAllFilterAjustes(event)
@@ -171,7 +172,7 @@ export class InventaryAdjustmentComponent {
       this.loading();
       this.desde=this.formatearFecha(this.formularioFecha.value.desde)==''? null : this.formatearFecha(this.formularioFecha.value.desde);
       this.hasta=this.formatearFecha(this.formularioFecha.value.hasta)==''?null : this.formatearFecha(this.formularioFecha.value.hasta);
-      this.productoService.getAllFilterMovimientos(filtro, this.desde, this.hasta).subscribe((data: any) => {
+      this.productoService.getAllFilterMovimientos(filtro, this.informationService.idSucursal, this.desde, this.hasta).subscribe((data: any) => {
         this.dataListMovimietoProductos = data.data;
         if (this.dataList.length > 0) {
           // this.sinRegistros = false
@@ -194,7 +195,7 @@ export class InventaryAdjustmentComponent {
       this.loading();
       this.desde=this.formatearFecha(this.formularioFecha.value.desde)==''? null : this.formatearFecha(this.formularioFecha.value.desde);
       this.hasta=this.formatearFecha(this.formularioFecha.value.hasta)==''?null : this.formatearFecha(this.formularioFecha.value.hasta);
-      this.productoService.getAllFilterAjustes(filtro, this.desde, this.hasta).subscribe((data: any) => {
+      this.productoService.getAllFilterAjustes(filtro, this.informationService.idSucursal, this.desde, this.hasta).subscribe((data: any) => {
         this.dataListProductosAjustados = data.data;
         if (this.dataList.length > 0) {
           // this.sinRegistros = false

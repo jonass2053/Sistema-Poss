@@ -1,0 +1,155 @@
+<div class="fatherContainer">
+    <app-loader *ngIf="loading"></app-loader>
+    <app-nodata *ngIf="dataListTurno.length==0 && loading==false"></app-nodata>
+
+    <div *ngIf="loading==false && dataListTurno.length>0">
+        <div style="display: flex; justify-content: space-between;">
+            <h4>Resumen de turnos de la caja</h4>
+              <button mat-stroked-button (click)="exportar()">
+            <mat-icon>archive</mat-icon>
+            Descargar
+          </button>
+
+        </div>
+        <table mat-table [dataSource]="dataListTurno">
+            <!-- ID Column -->
+            <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef>Cajero</th>
+                <td mat-cell *matCellDef="let register">
+                    <strong>{{register.usuarioObj.nombre || '' }} {{register.usuarioObj.apellidos || '' }}</strong>
+                    <!-- <p class="mb-0 fw-normal op-5">Cajero :{{register.usuarioObj.nombre || '' }} {{register.usuarioObj.apellidos || '' }}</p> -->
+
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="DESCRIPCION">
+                <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.descripcion }}
+
+                    </div>
+
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="COMENTARIO">
+                <th mat-header-cell *matHeaderCellDef>Comentario</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.comentario }}
+                    </div>
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="BASEINICIAL">
+                <th mat-header-cell *matHeaderCellDef>Base Inicial</th>
+                <td mat-cell *matCellDef="let register">
+                    {{ register.baseInicial | number:'1.2-2'  }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="DINEROESPERADOENCAJA">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Dinero esperado en caja">Esperado</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.dineroEsperadoCaja | number:'1.2-2' }}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="DINEROREALENCAJA">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Dinero real en caja">Real</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.dineroRealEnCaja | number:'1.2-2'}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="FECHAAPERTURA">
+                <th mat-header-cell *matHeaderCellDef>F.Apertura</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.fechaApertura | date:'dd/MM/yyyy' }}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="FECHACIERRE">
+                <th mat-header-cell *matHeaderCellDef>F.Cierre</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.fechaCierre | date:'dd/MM/yyyy' }}
+                    </div>
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ENTRADACAJA">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Entrada de dinero a caja">E.Caja</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.resumen.entradaCaja | number:'1.2-2'}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="SALIDACAJA">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Salida de dinero de caja">S.caja</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.resumen.salidaCaja | number:'1.2-2' }}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="VEFECT">
+                <th mat-header-cell *matHeaderCellDef>V.Efectivo</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.resumen.vefec | number:'1.2-2'}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="VT">
+                <th mat-header-cell *matHeaderCellDef>V.Tarjeta</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.resumen.vt | number:'1.2-2' }}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="VTRANSF">
+                <th mat-header-cell *matHeaderCellDef>V.Transf.</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        {{ register.resumen.vtransf | number:'1.2-2'}}
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="CAJERO">
+                <th mat-header-cell *matHeaderCellDef>Cajero</th>
+                <td mat-cell *matCellDef="let register">
+                    <div class="cashier-cell">
+                        <mat-icon class="cashier-icon">person</mat-icon>
+                        {{ register.usuarioObj.nombre }}
+                    </div>
+                </td>
+            </ng-container>
+
+
+
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+
+</div>

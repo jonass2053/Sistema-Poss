@@ -1,16 +1,18 @@
 import { C } from '@angular/cdk/keycodes';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { parse } from 'date-fns';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones } from 'src/app/Core/utilities/material/material';
-import { iComprobante, iTurno } from 'src/app/interfaces/iTermino';
+import { iCaja, iComprobante, iTurno } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { BancosService } from 'src/app/services/bancos.service';
 import { InformationService } from 'src/app/services/information.service';
 import { ShiftsService } from 'src/app/services/shifts.service';
 import { NodataComponent } from '../../nodata/nodata.component';
+import { BoxServiceService } from 'src/app/services/box-service.service';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 
 export interface iBilletesMonedas {
@@ -18,7 +20,11 @@ export interface iBilletesMonedas {
   Cantidad: number,
   Resultado: number
 }
-
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+}
 
 @Component({
   selector: 'app-close-shift',
@@ -39,25 +45,23 @@ export class CloseShiftComponent {
     private bancosSservice: BancosService,
     private informationService: InformationService,
     public turnoService: ShiftsService,
+    private cajaService: BoxServiceService,
     private dialogRef: MatDialogRef<CloseShiftComponent>
 
   ) {
-
-    // if (turnoService.isOpen !== undefined) {
-
-
-    // }
     this.getTurnoOpen();
-
+    this.getCajasDisponibles();
   }
-
+  matcher = new MyErrorStateMatcher();
 
 
   userLocal: any | undefined;
   miFormulario: FormGroup = this.fb.group({
     idTurno: this.fb.control(null),
+    idCaja: this.fb.control(null, Validators.required),
+    pin :this.fb.control(null, [Validators.required,  Validators.pattern(/^\d+$/)]),
     baseInicial: this.fb.control(0, Validators.required),
-    fechaApertura: this.fb.control(null, Validators.required),
+    fechaApertura: this.fb.control(null),
     fechaCierre: this.fb.control(null),
     vEfc: this.fb.control(0),
     vT: this.fb.control(0),
@@ -94,8 +98,11 @@ export class CloseShiftComponent {
   turnoOpen!: iTurno | undefined;
   dataListComprobantes: iComprobante[] = [];
   totalMontoTickets: number = 0;
+  dataListCajasDisponibles: iCaja[] = [];
 
-
+  selectCaja(id : number){
+    this.miFormulario.patchValue({idCaja : id});
+  }
 
   buscarMonto(denominacion: number) {
     return this.dataListBilletesMonedas.find(c => c.Monto == denominacion)?.Cantidad;
@@ -121,68 +128,78 @@ export class CloseShiftComponent {
 
 
   create() {
-    this.alertaService.ShowLoading();
-    this.setDenominacionFormulario();
-    if (this.turnoService.isOpen == undefined) {
-      //Abrir turno
-      this.miFormulario.patchValue({
-        idSucursal: this.informationService.idSucursal,
-        idUsuario: this.informationService.idUsuario,
-        baseInicial: this.resultadoMontoConteoBilletes,
-        denominacion: this.dataListBilletesMonedas
-      }
-      );
-      this.turnoService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-        if (data.status) {
-          this.alertaService.successAlert(data.message)
-          this.turnoService.isOpen = data.data;
-          this.turnoOpen = this.turnoService.isOpen;
-          let userLocal = localStorage.getItem('user');
-          if (userLocal != undefined && userLocal != null) {
-            this.userLocal = JSON.parse(userLocal);
-            this.userLocal.data.idTurno = data.data.idTurno;
-            localStorage.removeItem('user');
-            localStorage.setItem('user', JSON.stringify(this.userLocal))
-            this.informationService.idTurno = data.data.idTurno;
+    if (this.miFormulario.valid) {
+      this.alertaService.ShowLoading();
+      this.setDenominacionFormulario();
+      if (this.turnoService.isOpen == undefined) {
+        //Abrir turno
+        this.miFormulario.patchValue({
+          idSucursal: this.informationService.idSucursal,
+          idUsuario: this.informationService.idUsuario,
+          baseInicial: this.resultadoMontoConteoBilletes,
+          denominacion: this.dataListBilletesMonedas,
+        }
+        );
+        
+        this.turnoService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
+          if (data.status) {
+            this.alertaService.successAlert(data.message)
+            this.turnoService.isOpen = data.data;
+            this.turnoOpen = this.turnoService.isOpen;
+            let userLocal = localStorage.getItem('user');
+            if (userLocal != undefined && userLocal != null) {
+              this.userLocal = JSON.parse(userLocal);
+              this.userLocal.data.idTurno = data.data.idTurno;
+              localStorage.removeItem('user');
+              localStorage.setItem('user', JSON.stringify(this.userLocal))
+              this.informationService.idTurno = data.data.idTurno;
+            }
+            this.closeModal();
+          } else {
+            this.alertaService.errorAlert(data.message);
           }
-          this.closeModal();
-        } else {
-          this.alertaService.errorAlert(data.message);
-        }
-      });
+        });
 
-    } else if (this.validate()) {
-      //Cerrar turno
-      this.miFormulario.patchValue({
-        idSucursal: this.informationService.idSucursal,
-        idUsuario: this.informationService.idUsuario,
-        tickets: this.dataListComprobantes,
-        idTurno: this.turnoService.isOpen.idTurno,
-        baseInicial: this.turnoService.isOpen.baseInicial,
-        fechaApertura: this.turnoService.isOpen.fechaApertura,
-        dineroEsperadoCaja: (this.turnoService.isOpen.baseInicial + this.turnoService.isOpen.resumen.vefec + this.turnoService.isOpen.resumen.entradaCaja),
-        dineroRealEnCaja: this.resultadoMontoConteoBilletes,
-        ticketsEsperadoCaja: this.turnoService.isOpen.resumen.vt + this.turnoService.isOpen.resumen.vtransf,
-        ticketsRealCaja: this.totalMontoTickets,
-        denominacion: this.dataListBilletesMonedas,
-        faltante: this.montoFaltante,
-        vT: this.turnoOpen?.resumen.vt
+      } else if (this.validate()) {
+        //Cerrar turno
+        this.miFormulario.patchValue({
+          idSucursal: this.informationService.idSucursal,
+          idCaja: this.turnoOpen?.cajaObj.id,
+          idUsuario: this.informationService.idUsuario,
+          tickets: this.dataListComprobantes,
+          idTurno: this.turnoService.isOpen.idTurno,
+          baseInicial: this.turnoService.isOpen.baseInicial,
+          fechaApertura: this.turnoService.isOpen.fechaApertura,
+          dineroEsperadoCaja: (this.turnoService.isOpen.baseInicial + this.turnoService.isOpen.resumen.vefec + this.turnoService.isOpen.resumen.entradaCaja),
+          dineroRealEnCaja: this.resultadoMontoConteoBilletes,
+          ticketsEsperadoCaja: this.turnoService.isOpen.resumen.vt + this.turnoService.isOpen.resumen.vtransf,
+          ticketsRealCaja: this.totalMontoTickets,
+          denominacion: this.dataListBilletesMonedas,
+          faltante: this.montoFaltante,
+          vT: this.turnoOpen?.resumen.vt,
+          vEfc:this.turnoOpen?.resumen.vefec,
+          vTtrasf:this.turnoOpen?.resumen.vtransf,
+        }
+        );
+        this.turnoService.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
+        
+          if (data.status) {
+            this.alertaService.successAlert(data.message)
+            this.turnoService.isOpen = undefined;
+            this.turnoOpen = this.turnoService.isOpen;
+            this.turnoService.resetTurno();
+            this.closeModal();
+          }
+        })
+ 
       }
-      );
-      this.turnoService.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-        if (data.status) {
-          this.alertaService.successAlert(data.message)
-          this.turnoService.isOpen = undefined;
-          this.turnoOpen = this.turnoService.isOpen;
-          this.turnoService.resetTurno();
-          this.closeModal();
-        }
-      })
-
+    }else if (this.miFormulario.value.pin==null){
+     this.alertaService.warnigAlert("Para poder continuar con la operacion necesita insertar el pin de la caja.") 
     }
   }
 
   getTurnoOpen() {
+
     this.turnoOpen = this.turnoService.isOpen;
     if (this.turnoOpen != undefined) {
       this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.turnoOpen!.resumen.entradaCaja + this.totalMontoTickets) - this.turnoOpen!.resumen.salidaCaja;
@@ -191,6 +208,7 @@ export class CloseShiftComponent {
     this.turnoService.getTurnoActual(this.informationService.idUsuario, this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       if (data.statusCode == 200) {
         this.turnoOpen = data.data;
+        this.miFormulario.patchValue({idCaja : data.data.idCaja});
         this.turnoService.isOpen = this.turnoOpen;
         this.montoFaltante = (this.turnoOpen!.baseInicial + this.turnoOpen!.resumen.vefec + this.turnoOpen!.resumen.vtransf + this.turnoOpen!.resumen.vt + this.turnoOpen!.resumen.entradaCaja + this.totalMontoTickets) - this.turnoOpen!.resumen.salidaCaja;
         this.alertaService.hideLoading();
@@ -213,7 +231,7 @@ export class CloseShiftComponent {
   ]
   resultadoMontoConteoBilletes: number = 0;
   montoFaltante: number = 0;
-
+  
   calcularBillete(index: number, monto: number, event: any) {
     let cant = parseInt(event.target.value);
     this.dataListBilletesMonedas[index].Resultado = (monto * cant);
@@ -279,5 +297,13 @@ export class CloseShiftComponent {
     }
 
     return true;
+  }
+
+  getCajasDisponibles() {
+    this.cajaService.getAllCajasDisponibles().subscribe((result: ServiceResponse) => {
+      if (result.status) {
+        this.dataListCajasDisponibles = result.data;
+      }
+    })
   }
 }

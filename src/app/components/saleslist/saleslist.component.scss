@@ -14,6 +14,22 @@
   gap: 10px;
 }
 
+
+
+// .conteinerfiltros{
+//   // border: 5px solid red;
+//   width: 20%;
+//   padding: 20px;
+//   height: 94%;
+//   border-radius: 25px;
+//   margin-top: 15px;
+// }
+
+.containerfuncionesheader{
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+}
 .print-btn {
   background: #007bff;
   color: white;
@@ -280,7 +296,6 @@
             display: flex;
             align-items: center;
             padding-left: 10px;
-            // border: 1px solid red;
         }
 
         .summary-card .icon {
@@ -323,5 +338,5 @@
 .containerfuncionesheader{
   display: flex;
   align-items: center;
-  width: 90vw !important;
+  // width: 90vw !important;
 } 

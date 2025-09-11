@@ -10,6 +10,7 @@ import { MsjService } from 'src/app/Core/utilities/msj.service';
 import { ValidatorFormService } from 'src/app/Core/utilities/validator-form.service';
 import { idNumeracion, iTipoDocumento, iTipoNumeracion } from 'src/app/interfaces/iTermino';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
+import { InformationService } from 'src/app/services/information.service';
 import { NumeracionService } from 'src/app/services/numeracion.service';
 
 @Component({
@@ -32,7 +33,8 @@ export class NumbersComponent {
     private validatorForm: ValidatorFormService,
     private numeracionService: NumeracionService,
     private alertaService: AlertServiceService,
-    private msjService: MsjService
+    private msjService: MsjService,
+    private informationService: InformationService
   ) {
 
     this.getAll();
@@ -141,7 +143,7 @@ export class NumbersComponent {
 
   getAll() {
     this.cargando = true;
-    this.numeracionService.getAll().subscribe((data: any) => {
+    this.numeracionService.getAll(this.informationService.idEmpresa).subscribe((data: any) => {
       this.dataList = data.data;
       if(this.dataList.length > 0){
           this.sinRegistros = false
@@ -161,7 +163,7 @@ export class NumbersComponent {
   }
 
   getTipoNumeracion(id: number) {
-    this.numeracionService.getAll().subscribe((data: any) => {
+    this.numeracionService.getAll(this.informationService.idEmpresa).subscribe((data: any) => {
       this.dataList = data.data;
       console.log(data.data)
     })

@@ -18,13 +18,13 @@
   <form action="" [formGroup]="miFormulario">
     <div style="margin-top: 20px;">
       <div class="row">
-        <div class="col"> <mat-form-field class="example-full-width " appearance="outline">
+        <div class="col"> <mat-form-field class="example-full-width " appearance="fill">
             <mat-label>Monto</mat-label>
             <input matInput type="number" placeholder="Monto" value="0" formControlName="monto">
           </mat-form-field></div>
 
         <div class="col">
-          <mat-form-field appearance="outline" style="color: red;">
+          <mat-form-field appearance="fill" style="color: red;">
             <mat-label>Metodo de pago</mat-label>
             <mat-select formControlName="idMetodoPago">
               <mat-option (click)="selectMetodo(metodo)" *ngFor="let metodo of dataListMetodoPago"
@@ -36,7 +36,7 @@
         </div>
         <div class="col-6">
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="fill">
             <mat-label>Banco</mat-label>
             <mat-select formControlName="idBanco">
               <mat-option *ngFor="let tipo of dataListBanco" [value]="tipo.idBanco">
@@ -46,7 +46,7 @@
           </mat-form-field>
         </div>
         <div class="col-6">
-          <mat-form-field class="example-full-width" appearance="outline">
+          <mat-form-field class="example-full-width" appearance="fill">
             <mat-label>No.Ticket</mat-label>
             <input matInput placeholder="No.Ticket" formControlName="noTicket">
           </mat-form-field>
@@ -59,7 +59,7 @@
 
     
 
-    <mat-form-field class="fullwidth" appearance="outline">
+    <mat-form-field class="fullwidth" appearance="fill">
       <mat-label>Nota del pago</mat-label>
       <textarea matInput formControlName="notaPago"></textarea>
     </mat-form-field>

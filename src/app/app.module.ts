@@ -19,8 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
-
-
+import { Chart } from 'chart.js/auto';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -39,7 +39,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ComponentsModule,
     FormsModule,
     MatTreeModule, MatButtonModule, MatIconModule, CdkTreeModule
-    ,MatButtonModule, MatMenuModule, MatIconModule
+    ,MatButtonModule, MatMenuModule, MatIconModule, NgApexchartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

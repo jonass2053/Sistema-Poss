@@ -61,6 +61,8 @@ export class ContactsComponent {
       limiteCredito: this.fb.control(0),
       idVendedor: this.fb.control(""),
       idTermino: this.fb.control(""),
+      idEmpresa : this.fb.control(null),
+      predeterminado : this.fb.control(null),
       incluirEstadoCuenta: this.fb.control(false)
     });
 
@@ -139,7 +141,9 @@ export class ContactsComponent {
   }
 
   save() {
-
+    this.miFormulario.patchValue({
+      idEmpresa : this.informationService.idEmpresa
+    })
     if (this.miFormulario.valid) {
       this.miFormulario.get('idContacto')?.value === null ? this.insert() : this.update()
     }
@@ -195,7 +199,7 @@ export class ContactsComponent {
   }
 
   getAllTipoNumeracion() {
-    this.numeracionService.getAll().subscribe((response: ServiceResponse) => {
+    this.numeracionService.getAll(this.informationService.idEmpresa).subscribe((response: ServiceResponse) => {
       if (response.status) {
         this.dataListTipoNumeracion = response.data.filter((c: any) => c.idTipoDocumento == 1);
       }

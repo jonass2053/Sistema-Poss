@@ -9,6 +9,10 @@ import { CardsComponent } from './dashboard-components/cards/cards.component';
 import { FormsModule } from '@angular/forms';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatCardModule } from '@angular/material/card';
+import { importaciones } from '../Core/utilities/material/material';
+import { Loader } from 'angular-feather/icons';
+import { LoaderComponent } from '../components/loader/loader.component';
+import { NodataComponent } from '../components/nodata/nodata.component';
 
 
 
@@ -26,7 +30,10 @@ import { MatCardModule } from '@angular/material/card';
     DemoFlexyModule,
     FormsModule,
     NgApexchartsModule,
-    MatCardModule
+    MatCardModule,
+    importaciones, 
+    LoaderComponent,
+    NodataComponent
   ],
   exports: [
     DashboardComponent,

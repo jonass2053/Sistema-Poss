@@ -4,7 +4,7 @@
   <p>Configura una nueva caja registradora</p>
 
   <form [formGroup]="cashRegisterForm" class="dialog-form">
-    <mat-form-field appearance="outline" class="full-width">
+    <!-- <mat-form-field appearance="outline" class="full-width">
       <mat-label>Cajero</mat-label>
       <mat-select formControlName="cashier">
         <mat-option *ngFor="let cashier of cashiers" [value]="cashier.value">
@@ -42,24 +42,33 @@
       <mat-error *ngIf="cashRegisterForm.get('openAmount')?.hasError('min')">
         El monto debe ser mayor a 0
       </mat-error>
+    </mat-form-field> -->
+    <mat-form-field class="example-full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre">
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Observaciones</mat-label>
-      <textarea matInput
-                formControlName="notes"
-                rows="3"
-                placeholder="Notas adicionales..."></textarea>
+    <mat-form-field class="" appearance="fill">
+      <mat-label>Pin de la caja</mat-label>
+      <input [type]="hide() ? 'password' : 'text'" type="password" pattern="\d*" inputmode="numeric" matInput
+        placeholder="No.Ticket" formControlName="pin">
+
+      <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide()">
+        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-hint align="end">Solo se aceptan numeros.</mat-hint>
     </mat-form-field>
+
+
+  
+
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button
-          color="primary"
-          (click)="onSubmit()"
-          [disabled]="!cashRegisterForm.valid">
+  <button mat-raised-button (click)="save()" color="primary" [disabled]="!cashRegisterForm.valid">
     Crear Caja
   </button>
 </mat-dialog-actions>

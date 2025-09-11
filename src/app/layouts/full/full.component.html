@@ -1,128 +1,34 @@
-<mat-sidenav-container class="sidenav-container">
-  <!-- Sidebar -->
-  <!-- <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false"> -->
-  <mat-sidenav #drawer class="sidenav" fixedInViewport mode="over" [opened]="(isHandset$ | async) === true">
-    <div class="headermenu">
-      <h4>MY APLICACION</h4>
-      <button mat-icon-button (click)="drawer.toggle()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-
-    <div class="p-16">
-      <div class="mb-16">
-        <a href="javascript:void(0)" class="d-flex align-items-center">
-        </a>
-
-      </div>
-
-      <div class="pt-8">
-        <ul>
-          <li class="list-group mb-2" *ngFor="let sidenav of sidebarMenu">
-            <a *ngIf="sidenav.menu!=='Ventas' && sidenav.menu!=='Caja' && sidenav.menu!=='POS'"  matRipple [matRippleColor]="'white'"
-              routerLink="{{ sidenav.link }}" class="sidebar-menu w-100 d-flex align-items-center"
-              [routerLinkActive]="routerActive">
-              <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
-            </a>
-            <a (click)="facturar(0, true)"  *ngIf="sidenav.menu=='POS'" matRipple [matRippleColor]="'white'"
-              routerLink="{{ sidenav.link }}" class="sidebar-menu w-100 d-flex align-items-center"
-              [routerLinkActive]="routerActive">
-              <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
-            </a>
-            <div *ngIf="sidenav.menu==='Ventas'" style="display: flex; flex-direction: column; width: 100%;">
-              <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListVentas()"
-                class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-                <i class="{{ sidenav.icon }}"></i> {{
-                sidenav.menu }}
-                <span class="ps-4">
-                </span>
-                <div style="margin-left: 80px">
-                  <i-feather *ngIf="rowIcon==false" name="chevron-down"></i-feather>
-                  <i-feather *ngIf="rowIcon" name="chevron-up"></i-feather>
-                </div>
-              </a>
-              <div class="contItem" [class.show]="listIngresos" *ngIf="sidenav.menu=='Ventas'">
-                <a (click)="selectDocument('Factura')"> <span class="centerall"> • Facturas</span></a>
-                <a (click)="selectDocument('Cotización')"><span class="centerall">• Cotización</span></a>
-                <a [routerLink]="['sales/payment']"><span class="centerall">• Pagos recibidos</span></a>
-                <!-- <a [routerLink]="['sales/payment']"><span class="centerall">• Notas de credito</span> </a> -->
-              </div>
-            </div>
-
-            <div *ngIf="sidenav.menu==='Caja'" style="display: flex; flex-direction: column; width: 100%;">
-              <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListCaja()"
-                class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
-                <i class="{{ sidenav.icon }}"></i> {{
-                sidenav.menu }}
-                <span class="ps-4">
-                </span>
-                <div style="margin-left: 80px">
-                  <i-feather *ngIf="rowIconCaja==false" name="chevron-down"></i-feather>
-                  <i-feather *ngIf="rowIconCaja" name="chevron-up"></i-feather>
-                </div>
-              </a>
-              <div class="contItem" [class.show]="listCaja" *ngIf="sidenav.menu=='Caja'">
-                <a routerLink="/shifts"> <span class="centerall"> • Manejo de turno</span></a>
-                <a routerLink="/cash-management"> <span class="centerall"> • Gastos/Ingresos</span></a>
-                <a routerLink="/cashregisterlist"> <span class="centerall"> • Crear caja</span></a>
-              </div>
+<!-- <mat-sidenav-container class="sidenav-container">
 
 
-            </div>
-
-
-          </li>
-        </ul>
-      </div>
-
-      <!-- <div class="m-8 pt-4">
-        <div class="buy-flexy ps-24 pe-24 mt-48 mb-48">
-          <div class="text-center">
-            <img src="assets/images/sidebar-buynow-bg.svg" class="img-fluid" alt="">
-            <div class="pt-24 pb-24 mt-8">
-              <p class="fw-bold fs-18 mb-16 pb-8">Get This for Free</p>
-              <ul>
-                <li class="mb-8">
-                  <a href="https://www.wrappixel.com/templates/flexy-angular-admin-free/" mat-flat-button
-                    color="primary" class="fw-light w-100 fs-14">Download Free</a>
-                </li>
-                <li>
-                  <a href="https://www.wrappixel.com/templates/flexy-material-angular-admin/?ref=33" mat-flat-button
-                    color="accent" class="w-100 fw-light fs-14">Check Pro</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div> -->
-    </div>
-  </mat-sidenav>
 
   <mat-sidenav-content class="sidenav-content">
-    <!-- Header -->
     <mat-toolbar class="header ps-24 pe-24 toolbar">
       <button mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <button mat-stroked-button (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
+      &nbsp;
 
+      <button mat-stroked-button (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
+      &nbsp;
       <div>
         <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
           mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
         <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
           mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
 
+
       </div>
 
 
-
-
-
-      <div class="ms-auto">
+      <div class="ms-auto d-flex">
+        <div class="trial-card">
+          <mat-icon>history</mat-icon> 15 días de prueba gratuita
+        </div>
         <button mat-button class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted d-flex align-items-center"
           [matMenuTriggerFor]="menu">
           <div class="d-flex align-items-center">
+
             <img src="assets/images/user2.webp" class="rounded-circle" alt="">
             <span class="fw-light ms-8 text-secondary">Hi,</span>
             <span class="fw-bold ms-8">{{usuarioService.usuarioLogueado.data.nombre}}</span>
@@ -140,23 +46,440 @@
           <hr>
 
           <div class="p-16">
-            <button mat-flat-button color="accent" class="w-100 text-white">Logout</button>
+            <button mat-flat-button color="primary" class="w-100 text-white">Logout</button>
           </div>
 
         </mat-menu>
       </div>
     </mat-toolbar>
 
-    <!-- Content -->
+    <div class="body-wrapper main-content">
+
+      <div class="page-wrapper">
+              <mat-sidenav #drawer class="sidenav" fixedInViewport mode="push" [opened]="(isHandset$ | async) === true">
+        <div class="headermenu">
+          <h4>MY APLICACION</h4>
+          <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="p-16">
+          <div class="mb-16">
+            <a href="javascript:void(0)" class="d-flex align-items-center">
+            </a>
+
+          </div>
+
+          <div class="pt-8">
+            <ul>
+              <li class="list-group mb-2" *ngFor="let sidenav of siderbarMenuFilter">
+                <a *ngIf="sidenav.menu!=='Ventas' && sidenav.menu!=='Caja' && sidenav.menu!=='POS'" matRipple
+                  [matRippleColor]="'white'" routerLink="{{ sidenav.link }}"
+                  class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
+                  <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
+                </a>
+                <a (click)="facturar(0, true)" *ngIf="sidenav.menu=='POS'" matRipple [matRippleColor]="'white'"
+                  routerLink="{{ sidenav.link }}" class="sidebar-menu w-100 d-flex align-items-center"
+                  [routerLinkActive]="routerActive">
+                  <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
+                </a>
+                <div *ngIf="sidenav.menu==='Ventas'" style="display: flex; flex-direction: column; width: 100%;">
+                  <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListVentas()"
+                    class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
+                    <i class="{{ sidenav.icon }}"></i> {{
+                    sidenav.menu }}
+                    <span class="ps-4">
+                    </span>
+                    <div style="margin-left: 80px">
+                      <i-feather *ngIf="rowIcon==false" name="chevron-down"></i-feather>
+                      <i-feather *ngIf="rowIcon" name="chevron-up"></i-feather>
+                    </div>
+                  </a>
+                  <div class="contItem" [class.show]="listIngresos" *ngIf="sidenav.menu=='Ventas'">
+                    <a (click)="selectDocument('Factura')"> <span class="centerall"> • Facturas</span></a>
+                    <a (click)="selectDocument('Cotización')"><span class="centerall">• Cotización</span></a>
+                    <a [routerLink]="['sales/payment']"><span class="centerall">• Pagos recibidos</span></a>
+                  </div>
+                </div>
+
+                <div *ngIf="sidenav.menu==='Caja'" style="display: flex; flex-direction: column; width: 100%;">
+                  <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListCaja()"
+                    class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
+                    <i class="{{ sidenav.icon }}"></i> {{
+                    sidenav.menu }}
+                    <span class="ps-4">
+                    </span>
+                    <div style="margin-left: 80px">
+                      <i-feather *ngIf="rowIconCaja==false" name="chevron-down"></i-feather>
+                      <i-feather *ngIf="rowIconCaja" name="chevron-up"></i-feather>
+                    </div>
+                  </a>
+                  <div class="contItem" [class.show]="listCaja" *ngIf="sidenav.menu=='Caja'">
+                    <a routerLink="/shifts"> <span class="centerall"> • Manejo de turno</span></a>
+                    <a routerLink="/cash-management"> <span class="centerall"> • Gastos/Ingresos</span></a>
+                    <a routerLink="/cashregisterlist"> <span class="centerall"> • Crear caja</span></a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+       
+        </div>
+      </mat-sidenav>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container> -->
+
+
+<!-- 
+<mat-sidenav-container class="sidenav-container">
+  
+  <mat-sidenav #drawer class="sidenav"
+               fixedInViewport
+               [mode]="(isHandset$ | async) ? 'push' : 'side'"
+               [opened]="!(isHandset$ | async)">
+    
+    <div class="headermenu">
+      <h4>MY APLICACION</h4>
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="p-16">
+      <ul>
+        <li class="list-group mb-2" *ngFor="let sidenav of siderbarMenuFilter">
+
+          <a *ngIf="sidenav.menu!=='Ventas' && sidenav.menu!=='Caja' && sidenav.menu!=='POS'"
+             matRipple [matRippleColor]="'white'"
+             [routerLink]="sidenav.link"
+             class="sidebar-menu w-100 d-flex align-items-center"
+             [routerLinkActive]="routerActive">
+            <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
+          </a>
+
+          <a *ngIf="sidenav.menu=='POS'"
+             (click)="facturar(0, true)"
+             matRipple [matRippleColor]="'white'"
+             [routerLink]="sidenav.link"
+             class="sidebar-menu w-100 d-flex align-items-center"
+             [routerLinkActive]="routerActive">
+            <i class="{{sidenav.icon}}"></i>{{sidenav.menu}}
+          </a>
+
+          <div *ngIf="sidenav.menu==='Ventas'" style="display: flex; flex-direction: column; width: 100%;">
+            <a matRipple [matRippleColor]="'#f7f8f443'"
+               (click)="showListVentas()"
+               class="sidebar-menu w-100 d-flex align-items-center"
+               [routerLinkActive]="routerActive">
+              <i class="{{ sidenav.icon }}"></i> {{ sidenav.menu }}
+              <div style="margin-left: 80px">
+                <i-feather *ngIf="!rowIcon" name="chevron-down"></i-feather>
+                <i-feather *ngIf="rowIcon" name="chevron-up"></i-feather>
+              </div>
+            </a>
+            <div class="contItem" [class.show]="listIngresos">
+              <a (click)="selectDocument('Factura')"> <span class="centerall"> • Facturas</span></a>
+              <a (click)="selectDocument('Cotización')"><span class="centerall">• Cotización</span></a>
+              <a [routerLink]="['sales/payment']"><span class="centerall">• Pagos recibidos</span></a>
+            </div>
+          </div>
+
+          <div *ngIf="sidenav.menu==='Caja'" style="display: flex; flex-direction: column; width: 100%;">
+            <a matRipple [matRippleColor]="'#f7f8f443'"
+               (click)="showListCaja()"
+               class="sidebar-menu w-100 d-flex align-items-center"
+               [routerLinkActive]="routerActive">
+              <i class="{{ sidenav.icon }}"></i> {{ sidenav.menu }}
+              <div style="margin-left: 80px">
+                <i-feather *ngIf="!rowIconCaja" name="chevron-down"></i-feather>
+                <i-feather *ngIf="rowIconCaja" name="chevron-up"></i-feather>
+              </div>
+            </a>
+            <div class="contItem" [class.show]="listCaja">
+              <a routerLink="/shifts"> <span class="centerall"> • Manejo de turno</span></a>
+              <a routerLink="/cash-management"> <span class="centerall"> • Gastos/Ingresos</span></a>
+              <a routerLink="/cashregisterlist"> <span class="centerall"> • Crear caja</span></a>
+            </div>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidenav-content">
+    
+    <mat-toolbar class="header ps-24 pe-24 toolbar">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      &nbsp;
+      <button mat-stroked-button (click)="facturar(0, true)">
+        <mat-icon>shopping_cart</mat-icon> Facturar
+      </button>
+      &nbsp;
+      <div>
+        <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()" mat-stroked-button>
+          <mat-icon>lock_open_circle</mat-icon> Abrir turno
+        </button>
+        <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()" mat-stroked-button>
+          <mat-icon>lock_closed_circle</mat-icon> Cerrar turno
+        </button>
+      </div>
+
+      <div class="ms-auto d-flex">
+        <div class="trial-card">
+          <mat-icon>history</mat-icon> 15 días de prueba gratuita
+        </div>
+        <button mat-button class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted d-flex align-items-center"
+                [matMenuTriggerFor]="menu">
+          <div class="d-flex align-items-center">
+            <img src="assets/images/user2.webp" class="rounded-circle" alt="">
+            <span class="fw-light ms-8 text-secondary">Hi,</span>
+            <span class="fw-bold ms-8">{{usuarioService.usuarioLogueado.data.nombre}}</span>
+            <i-feather name="chevron-down" class="feather-base"></i-feather>
+          </div>
+        </button>
+        <mat-menu #menu="matMenu" class="profile-dropdown">
+          <div class="p-16 mb-4">
+            <button mat-menu-item class="fs-16">Edit Profile</button>
+            <button mat-menu-item class="fs-16">Account</button>
+            <button mat-menu-item class="fs-16">Change Password</button>
+            <button mat-menu-item class="fs-16">My Settings</button>
+          </div>
+          <hr>
+          <div class="p-16">
+            <button mat-flat-button color="primary" class="w-100 text-white">Logout</button>
+          </div>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
     <div class="body-wrapper main-content">
       <div class="page-wrapper">
         <router-outlet></router-outlet>
       </div>
     </div>
 
-    <!-- <p class="text-center pb-15 fs-16">© 2025 All rights reserved by <a href="" target="_blank"
-        class="text-indigo">JDSoftware.com</a></p> -->
-
   </mat-sidenav-content>
+</mat-sidenav-container> -->
 
-</mat-sidenav-container>
+
+
+
+
+
+
+
+<!-- <mat-toolbar class="toolbar">
+        <button mat-stroked-button (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
+        &nbsp;
+        <div>
+          <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
+            mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
+          <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
+            mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+        </div>
+        <div class="ms-auto d-flex">
+          <div class="trial-card">
+            <mat-icon>history</mat-icon> 15 días de prueba gratuita
+          </div>
+          <button mat-button class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted d-flex align-items-center"
+            [matMenuTriggerFor]="menu">
+            <div class="d-flex align-items-center">
+              <img src="assets/images/user2.webp" class="rounded-circle" alt="">
+              <span class="fw-light ms-8 text-secondary">Hi,</span>
+              <span class="fw-bold ms-8">{{usuarioService.usuarioLogueado.data.nombre}}</span>
+              <i-feather name="chevron-down" class="feather-base"></i-feather>
+            </div>
+          </button>
+          <mat-menu #menu="matMenu" class="profile-dropdown">
+            <div class="p-16 mb-4">
+              <button mat-menu-item class="fs-16">Edit Profile</button>
+              <button mat-menu-item class="fs-16">Account</button>
+              <button mat-menu-item class="fs-16">Change Password</button>
+              <button mat-menu-item class="fs-16">My Settings</button>
+            </div>
+            <hr>
+            <div class="p-16">
+              <button mat-flat-button color="primary" class="w-100 text-white">Logout</button>
+            </div>
+          </mat-menu>
+        </div>
+      </mat-toolbar> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="main-content">
+    
+
+        
+    <router-outlet></router-outlet>
+
+  </div>
+ -->
+
+
+
+<div class="layout-container">
+  <div class="sidebar" [class.collapsed]="isCollapsed">
+
+
+    <div class="sidebar" [class.collapsed]="isCollapsed">
+      <div class="sidebar-header">
+        <button class="toggle-btn" (click)="toggleSidebar()">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 12h18M3 6h18M3 18h18" />
+          </svg>
+        </button>
+        <span class="logo-text">Sistema</span>
+      </div>
+
+      <nav class="sidebar-nav">
+
+
+        <a [routerLink]="['/home']"  class="nav-link"  matTooltip="Inicio" matTooltipPosition="right">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+          </svg>
+
+          <span class="nav-text">Inicio</span>
+        </a>
+
+        <div class="nav-item">
+          <div class="nav-link" [class.active]="isVentasSubmenuOpen" (click)="toggleVentasSubmenu()" matTooltipPosition="right"
+            matTooltip="Ventas">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 3h18l-1 13H4L3 3z" />
+              <path d="M16 16a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+              <path d="M9 16a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+            </svg>
+            <span class="nav-text">Ventas</span>
+            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </div>
+
+          <div class="submenu" [class.show]="isVentasSubmenuOpen">
+            <a class="submenu-item" (click)="selectDocument('Factura'); $event.preventDefault()"
+              [class.active]="isVentasSubmenuOpen" [routerLinkActive]="routerActive">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14,2 14,8 20,8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10,9 9,9 8,9" />
+              </svg>
+              <span class="submenu-text">Facturas</span>
+            </a>
+
+            <a href="#" class="submenu-item" (click)="selectDocument('Cotización'); $event.preventDefault()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14,2 14,8 20,8" />
+                <line x1="12" y1="18" x2="12" y2="12" />
+                <line x1="9" y1="15" x2="15" y2="15" />
+              </svg>
+              <span class="submenu-text">Cotizaciones</span>
+            </a>
+
+            <a [routerLink]="['sales/payment']" class="submenu-item"
+              (click)="onSubmenuItemClick('Pagos'); $event.preventDefault()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              <span class="submenu-text">Pagos</span>
+            </a>
+
+            <a href="#" class="submenu-item" (click)="selectDocument('Conduce'); $event.preventDefault()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+              </svg>
+              <span class="submenu-text">Conduces</span>
+            </a>
+
+            <a href="#" class="submenu-item"
+              (click)="onSubmenuItemClick('Nota Crédito/Débito'); $event.preventDefault()">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span class="submenu-text">Nota Crédito/Débito</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="nav-link"  (click)="facturar(0, true)" matTooltip="POS" matTooltipPosition="right">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          <span class="nav-text">POS</span>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div class="main-content" [class.collapsed]="isCollapsed">
+    <mat-toolbar class="toolbar">
+      <button mat-stroked-button (click)="facturar(0, true)"><mat-icon>shopping_cart</mat-icon> Facturar</button>
+      &nbsp;
+      <div>
+        <button *ngIf="turnoService.isOpen===undefined" (click)="openShift()"
+          mat-stroked-button><mat-icon>lock_open_circle</mat-icon> Abrir turno</button>
+        <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
+          mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
+      </div>
+      <div class="ms-auto d-flex">
+        <button mat-button class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted d-flex align-items-center"
+          [matMenuTriggerFor]="menu">
+          <div class="d-flex align-items-center">
+            <img src="assets/images/user2.webp" class="rounded-circle" alt="">
+            <span class="fw-light ms-8 text-secondary">Hi,</span>
+            <span class="fw-bold ms-8">{{usuarioService.usuarioLogueado.data.nombre}}</span>
+            <i-feather name="chevron-down" class="feather-base"></i-feather>
+          </div>
+        </button>
+        <mat-menu #menu="matMenu" class="profile-dropdown">
+          <div class="p-16 mb-4">
+            <button mat-menu-item class="fs-16">Edit Profile</button>
+            <button mat-menu-item class="fs-16">Account</button>
+            <button mat-menu-item class="fs-16">Change Password</button>
+            <button mat-menu-item class="fs-16">My Settings</button>
+          </div>
+          <hr>
+          <div class="p-16">
+            <button mat-flat-button color="primary" class="w-100 text-white">Logout</button>
+          </div>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
+    <!-- resto del contenido -->
+    <div class="content-header">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

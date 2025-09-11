@@ -6,6 +6,7 @@
   width: 200px;
 }
 
+
 .sidenav .mat-toolbar {
   background: inherit;
 }
@@ -27,18 +28,10 @@
   list-style-type: none;
 }
 
-/*
- * This padding sets alignment of the nested nodes.
- */
 .example-tree .mat-nested-tree-node div[role=group] {
   padding-left: 40px;
 }
 
-/*
- * Padding for leaf nodes.
- * Leaf nodes need to have padding so as to align with other non-leaf nodes
- * under the same parent.
- */
 .example-tree div[role=group] > .mat-nested-tree-node {
   padding-left: 40px;
 }
@@ -50,26 +43,26 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.25s ease-out;
-  // background-color: rgb(244, 243, 243);
   width: 100%;
+  
 }
 
 .contItem a {
   display: block;
   padding: 10px 15px;
   text-decoration: none;
-  color: #545454;
+  color: rgb(213, 213, 213);
   border-radius: 10px;
   margin-top: 10px;
 }
 
 .contItem a:hover {
   background-color: #cecece;
+  color: gray;
 }
 
 .contItem.show {
   max-height: 500px;
-  /* Ajusta este valor según la altura de tu contenido */
 }
 .logorectangular{
   width: 50px;
@@ -88,12 +81,238 @@
 }
 .toolbar
 {
-  position: fixed;
-  z-index: 999;
-  background-color: #ffffff !important;
-  color: #7a7a7a;
+    width: 100%;
 
 }
 .sidenav-content{
   background-color: #F3F4F6;
 }
+.trial-card{
+  background-color:#673ab7;
+  color: white;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 6px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  background: #2c3e50;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #34495e;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  margin-left: -7px;
+}
+
+.toggle-btn:hover {
+  background-color: #34495e;
+}
+
+.logo-text {
+  margin-left: 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .logo-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-nav {
+  padding: 1rem 0;
+}
+
+.nav-item {
+  margin-bottom: 0.5rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.nav-link:hover {
+  background-color: #34495e;
+}
+
+.nav-link.active {
+  background-color: #3498db;
+}
+
+.nav-text {
+  margin-left: 1rem;
+  flex: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .nav-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.sidebar.collapsed .arrow-icon {
+  opacity: 0;
+}
+
+.nav-link.active .arrow-icon {
+  transform: rotate(90deg);
+}
+
+.icon {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: #34495e;
+}
+
+.submenu.show {
+  max-height: 300px;
+}
+
+.submenu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem 0.5rem 3rem;
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.submenu-item:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+.submenu-text {
+  margin-left: 0.75rem;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .submenu-text {
+  opacity: 0;
+}
+
+.main-content {
+  margin-left: 280px;
+  padding: 2rem;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  background-color: #ecf0f1;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 60px;
+}
+
+
+
+.content-header h1 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.content-header p {
+  color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .main-content {
+    margin-left: 60px;
+  }
+
+  .logo-text,
+  .nav-text,
+  .submenu-text,
+  .arrow-icon {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .submenu {
+    display: none;
+  }
+}
+
+
+
+
+.layout-container {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+   padding: 0 !important ;
+  transition: margin-left 0.3s ease;
+  background-color: #ecf0f1;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+

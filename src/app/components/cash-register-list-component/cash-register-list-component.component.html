@@ -1,17 +1,19 @@
 <div class="cash-register-container">
   <!-- Header -->
   <mat-card class="header-card">
-    <mat-card-content>
-      <div class="header-content">
+    <mat-card-content >
+      <div class="header-content" >
         <div class="header-info">
           <h1>Gestión de Cajas Registradoras</h1>
           <p>Administra y controla todas las cajas del sistema</p>
         </div>
-        <button mat-raised-button color="primary" (click)="openCreateDialog()">
-          <mat-icon>add</mat-icon>
-          Nueva Caja
-        </button>
+
+          <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Nueva Caja
+      </button>
       </div>
+    
     </mat-card-content>
   </mat-card>
 
@@ -45,7 +47,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card">
+    <!-- <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-content">
           <div class="stat-icon primary">
@@ -71,19 +73,28 @@
           </div>
         </div>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
   </div>
 
   <!-- Filters and Table -->
   <mat-card class="table-card">
-    <mat-card-header>
+    <mat-card-header style="display: flex; justify-content: space-between;">
       <mat-card-title>Lista de Cajas</mat-card-title>
-      <mat-card-subtitle>Gestiona todas las cajas registradoras</mat-card-subtitle>
+      <mat-card-subtitle>Gestiona todas las cajas registradoras</mat-card-subtitle>\
+
+
+
+      <button mat-stroked-button (click)="openReportConsolidadDialog()">
+        <mat-icon>description</mat-icon>
+        Reporte Consolidado
+      </button>
     </mat-card-header>
+
+
 
     <mat-card-content>
       <!-- Filters -->
-      <div class="filters-container">
+      <!-- <div class="filters-container">
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Buscar</mat-label>
           <input matInput
@@ -102,11 +113,12 @@
             <mat-option value="today">Hoy</mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
+      </div> -->
 
       <!-- Table -->
       <div class="table-container">
-        <table mat-table [dataSource]="filteredRegisters" class="cash-register-table">
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+        <table mat-table [dataSource]="dataListCaja" class="cash-register-table">
           <!-- ID Column -->
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -115,19 +127,60 @@
             </td>
           </ng-container>
 
-          <!-- Cashier Column -->
-          <ng-container matColumnDef="cashier">
-            <th mat-header-cell *matHeaderCellDef>Cajero</th>
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
             <td mat-cell *matCellDef="let register">
               <div class="cashier-cell">
                 <mat-icon class="cashier-icon">person</mat-icon>
-                {{ register.cashier }}
+                {{ register.nombre }}
               </div>
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="pin">
+            <th mat-header-cell *matHeaderCellDef>Pin</th>
+            <td mat-cell *matCellDef="let register">
+              <div class="cashier-cell">
+                <mat-icon class="cashier-icon">person</mat-icon>
+                {{ register.pin }}
+              </div>
+            </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="isOpen">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let register" [ngStyle]="{ 'color': register.isOpen==false ? 'red' : 'green' }">
+              {{ register.isOpen==false? 'Cerrada' : 'Abierta' }}
+            </td>
+          </ng-container>
+
+
+
+          <ng-container matColumnDef="idSucursal">
+            <th mat-header-cell *matHeaderCellDef>Sucursal</th>
+            <td mat-cell *matCellDef="let register">
+              <div class="cashier-cell">
+                <mat-icon class="cashier-icon">person</mat-icon>
+                {{ register.sucursalObj.nombre }}
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let register">
+              <div class="cashier-cell">
+                <!-- <i class="fa-solid fa-eye"></i> -->
+                <mat-icon (click)="openShiftListDialog(register.id)" matTooltip="Ver turnos de la caja"
+                  class="date-icon">visibility</mat-icon>
+                <mat-icon (click)="edit(register)" class="date-icon">edit</mat-icon>
+
+              </div>
+            </td>
+          </ng-container>
           <!-- Date Column -->
-          <ng-container matColumnDef="date">
+          <!-- <ng-container matColumnDef="date">
             <th mat-header-cell *matHeaderCellDef>Fecha</th>
             <td mat-cell *matCellDef="let register">
               <div class="date-cell">
@@ -135,51 +188,39 @@
                 {{ formatDate(register.openDate) }}
               </div>
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Shift Column -->
-          <ng-container matColumnDef="shift">
+          <!-- <ng-container matColumnDef="shift">
             <th mat-header-cell *matHeaderCellDef>Turno</th>
-            <!-- <td mat-cell *matCellDef="let register">
-              <mat-chip-list>
-                <mat-chip>{{ register.shift }}</mat-chip>
-              </mat-chip-list>
-            </td> -->
-          </ng-container>
+         
+          </ng-container> -->
 
           <!-- Status Column -->
-          <ng-container matColumnDef="status">
+          <!-- <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Estado</th>
             <td mat-cell *matCellDef="let register">
-              <!-- <mat-chip-list>
-                <mat-chip [ngClass]="register.status === 'Abierta' ? 'status-open' : 'status-closed'">
-                  <mat-icon matChipAvatar>
-                    {{ register.status === 'Abierta' ? 'lock_open' : 'lock' }}
-                  </mat-icon>
-                  {{ register.status }}
-                </mat-chip>
-              </mat-chip-list> -->
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Open Amount Column -->
-          <ng-container matColumnDef="openAmount">
+          <!-- <ng-container matColumnDef="openAmount">
             <th mat-header-cell *matHeaderCellDef>Apertura</th>
             <td mat-cell *matCellDef="let register">
               {{ formatCurrency(register.openAmount) }}
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Close Amount Column -->
-          <ng-container matColumnDef="closeAmount">
+          <!-- <ng-container matColumnDef="closeAmount">
             <th mat-header-cell *matHeaderCellDef>Cierre</th>
             <td mat-cell *matCellDef="let register">
               {{ formatCurrency(register.closeAmount) }}
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Sales Column -->
-          <ng-container matColumnDef="sales">
+          <!-- <ng-container matColumnDef="sales">
             <th mat-header-cell *matHeaderCellDef>Ventas</th>
             <td mat-cell *matCellDef="let register">
               <div class="sales-cell">
@@ -187,10 +228,10 @@
                 <div class="sales-amount">{{ formatCurrency(register.salesAmount) }}</div>
               </div>
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Difference Column -->
-          <ng-container matColumnDef="difference">
+          <!-- <ng-container matColumnDef="difference">
             <th mat-header-cell *matHeaderCellDef>Diferencia</th>
             <td mat-cell *matCellDef="let register">
               <span [ngClass]="getDifferenceColor(register.difference)">
@@ -200,7 +241,7 @@
                 <ng-container *ngIf="register.difference === null">-</ng-container>
               </span>
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- Actions Column -->
           <ng-container matColumnDef="actions">
@@ -214,9 +255,7 @@
                   <mat-icon>visibility</mat-icon>
                   <span>Ver Detalles</span>
                 </button>
-                <button mat-menu-item
-                        (click)="manageRegister(register)"
-                        *ngIf="register.status === 'Abierta'">
+                <button mat-menu-item (click)="manageRegister(register)" *ngIf="register.status === 'Abierta'">
                   <mat-icon>edit</mat-icon>
                   <span>Administrar</span>
                 </button>
@@ -246,7 +285,7 @@
 
   <!-- Quick Actions -->
   <div class="quick-actions-grid">
-    <mat-card class="quick-actions-card">
+    <!-- <mat-card class="quick-actions-card">
       <mat-card-header>
         <mat-card-title>Acciones Rápidas</mat-card-title>
       </mat-card-header>
@@ -256,19 +295,16 @@
             <mat-icon>add</mat-icon>
             Crear Nueva Caja
           </button>
-          <button mat-stroked-button>
+          <button mat-stroked-button (click)="openReportConsolidadDialog()">
             <mat-icon>description</mat-icon>
             Reporte Consolidado
           </button>
-          <button mat-stroked-button>
-            <mat-icon>download</mat-icon>
-            Exportar Datos
-          </button>
+
         </div>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
-    <mat-card class="summary-card">
+    <!-- <mat-card class="summary-card">
       <mat-card-header>
         <mat-card-title>Resumen del Día</mat-card-title>
       </mat-card-header>
@@ -288,9 +324,9 @@
           </div>
         </div>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
-    <mat-card class="alerts-card">
+    <!-- <mat-card class="alerts-card">
       <mat-card-header>
         <mat-card-title>Alertas</mat-card-title>
       </mat-card-header>
@@ -306,6 +342,6 @@
           </div>
         </div>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
   </div>
 </div>

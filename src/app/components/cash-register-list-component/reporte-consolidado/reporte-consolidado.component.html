@@ -1,0 +1,35 @@
+<div class="container">
+    <form [formGroup]="miFormulario">
+        <div>
+            <h1>Generar reporte consolidado</h1>
+            <p>Este reporte consolida todas los turnos con sus cajas correspondiente.</p>
+
+            <mat-divider></mat-divider>
+
+            <mat-form-field class="no-fill-background">
+                <mat-label>Selec. fecha</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Fecha inicio" formControlName="desde">
+                    <input matEndDate placeholder="Fecha fin" formControlName="hasta">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <div class="control">
+                <button mat-stroked-button (click)="printReporteConsolidado()" [disabled]="!miFormulario.valid">
+                    <mat-icon>description</mat-icon>
+                    Generar e imprimir
+                </button>
+
+
+                <button mat-stroked-button (click)="exportar()" [disabled]="!miFormulario.valid">
+                    <mat-icon>download</mat-icon>
+                    Generar y descargar
+                </button>
+            </div>
+        </div>
+
+
+    </form>
+
+</div>

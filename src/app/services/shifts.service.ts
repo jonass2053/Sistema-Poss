@@ -46,16 +46,15 @@ export class ShiftsService {
   insert(formulario: any): any {
     return this.http.post<ServiceResponse>(`${this.url}`, formulario, this.header).pipe(catchError((error) => {
       console.log(error);
-      this.alertas.errorAlert(error);
+      this.alertas.errorAlert(error.error.message);
       return error()
     })
     )
   }
   update(formualrio: any): any {
     return this.http.put<ServiceResponse>(`${this.url}/close_turno`, formualrio, this.header).pipe(catchError((error) => {
-      console.log(error);
-      this.alertas.errorAlert(error);
-      return error()
+      this.alertas.errorAlert(error.error.message);
+      return error();
     })
     )
   }
@@ -65,6 +64,24 @@ export class ShiftsService {
   getAll(idSucursal: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/get_by_idsucursal/${idSucursal}`, this.header)
   }
+
+   getAllByIdCaja(idCaja: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/get_by_idcaja/${idCaja}`, this.header)
+  }
+
+getAllByIdCajaExportar(idCaja: number): Observable<Blob> {
+  return this.http.get(`${this.url}/get_by_idcaja_exportar/${idCaja}`, {
+    ...this.header,    // <-- esto inyecta las cabeceras correctamente
+    responseType: 'blob'
+  });
+}
+
+  
+
+  getAllCajasDisponibles(idSucursal: number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/disponible/get_by_idsucursal/${idSucursal}`, this.header)
+  }
+
   getById(idTurno: number): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/${idTurno}`, this.header)
   }

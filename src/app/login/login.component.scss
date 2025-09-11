@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+   
 }
 .example-container mat-form-field + mat-form-field {
     margin-left: 8px;
@@ -35,7 +36,6 @@
   }
   .example-button-row p
   {
-    color: red;
   }
   .example-button-row button div
   {
@@ -63,5 +63,35 @@
   align-items: center;
 }
 .example-card{
+  // width:40vw;
+  border: none;
+  box-shadow: none;
+  padding-top: 20px;
+  min-width: 500px;
+}
+
+.jonas{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.btnIniciar{
   width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.formulario2{
+ 
+  display: flex;
+  justify-content: center;
+}
+.formulario2 form{
+  width: 30vw;
+  display: flex;
+  justify-content: center;
+}
+.btnPrimary {
+  background-color:  #1976d2 !important; /* primary por defecto */
+  color: white !important;
 }

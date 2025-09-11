@@ -3,6 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CashRegisterComponent } from '../cash-register/cash-register.component';
 import { importaciones } from 'src/app/Core/utilities/material/material';
+import { BoxServiceService } from 'src/app/services/box-service.service';
+import { ServiceResponse } from 'src/app/interfaces/service-response-login';
+import { iCaja, iTurno } from 'src/app/interfaces/iTermino';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ShiftListComponent } from './shift-list/shift-list.component';
+import { ReporteConsolidadoComponent } from './reporte-consolidado/reporte-consolidado.component';
 export interface CashRegister {
   id: number;
   cashier: string;
@@ -20,12 +26,12 @@ export interface CashRegister {
 @Component({
   selector: 'app-cash-register-list-component',
   standalone: true,
-  imports: [ importaciones],
+  imports: [importaciones],
   templateUrl: './cash-register-list-component.component.html',
   styleUrl: './cash-register-list-component.component.scss'
 })
 export class CashRegisterListComponentComponent implements OnInit {
-cashRegisters: CashRegister[] = [
+  cashRegisters: CashRegister[] = [
     {
       id: 1,
       cashier: 'Juan Pérez',
@@ -83,13 +89,19 @@ cashRegisters: CashRegister[] = [
       shift: 'Tarde'
     }
   ];
-
+  dataListCaja: iCaja[] = [];
   filteredRegisters: CashRegister[] = [];
   searchTerm: string = '';
   selectedView: string = 'all';
+  loading : boolean = false;
+  // displayedColumns: string[] = [
+  //   'id', 'cashier', 'date', 'shift', 'status',
+  //   'openAmount', 'closeAmount', 'sales', 'difference', 'actions'
+  // ];
+
+
   displayedColumns: string[] = [
-    'id', 'cashier', 'date', 'shift', 'status',
-    'openAmount', 'closeAmount', 'sales', 'difference', 'actions'
+    'id', 'nombre', 'pin', 'isOpen', 'idSucursal', 'acciones'
   ];
 
   stats = {
@@ -101,13 +113,44 @@ cashRegisters: CashRegister[] = [
 
   constructor(
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private cajaService: BoxServiceService,
+    private fb: FormBuilder
+  ) {
+    this.getAllCaja();
+  }
+
+
+  // {
+  //   "id": 0,
+  //   "nombre": "string",
+  //   "pin": 0,
+  //   "idSucursal": 0
+  // }
 
   ngOnInit(): void {
     this.updateStats();
     this.applyFilters();
   }
+
+
+  getAllCaja() {
+    this.loading=true;
+    this.cajaService.getAll().subscribe((result: ServiceResponse) => {
+      if (result.status) {
+        this.loading=false;
+        this.dataListCaja = result.data;
+        this.stats.totalRegisters = result.data.length;
+        this.stats.openRegisters = result.data.filter((c: any) => c.isOpen == true).length;
+      }
+    })
+  }
+
+  edit(caja: iCaja) {
+    this.cajaService.cajaEdit = caja;
+    this.openCreateDialog();
+  }
+
 
   updateStats(): void {
     this.stats = {
@@ -146,13 +189,39 @@ cashRegisters: CashRegister[] = [
     const dialogRef = this.dialog.open(CashRegisterComponent, {
       width: '500px',
       data: {}
+    }).afterClosed().subscribe(c=>{
+      this.cajaService.cajaEdit = undefined;
     });
+  }
+    
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.createCashRegister(result);
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       // this.createCashRegister(result);
+  //     }
+  //     this.getAllCaja();
+  //   });
+  // }
+
+   openShiftListDialog(idCaja : number){
+       const dialogRef = this.dialog.open(ShiftListComponent, {
+      width: '1600px',  // tu ancho deseado
+      maxWidth: '90vw',
+      height : '', // opcional, para que no se pase de la pantalla,
+      data: {
+        idCaja : idCaja
       }
-    });
+    })
+  }
+
+  
+   openReportConsolidadDialog(){
+       const dialogRef = this.dialog.open(ReporteConsolidadoComponent, {
+      width: '450px',
+      height: '250px',  // tu ancho deseado
+      maxWidth: '90vw',
+    })
   }
 
   createCashRegister(data: any): void {
@@ -233,4 +302,6 @@ cashRegisters: CashRegister[] = [
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString();
   }
+
+
 }

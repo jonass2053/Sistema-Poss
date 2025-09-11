@@ -1,4 +1,4 @@
-<app-sales></app-sales>
+<!-- <app-sales></app-sales>
 
 
 <div>
@@ -13,4 +13,293 @@
 </div>
 
 
-<app-cards></app-cards>
+<app-cards></app-cards> -->
+<app-loader *ngIf="loading==true"></app-loader>
+
+
+
+
+<div class="max-w-10xl mx-auto" *ngIf="resumen!=undefined && loading==false">
+    <div class="flex">
+
+        <form [formGroup]="miFormulario" class="flex formulario ">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">Resumen de operaciones: ({{miFormulario.value.desde | date
+                : "dd/MM/YYYY"}}) / ({{miFormulario.value.hasta | date : "dd/MM/YYYY"}})</h2>
+
+            <div class="buscador">
+                <mat-form-field class="no-fill-background">
+                    <mat-label>Selec. fecha</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate placeholder="Fecha inicio" formControlName="desde">
+                        <input (dateChange)="getResumen()" matEndDate placeholder="Fecha fin" formControlName="hasta">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+
+                <!-- <button mat-stroked-button><mat-icon>search</mat-icon>Buscar</button> -->
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Tarjeta 1: Ventas del Día -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4  border-blue-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total de ventas</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2"> {{resumen.totalVentas | number : '1.2-5'}}</p>
+                    <p class="text-sm text-green-600 mt-1">
+                        <!-- <span class="font-medium">+15.3%</span> vs ayer -->
+                    </p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="text-xs text-gray-500">{{resumen.cantTotalVentasCobradas +
+                    resumen.cantTotalVentasPorCobrar}} transacciones</div>
+            </div>
+        </div>
+        <!-- Tarjeta 2: Total de ventas cobradas -->
+
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total de ventas cobradas</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2"> {{resumen.totalVentasCobradas| number : '1.2-5'}}
+                    </p>
+                    <p class="text-sm text-green-600 mt-1">
+                        <!-- <span class="font-medium">+15.3%</span> vs ayer -->
+                    </p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="text-xs text-gray-500">{{resumen.cantTotalVentasCobradas}} transacciones</div>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Total de ventas por cobrar -->
+
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Total de ventas por cobrar</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2"> {{resumen.totalVentasPorCobrar| number : '1.2-5'}}
+                    </p>
+                    <p class="text-sm text-green-600 mt-1">
+                        <!-- <span class="font-medium">+15.3%</span> vs ayer -->
+                    </p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="text-xs text-gray-500">{{resumen.cantTotalVentasPorCobrar}} transacciones</div>
+            </div>
+        </div>
+        <!-- Tarjeta 2: Productos Vendidos -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Productos Vendidos</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">{{resumen.cantTotalProductosVendidos}}</p>
+                    <p class="text-sm text-blue-600 mt-1">
+                        <!-- <span class="font-medium">+8.2%</span> vs ayer -->
+                    </p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <!-- <div class="text-xs text-gray-500">Promedio: 6.9 por venta</div> -->
+            </div>
+        </div>
+
+        <!-- Tarjeta 3: Inventario Bajo -->
+        <!-- <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Inventario Bajo</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">23</p>
+                        <p class="text-sm text-orange-600 mt-1">
+                            <span class="font-medium">Requiere atención</span>
+                        </p>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="text-xs text-gray-500">< 10 unidades disponibles</div>
+                </div>
+            </div> -->
+
+        <!-- Tarjeta 4: Clientes Atendidos -->
+        <!-- <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 uppercase tracking-wide">Clientes Atendidos</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-2">89</p>
+                        <p class="text-sm text-purple-600 mt-1">
+                            <span class="font-medium">+12.7%</span> vs ayer
+                        </p>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="text-xs text-gray-500">Tiempo promedio: 8.5 min</div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Sección adicional con información resumida
+        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Resumen del Día</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div class="border-r border-gray-200 last:border-r-0">
+                    <p class="text-2xl font-bold text-green-600">$264.50</p>
+                    <p class="text-sm text-gray-600">Ticket Promedio</p>
+                </div>
+                <div class="border-r border-gray-200 last:border-r-0">
+                    <p class="text-2xl font-bold text-blue-600">94.2%</p>
+                    <p class="text-sm text-gray-600">Satisfacción Cliente</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-purple-600">2.3 min</p>
+                    <p class="text-sm text-gray-600">Tiempo Espera Promedio</p>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Cuenta por cobrar -->
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-12 col-md-6 mt-3">
+            <mat-card>
+                <div class="headerCuentaPorCobrar">
+                    <div>
+                        <h2 style="margin: 0; padding: 0;">Cuenta por cobrar</h2>
+                        <p>Deudas activas y vencidas de los clientes</p>
+                    </div>
+
+                    <div>
+                        <p>Vencidas : {{cantTotalVencidas }} <br> Monto : {{montoTotalVencidas | number : '1.2-5'}} </p>
+                    </div>
+
+                     <div>
+                        <p>Activas : {{cantTotalActivas }} <br> Monto : {{montoTotalActivas | number : '1.2-5'}} </p>
+                    </div>
+
+
+                </div>
+                <app-nodata *ngIf="resumen.cuentaPorCobrar.length<1"></app-nodata>
+                <div class="cardTable" *ngIf="resumen.cuentaPorCobrar.length>0">
+                    <mat-card>
+                        <div class="table-container">
+                            <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+                            <table mat-table [dataSource]="resumen.cuentaPorCobrar" class="cash-register-table">
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="Cliente">
+                                    <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                                    <td mat-cell *matCellDef="let register">
+                                        {{ register.contacto.nombreRazonSocial.toUpperCase()}}
+                                        <!-- <p class="mb-0 fw-normal op-5">{{register.noFactura || '' }}</p> -->
+
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Documento">
+                                    <th mat-header-cell *matHeaderCellDef>#Documento</th>
+                                    <td mat-cell *matCellDef="let register">
+                                        <div class="cashier-cell">
+                                            <p class="mb-0 fw-normal op-5">{{register.noFactura || '' }}</p>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Monto">
+                                    <th mat-header-cell *matHeaderCellDef>Monto deudor</th>
+                                    <td mat-cell *matCellDef="let register">
+                                        <div class="cashier-cell">
+                                            {{ register.monto | number : '1.2-5'}}
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="Vencimiento">
+                                    <th mat-header-cell *matHeaderCellDef>Fecha de vencimiento</th>
+                                    <td mat-cell *matCellDef="let register">
+                                        <div class="cashier-cell">
+                                            {{ register.vencimiento | date : 'dd/MM/YYYY'}}
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+
+                                <ng-container matColumnDef="Estado">
+                                    <th mat-header-cell *matHeaderCellDef>Estado</th>
+                                    <td mat-cell *matCellDef="let register">
+                                        <div class="cashier-cell">
+                                            <div [ngClass]="register.vencido==true? 'vencida' : 'activa'">
+                                                {{register.vencido==true? 'VENCIDA' : 'ACTIVA' }}</div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="textTable"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="textTable"></tr>
+                            </table>
+                        </div>
+                    </mat-card>
+                </div>
+            </mat-card>
+
+        </div>
+
+        <div class="col-12 col-md-6 mt-3">
+            <mat-card>
+                <apx-chart *ngIf="chartOptions" [series]="chartOptions.series" [chart]="chartOptions.chart"
+                    [title]="chartOptions.title" [xaxis]="chartOptions.xaxis">
+                </apx-chart>
+            </mat-card>
+
+
+        </div>
+
+
+
+    </div>

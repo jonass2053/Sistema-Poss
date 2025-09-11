@@ -5,9 +5,11 @@
   font-family: $bodyfont;
 }
 
-// .mat-drawer-container {
-//   background-color: $body-color;
-// }
+.mat-drawer-container {
+  background-color: transparent !important;
+  height: auto;
+ 
+}
 
 a:hover,
 a:focus,

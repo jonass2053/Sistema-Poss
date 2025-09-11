@@ -41,7 +41,7 @@ export class PaymentComponent {
     private usuarioService: UsuarioService,
     private marcaService: MarcasService,
     private modeloService: ModelosService,
-    private informationService: InformationService,
+    public informationService: InformationService,
     private facturaService: FacturaService,
     private router: Router,
     private contactoService: ContactosService,
@@ -98,9 +98,10 @@ export class PaymentComponent {
   }
 
   getAll() {
-    // this.alertaService.ShowLoading();
+    this.cargando=true;
     this.pagoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       this.dataList = data.data;
+      this.cargando=false;
       this.setNoData(data.data.length > 0 ? true : false);
       this.totalMontoPagado = data.totalMontoPagado;
       // this.alertaService.hideLoading();
@@ -151,7 +152,6 @@ export class PaymentComponent {
       this.desde = `${desdeOri?.getFullYear()}-${(desdeOri?.getMonth()!) + 1}-${desdeOri?.getDate()}`;
       this.hasta = `${hastaOri?.getFullYear()}-${(hastaOri?.getMonth()!) + 1}-${hastaOri?.getDate()}`;
     }
-
   }
 
 

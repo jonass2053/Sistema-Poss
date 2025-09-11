@@ -1,0 +1,91 @@
+.tablacuentapagar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+
+}
+
+.tablacuentapagar .deudor small {
+    margin-top: 100px;
+    color: rgb(107, 107, 107);
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.vencida {
+    color: white;
+    background-color: rgb(235, 53, 53);
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+   font-size: 10px;
+       border-radius: 10px;
+
+
+}
+
+.activa {
+    color: white;
+    background-color: green;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 10px;
+    font-size: 10px;
+
+
+}
+
+
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.row{
+//   border: 1px solid red !important;
+  width: 100%;
+}
+.textTable{
+    font-size: 12px;
+}
+.cardTable{
+    max-height: 400px;
+    overflow: auto;
+}
+mat-card{
+    padding: 10px !important;
+}
+.headerCuentaPorCobrar{
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+.buscador{
+    display: flex;
+    justify-content: space-between;
+
+    
+}
+
+.formulario{
+    display: flex;
+    justify-content: space-between;
+}

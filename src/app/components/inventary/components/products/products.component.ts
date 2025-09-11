@@ -268,7 +268,7 @@ export class ProductsComponent {
     }
     else {
       this.cargando = true;
-      this.productoService.getAllFilter(filtro).subscribe((data: any) => {
+      this.productoService.getAllFilter(filtro, this.informationService.idSucursal).subscribe((data: any) => {
         this.dataList = data.data;
         if (this.dataList.length > 0) {
           this.sinRegistros = false

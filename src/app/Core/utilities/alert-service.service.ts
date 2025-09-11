@@ -17,9 +17,9 @@ export class AlertServiceService {
       didOpen: () => {
         Swal.showLoading();
       },
-      position: "top",
-      width: '100px',
-      // html: "Cargando... por favor espere.",
+      position: "center",
+      width: '250px',
+      html: "Cargando...",
       allowOutsideClick: false,
 
     });

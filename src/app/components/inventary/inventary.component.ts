@@ -107,11 +107,10 @@ export class InventaryComponent {
       this.dataList = data.data;
       if (this.dataList.length > 0) {
         this.loading();
-
       }
       else {
-        // this.sinRegistros = true;
-        // this.cargando = false;
+        this.sinRegistros = true;
+        this.loading();
       }
 
     })
@@ -166,7 +165,7 @@ export class InventaryComponent {
     }
     else {
       this.loading();
-      this.productoService.getAllFilter(filtro).subscribe((data: any) => {
+      this.productoService.getAllFilter(filtro, this.informationService.idSucursal).subscribe((data: any) => {
         this.dataList = data.data;
         if (this.dataList.length > 0) {
           this.sinRegistros = false

@@ -1,0 +1,71 @@
+@use '@angular/material' as mat;
+
+// ===================================================
+// 1. Core reset de Angular Material
+// ===================================================
+@include mat.core();
+
+// ===================================================
+// 2. Definir paleta personalizada con tu color #2c3e50
+// ===================================================
+$my-primary-colors: (
+  50:  #ecf0f1,
+  100: #d0d7db,
+  200: #b4bdc5,
+  300: #99a4af,
+  400: #7d8b99,
+  500: #2c3e50, // Color principal
+  600: #253646,
+  700: #1e2d3b,
+  800: #172531,
+  900: #101c26,
+  A100: #5d7fa6,
+  A200: #486a8f,
+  A400: #335578,
+  A700: #1e3f61,
+  contrast: (
+    50:  black,
+    100: black,
+    200: black,
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: white,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+// Crear paletas
+$my-primary-palette: mat.define-palette($my-primary-colors, 500);
+$my-accent-palette: mat.define-palette(mat.$blue-palette, A200);
+$my-warn-palette: mat.define-palette(mat.$red-palette);
+
+// ===================================================
+// 3. Definir el tema completo
+// ===================================================
+$my-theme: mat.define-light-theme((
+  color: (
+    primary: $my-primary-palette,
+    accent: $my-accent-palette,
+    warn: $my-warn-palette,
+  ),
+  typography: mat.define-typography-config(), // 👈 incluye tipografía
+  density: 0,
+));
+
+// ===================================================
+// 4. Aplicar el tema a todos los componentes
+// ===================================================
+@include mat.all-component-themes($my-theme);
+
+// Tipografía global
+@include mat.typography-hierarchy($my-theme);
+
+// Asegurar estilos de campos de formulario
+@include mat.form-field-theme($my-theme);
