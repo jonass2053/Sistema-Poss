@@ -1,0 +1,100 @@
+ .opciones-container {
+            max-width: 400px;
+            margin: 50px auto;
+        }
+
+        .opcion {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .opcion:hover {
+            border-color: #007bff;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+        }
+
+        .opcion.selected {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+
+        .opcion-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pendiente .opcion-icon {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .entregado .opcion-icon {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .opcion.selected.pendiente .opcion-icon {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .opcion.selected.entregado .opcion-icon {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .opcion-content {
+            flex: 1;
+        }
+
+        .opcion-titulo {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        .opcion-descripcion {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .radio-custom {
+            // width: 20px;
+            // height: 20px;
+            // border: 2px solid #ddd;
+            // border-radius: 50%;
+            // position: relative;
+            // flex-shrink: 0;
+        }
+
+        .opcion.selected .radio-custom {
+            border-color: #007bff;
+        }
+
+        .opcion.selected .radio-custom::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #007bff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }

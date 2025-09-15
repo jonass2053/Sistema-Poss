@@ -157,7 +157,9 @@
 }
 
 .nav-item {
-  margin-bottom: 0.5rem;
+  // margin-bottom: 0.5rem;
+  margin-bottom: 0;
+
 }
 
 .nav-link {
@@ -167,6 +169,12 @@
   cursor: pointer;
   transition: background-color 0.2s;
   position: relative;
+}
+
+.nav-link, .submenu-item {
+  min-height: 48px; /* ajusta a tu diseño */
+  display: flex;
+  align-items: center;
 }
 
 .nav-link:hover {
@@ -216,6 +224,8 @@
   overflow: hidden;
   transition: max-height 0.3s ease;
   background-color: #34495e;
+  margin-bottom: 0; 
+  padding-bottom: 0;
 }
 
 .submenu.show {

@@ -35,7 +35,7 @@ export class ViewSalesComponent {
 
 
   constructor(
-    private facturaService: FacturaService,
+    public facturaService: FacturaService,
     private usuarioService: UsuarioService,
     private route: ActivatedRoute,
     private alertas: AlertServiceService,
@@ -48,6 +48,7 @@ export class ViewSalesComponent {
     route.paramMap.subscribe((params: any) => {
       this.idFactura = params.get("id")
     })
+
     alertas.ShowLoading();
     facturaService.getById(this.idFactura).subscribe((r: ServiceResponse) => {
       this.factura = r.data;

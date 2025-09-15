@@ -98,7 +98,6 @@ export class NewsalesComponent implements OnDestroy {
     this.miFormulario.patchValue({ fecha: new Date(), cantidad: 1 })
     this.getAllTerminos();
     this.getAllVendedores();
-    this.getTipoDocumentos();
     this.getAllBancos();
     this.getAllProduct();
     this.getAllContactos();
@@ -111,7 +110,6 @@ export class NewsalesComponent implements OnDestroy {
     this.idFactura = this.route.snapshot.paramMap.get('id');
     this.idTipoDocumento = this.route.snapshot.paramMap.get('idtipo');
     this.document = informationService.tipoDocumento;
-    alert(this.document)
     if (this.idFactura !== '0' && this.idFactura !== 0) {
       this.getById(this.idFactura);
     }
@@ -144,8 +142,18 @@ export class NewsalesComponent implements OnDestroy {
       idDocumento: this.idTipoDocumento == 1 && this.document == "Cotización" ? factura.idFactura : undefined
 
     })
-    this.idNumeracion = this.idTipoDocumento == 1 && this.document == "Cotización" ? factura.contacto.idTipoNumeracion : factura.idNumeracion,
-      this.miFormulario.patchValue({ idNumeracion: this.idNumeracion });
+
+    // this.idNumeracion = this.idTipoDocumento == 1 && this.document == "Cotización" ? factura.contacto.idTipoNumeracion : ;
+    if (this.idTipoDocumento == 1 && this.document == "Cotización") {
+      this.idNumeracion = factura.contacto.idTipoNumeracion;
+    } else if (this.document == "Conduce") {
+      this.idNumeracion = factura.idNumeracion
+    } else {
+      this.idNumeracion = factura.idNumeracion;
+    }
+
+
+    this.miFormulario.patchValue({ idNumeracion: this.idNumeracion });
     this.impuestosGenerales = factura.itbis;
     this.miFormulario.get('nombreClienteCompleto')?.setValue(factura.contacto); // Cambia "Opción 2" por el valor deseado
     this.dataListDetalleFactura = factura.detalle;
@@ -203,7 +211,8 @@ export class NewsalesComponent implements OnDestroy {
     cambio: this.fb.control(0),
     noComprobante: [''],
     observacionPago: [''],
-    idDocumento: this.fb.control(null)
+    idDocumento: this.fb.control(null),
+    document: this.fb.control(null)
     // totalRecibido: [''],
     // cambio: ['']
 
@@ -427,26 +436,24 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getTipoDocumentos() {
-           
     this.numeracionService.getAllTipoDocumentos().subscribe((data: ServiceResponse) => {
-      if (data.status && this.informationService.tipoDocumento !== "Cotización") {
+      if (data.status && this.informationService.tipoDocumento !== "Cotización" && this.informationService.tipoDocumento !== "Conduce") {
         this.miFormulario.patchValue({
           idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("FACTURA DE VENTA")).idTipoDocumento,
-
         })
       }
-      else if (data.status && this.informationService.tipoDocumento ==="Conduce") {
+      else if (data.status && this.informationService.tipoDocumento === "Conduce") {
         this.miFormulario.patchValue(
           {
             idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("CONDUCE")).idTipoDocumento,
-            idNumeracion: 11
+            idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("CONDUCE"))?.idNumeracion
           })
       }
       else {
         this.miFormulario.patchValue(
           {
             idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("COTIZAC")).idTipoDocumento,
-            idNumeracion: 11
+            idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("COTIZAC"))?.idNumeracion
           })
       }
     })
@@ -461,6 +468,7 @@ export class NewsalesComponent implements OnDestroy {
       idContacto: currentValue.idContacto,
       nombreClienteCompleto: currentValue
     })
+
     this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idTipoNumeracion;
   }
 
@@ -562,10 +570,6 @@ export class NewsalesComponent implements OnDestroy {
   }
 
 
-
-
-
-
   selectProductoById(producto: any, impuestos: any) {
     this.idProducto = producto.idProducto!;
     this.nombre = producto.nombre;
@@ -628,7 +632,9 @@ export class NewsalesComponent implements OnDestroy {
       if (this.facturaServcie.facturaEdit == undefined) {
         this.miFormulario.patchValue({ "idNumeracion": (data.data.find((c: idNumeracion) => c.predeterminada == true)).idNumeracion })
       }
+      this.getTipoDocumentos();
     })
+
   }
 
   setVencimiento(event: any = null) {
@@ -744,11 +750,25 @@ export class NewsalesComponent implements OnDestroy {
 
     }
   }
-
+  
+  numeracionCompany : number | undefined;
   setMiFormulario() {
+    this.getTipoDocumentos();
+
+    let docValue =
+      this.document === "Factura" ? 1 :
+        (this.document == "Cotización" && this.idTipoDocumento == 1) ? 1 :
+          this.document === "Cotización" ? 6 :
+            this.document === "Conduce" ? 8 :
+              7;
+
+
+    if(this.document == "Cotización" && this.idTipoDocumento == 1)
+    {
+        this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes(this.document.toUpperCase()))
+        this.numeracionCompany =  this.dataListContactos.find((c: iContactoPos)=>c.idContacto==this.miFormulario.value.idContacto)?.idTipoNumeracion;
+    }
     
-    let numeracionesCompany =  this.dataListNumeracion.find(c=>c.nombre.includes(this.document))
-    alert(this.document);
     this.miFormulario.patchValue({
       detalle: this.dataListDetalleFactura,
       idEmpresa: this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa,
@@ -760,59 +780,60 @@ export class NewsalesComponent implements OnDestroy {
       itbis: this.impuestosGenerales,
       impuestos: this.miFormulario.value.impuestoObjet,
       // idNumeracion: this.idNumeracion,
-      idFactura: this.document == "Cotización" && this.idTipoDocumento == 1 ? null : this.miFormulario.value.idFactura
-
+      idFactura: this.document == "Cotización" && this.idTipoDocumento == 1 ? null : this.miFormulario.value.idFactura,
+      document: docValue,
+      idTipoDocumento: docValue,
+      idNumeracion : (this.document == "Cotización" && this.idTipoDocumento == 1)? this.numeracionCompany : this.miFormulario.value.idNumeracion
       // idTipoDocumento: this.miFormulario.value.idDocumento == undefined || this.miFormulario.value.idDocumento == null ? this.miFormulario.value.idDocumento : 1
     })
   }
 
   guardarFactura() {
     this.setMiFormulario();
-    console.log(this.miFormulario.value)
-    // if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
-    //   this.alertaService.ShowLoading();
-    //   if (this.miFormulario.value.idFactura !== null && this.miFormulario.value.idDocumento == undefined) {
-    //     this.facturaServcie.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-    //       if (data.status) {
-    //         this.alertaService.successAlert(data.message);
-    //         this.resetHeader();
-    //         this.resetDetails();
-    //         this.resetFormPago()
-    //         this.setDefaultContacto();
-    //       }
-    //       else {
-    //         this.alertaService.errorAlert(data.message);
-    //       }
-    //     })
-    //   }
-    //   else {
-    //     this.facturaServcie.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
-    //       if (data.statusCode == 200) {
-    //         this.alertaService.successAlert(data.message);
-    //         this.resetHeader();
-    //         this.resetDetails();
-    //         this.resetFormPago();
-    //         this.setDefaultContacto();
-    //         //Realizamos el get de la factura para poder imprimir
-    //         if (this.configuraciones.impresionAutomatica && this.miFormulario.value.montoPagado!=0) {
-    //           this.facturaServcie.getById(data.data.idFactura).subscribe((response: ServiceResponse) => {
-    //             if (response.status) {
-    //               setTimeout(() => {
-    //               this.printService.printTicketFactura(response.data);
-    //               }, 600);
-    //             }
-    //           })
-    //         }
-    //       }
-    //       else {
-    //         this.alertaService.errorAlert(data.message);
-    //       }
-    //     })
-    //   }
-    // }
-    // else {
-    //   this.alertaService.warnigAlert("Debe completar todos para poder guardar el documento");
-    // }
+    if (this.miFormulario.valid && this.dataListDetalleFactura.length > 0) {
+      this.alertaService.ShowLoading();
+      if (this.miFormulario.value.idFactura !== null && this.miFormulario.value.idDocumento == undefined) {
+        this.facturaServcie.update(this.miFormulario.value).subscribe((data: ServiceResponse) => {
+          if (data.status) {
+            this.alertaService.successAlert(data.message);
+            this.resetHeader();
+            this.resetDetails();
+            this.resetFormPago()
+            this.setDefaultContacto();
+          }
+          else {
+            this.alertaService.errorAlert(data.message);
+          }
+        })
+      }
+      else {
+        this.facturaServcie.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
+          if (data.statusCode == 200) {
+            this.alertaService.successAlert(data.message);
+            this.resetHeader();
+            this.resetDetails();
+            this.resetFormPago();
+            this.setDefaultContacto();
+            //Realizamos el get de la factura para poder imprimir
+            if (this.configuraciones.impresionAutomatica && this.miFormulario.value.montoPagado != 0) {
+              this.facturaServcie.getById(data.data.idFactura).subscribe((response: ServiceResponse) => {
+                if (response.status) {
+                  setTimeout(() => {
+                    this.printService.printTicketFactura(response.data);
+                  }, 600);
+                }
+              })
+            }
+          }
+          else {
+            this.alertaService.errorAlert(data.message);
+          }
+        })
+      }
+    }
+    else {
+      this.alertaService.warnigAlert("Debe completar todos para poder guardar el documento");
+    }
   }
 
 

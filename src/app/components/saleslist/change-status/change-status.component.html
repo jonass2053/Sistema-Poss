@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Seleccione un estado</h2>
+
+<mat-dialog-content>
+     <mat-radio-group>
+    <div class="opciones-container">
+        <div class="opcion pendiente">
+            <div class="opcion-icon">⏳</div>
+            <div class="opcion-content">
+                <div class="opcion-titulo">Pendiente</div>
+                <div class="opcion-descripcion">El conduce esta creado pero aun no se ha despachado</div>
+            </div>
+        <mat-radio-button (click)="seelctOpcion(7)" class="radio-custom" value="1"></mat-radio-button>
+        </div>
+
+        <div class="opcion entregado">
+            <div class="opcion-icon">✅</div>
+            <div class="opcion-content">
+                <div class="opcion-titulo">Despachado</div>
+                <div class="opcion-descripcion">El pedido ya ha sido despachado</div>
+            </div>
+        <mat-radio-button (click)="seelctOpcion(6)" value="2"></mat-radio-button>
+        </div>
+    </div>
+ </mat-radio-group>
+
+</mat-dialog-content>
+
+<!-- Botones de acción -->
+<mat-dialog-actions align="end">
+
+
+    <button (click)="saveChange()" color="primary" mat-raised-button class="me-8 mb-8">Guardar
+        <mat-icon>save</mat-icon> </button>
+    <button color="primary" mat-raised-button class="me-8 mb-8" mat-dialog-close>Cancelar
+        <mat-icon>cancel</mat-icon> </button>
+
+
+
+</mat-dialog-actions>

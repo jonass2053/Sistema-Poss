@@ -55,7 +55,7 @@ export class FullComponent implements OnInit {
     public turnoService: ShiftsService,
     private router: Router) {
     this.checkScreenSize();
-    this.toggleSidebar();
+    // this.toggleSidebar();
 
 
   }
@@ -384,7 +384,7 @@ export class FullComponent implements OnInit {
 
 
 
-  isCollapsed = false
+  isCollapsed = true;
   isVentasSubmenuOpen = false
 
 

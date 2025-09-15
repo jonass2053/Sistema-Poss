@@ -1,119 +1,95 @@
-<!-- otro formato de factura --> <div class="invoice-container" id="thermal-receipt">
-        <div class="header">
-            <div class="company-info">
-                <div class="company-name">{{factura.empresaObj.razonSocial.toUpperCase()}}</div>
-                <div class="company-details">
-                    <strong>RNC:</strong> {{factura.empresaObj.rnc}}<br>
-                    <strong>Dirección:</strong> {{factura.sucursalObj.direccion}}<br>
-                    <strong>Teléfono:</strong> {{factura.sucursalObj.telefono1}}<br>
-                    <strong>Email:</strong> {{factura.empresaObj.correo}}<br>
-                    <!-- <strong>Web:</strong> www.miempresa.com -->
-                </div>
-            </div>
-            <div>
-                <img style="width: 150px;" src="{{factura.empresaObj.logo}}" alt="Mi logo">
-            </div>
-            <div class="invoice-title">
-                <h1>{{factura.numeracionObj.nombre.toUpperCase()}}</h1>
-                <div class="invoice-number">
-                    <strong>{{factura.numeracion}}</strong><br>
-                </div>
+<div class="invoice-container" id="thermal-receipt">
+    <div class="header">
+        <div class="company-info">
+            <div class="company-name">{{factura.empresaObj.razonSocial.toUpperCase()}}</div>
+            <div class="company-details">
+                <strong>RNC:</strong> {{factura.empresaObj.rnc}}<br>
+                <strong>Dirección:</strong> {{factura.sucursalObj.direccion}}<br>
+                <strong>Teléfono:</strong> {{factura.sucursalObj.telefono1}}<br>
+                <strong>Email:</strong> {{factura.empresaObj.correo}}<br>
             </div>
         </div>
-
-        <div class="invoice-details">
-            <div class="bill-to">
-                <h3>FACTURAR A:</h3>
-                <p>Cliente:<strong>{{factura.contacto.nombreRazonSocial}}</strong></p>
-                <p>Identificación{{factura.contacto.rnc || 'N/A'}}</p>
-                <p>Dirección:{{factura.contacto.direccion || 'N/A'}}</p>
-                <p>Telefono : {{factura.contacto.telefono1 || 'NA'}} : {{factura.contacto.telefono2}}</p>
-                <p>Email: {{factura.contacto.correo || 'NA'}}</p>
-            </div>
-            <div class="invoice-info">
-                <h3>INFORMACIÓN DE FACTURA:</h3>
-                <p><strong>Fecha de Emisión:</strong> {{factura.fechaCreacion}}</p>
-                <p><strong>Método de Pago:</strong> {{factura.terminoObj.nombre}}</p>
-                <!-- <p><strong>Forma de Pago:</strong> Pago en una sola exhibición</p> -->
-                <p><strong>Uso CFDI:</strong> Gastos en general</p>
-                <p><strong>Vendedor:</strong> {{factura.usuario.nombre + " " + factura.usuario.apellidos}}</p>
+        <div>
+            <img style="width: 150px;" src="{{factura.empresaObj.logo}}" alt="Mi logo">
+        </div>
+        <div class="invoice-title">
+            <h1 *ngIf="factura.idTipoDocumento==8">CONDUCE</h1>
+            <h1 *ngIf="factura.idTipoDocumento!=8">{{factura.numeracionObj.nombre.toUpperCase()}}</h1>
+            <div class="invoice-number">
+                <strong>{{factura.numeracion}}</strong><br>
             </div>
         </div>
-
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th>CANT.</th>
-                    <th>CÓDIGO</th>
-                    <th>DESCRIPCIÓN</th>
-                    <th>PRE. UNIT.</th>
-                    <th>DESC.</th>
-                    <th>ITBIS</th>
-                    <th class="text-right">TOTAL</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let detalle of factura.detalle">
-                    <td>{{detalle.cantidad}}</td>
-                    <td>{{detalle.idProducto}}</td>
-                    <td >{{detalle.nombre }}<br><small></small></td>
-                    <td >{{moneda.simbolo}}{{detalle.precio |  number : '1.2-5'}}<br></td>
-                    <td >{{moneda.simbolo}}{{detalle.descuento|  number : '1.2-5'}}<br></td>
-                    <td >{{moneda.simbolo}}{{detalle.impuestos|  number : '1.2-5'}}<br></td>
-                    <td  class="text-right">{{moneda.simbolo}}{{detalle.total |  number : '1.2-5'}}<br></td>
-                </tr>
-               
-            </tbody>
-        </table>
-
-        <div class="totals-section">
-            <table class="totals-table">
-                <tr>
-                    <td class="total-label">Subtotal:</td>
-                    <td class="total-amount">{{moneda.simbolo}}{{factura.subTotal | number : '1.2-5' }}</td>
-                </tr>
-                <tr>
-                    <td class="total-label">Descuentos:</td>
-                    <td class="total-amount">-{{moneda.simbolo}}{{factura.descuento | number : '1.2-5'}}</td>
-                </tr>
-                <tr>
-                    <td class="total-label">ITBIS (18%):</td>
-                    <td class="total-amount">{{moneda.simbolo}}{{factura.itbis}}</td>
-                </tr>
-                <tr>
-                    <td class="total-label grand-total">TOTAL:</td>
-                    <td class="total-amount grand-total">{{moneda.simbolo}}{{factura.totalGeneral}}</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="payment-info">
-            <div class="payment-method">
-                <h4>INFORMACIÓN DE PAGO</h4>
-                <p><strong>Método:</strong> {{factura.terminoObj.nombre}}</p>
-                <p><strong>Recibido:</strong>{{moneda.simbolo}} {{factura.montoPagado}}</p>
-                <p><strong>Cambio:</strong>{{moneda.simbolo}} {{factura.cambio}}</p>
-                <p><strong>Estado:</strong> {{factura.estadoFactura.nombre}}</p>
-            </div>
-            <div class="bank-info">
-                <p>Entregado por: <br> <br><hr></p> 
-                <p>Recibido por: <br> <br><hr></p>
-            </div>
-        </div>
-
-        <!-- <div class="terms">
-            <h4 style="color: #2c5aa0; margin-bottom: 10px;">TÉRMINOS Y CONDICIONES:</h4>
-            <p>1. Esta factura debe ser pagada dentro de los 30 días posteriores a la fecha de emisión.</p>
-            <p>2. Los pagos tardíos pueden estar sujetos a intereses moratorios del 2% mensual.</p>
-            <p>3. Todos los productos tienen garantía según las condiciones del fabricante.</p>
-            <p>4. Para cualquier aclaración, contactar al departamento de facturación.</p>
-        </div>
-
-        <div class="footer">
-            <p>Este documento es una representación impresa de un CFDI</p>
-            <p>Sello Digital del CFDI: 12345678901234567890123456789012345678901234567890123456789012345678901234567890</p>
-            <p>Sello Digital del SAT: 98765432109876543210987654321098765432109876543210987654321098765432109876543210</p>
-            <p>Cadena Original del Complemento de Certificación Digital del SAT</p>
-        </div> -->
     </div>
+
+    <div class="invoice-details">
+        <div class="bill-to">
+            <h3>CLIENTE:</h3>
+            <p><strong>{{factura.contacto.nombreRazonSocial}}</strong></p>
+            <p>Identificación: {{factura.contacto.rnc || 'N/A'}}</p>
+            <p>Dirección: {{factura.contacto.direccion || 'N/A'}}</p>
+            <p>Teléfono: {{factura.contacto.telefono1 || 'NA'}} {{factura.contacto.telefono2}}</p>
+            <p>Email: {{factura.contacto.correo || 'NA'}}</p>
+        </div>
+
+        <div class="invoice-info">
+            <h3 *ngIf="factura.idTipoDocumento==8">INFORMACIÓN DE CONDUCE:</h3>
+            <h3 *ngIf="factura.idTipoDocumento!=8">INFORMACIÓN DE FACTURA:</h3>
+            <p><strong>Fecha de Emisión:</strong> {{factura.fechaCreacion}}</p>
+            <p><strong>Vendedor:</strong> {{factura.usuario.nombre + " " + factura.usuario.apellidos}}</p>
+        </div>
+    </div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>CANT.</th>
+                <th>CÓDIGO</th>
+                <th>DESCRIPCIÓN</th>
+                <th *ngIf="factura.idTipoDocumento!=8">PRE. UNIT.</th>
+                <th *ngIf="factura.idTipoDocumento!=8">DESC.</th>
+                <th *ngIf="factura.idTipoDocumento!=8">ITBIS</th>
+                <th *ngIf="factura.idTipoDocumento!=8" class="text-right">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let detalle of factura.detalle">
+                <td>{{detalle.cantidad}}</td>
+                <td>{{detalle.idProducto}}</td>
+                <td>{{detalle.nombre}}</td>
+                <td *ngIf="factura.idTipoDocumento!=8">{{moneda.simbolo}}{{detalle.precio | number : '1.2-5'}}</td>
+                <td *ngIf="factura.idTipoDocumento!=8">{{moneda.simbolo}}{{detalle.descuento | number : '1.2-5'}}</td>
+                <td *ngIf="factura.idTipoDocumento!=8">{{moneda.simbolo}}{{detalle.impuestos | number : '1.2-5'}}</td>
+                <td *ngIf="factura.idTipoDocumento!=8" class="text-right">{{moneda.simbolo}}{{detalle.total | number : '1.2-5'}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Se ocultan totales y pagos cuando es conduce -->
+    <div *ngIf="factura.idTipoDocumento!=8" class="totals-section">
+        <table class="totals-table">
+            <tr>
+                <td class="total-label">Subtotal:</td>
+                <td class="total-amount">{{moneda.simbolo}}{{factura.subTotal | number : '1.2-5'}}</td>
+            </tr>
+            <tr>
+                <td class="total-label">Descuentos:</td>
+                <td class="total-amount">-{{moneda.simbolo}}{{factura.descuento | number : '1.2-5'}}</td>
+            </tr>
+            <tr>
+                <td class="total-label">ITBIS (18%):</td>
+                <td class="total-amount">{{moneda.simbolo}}{{factura.itbis}}</td>
+            </tr>
+            <tr>
+                <td class="total-label grand-total">TOTAL:</td>
+                <td class="total-amount grand-total">{{moneda.simbolo}}{{factura.totalGeneral}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="payment-info">
+        <div class="bank-info">
+            <p>Entregado por: <br> <br><hr></p> 
+            <p>Recibido por: <br> <br><hr></p>
+        </div>
+    </div>
+</div>

@@ -26,20 +26,24 @@ export class FacturaService {
   }
 
   tipoDocument = () => {
-    console.log(localStorage.getItem('tipoDocumento'));
   }
 
 
   insert(formualrio: any): Observable<ServiceResponse> {
     return this.http.post<ServiceResponse>(`${this.url}`, formualrio, this.header).pipe(
-      catchError((error : HttpErrorResponse) => {;
+      catchError((error : HttpErrorResponse) => {
         this.usuarioService.chekSesion(error.status);
         this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
         return throwError(() => error);
       }))
   }
   update(formualrio: any): Observable<ServiceResponse> {
-    return this.http.put<ServiceResponse>(`${this.url}`, formualrio, this.header)
+    return this.http.put<ServiceResponse>(`${this.url}`, formualrio, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')===true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
   }
   delete(id: number): Observable<ServiceResponse> {
     return this.http.delete<ServiceResponse>(`${this.url}/${id}`, this.header)
@@ -77,7 +81,11 @@ export class FacturaService {
   }
 
   getResumen(idSucursal : number, desde : string, hasta : string): Observable<ServiceResponse> {
-    return this.http.get<ServiceResponse>(`${this.url}/getresumenventasbyidsucursal/${idSucursal}/${desde}/${hasta}`, this.header, )
+    return this.http.get<ServiceResponse>(`${this.url}/getresumenventasbyidsucursal/${idSucursal}/${desde}/${hasta}`, this.header)
+  } 
+
+  changeStatusConduce(idStatus : number, idDocumento : number): Observable<ServiceResponse> {
+    return this.http.put<ServiceResponse>(`${this.url}/change_status_document/${idStatus}/${idDocumento}`, null, this.header)
   } 
 
 

@@ -26,6 +26,7 @@ import { NumeracionService } from 'src/app/services/numeracion.service';
 import { NodataComponent } from '../nodata/nodata.component';
 import { ContactosService } from 'src/app/services/contactos.service';
 import { PrintServiceService } from 'src/app/services/print-service.service';
+import { ChangeStatusComponent } from './change-status/change-status.component';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -121,7 +122,7 @@ export class SaleslistComponent implements OnInit {
   fechaActualServer: string = "";
 
 
-  openDialog(factura: iFactura) {
+  openDialogPago(factura: iFactura) {
     if (factura.montoPorPagar > 0) {
       this.pagoService.facturaPagar = factura;
       var ref = this.dialog.open(PayComponent, { width: '750px', hasBackdrop: true });
@@ -200,10 +201,11 @@ export class SaleslistComponent implements OnInit {
     this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
       this.facturaService.facturaEdit = data.data;
       if (this.document == 'Cotización') {
-        this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/6`);
+        this.router.navigateByUrl(`sales/newprice/${Factura.idFactura}/6`);
+      } else if (this.document == 'Conduce') {
+        this.router.navigateByUrl(`sales/newconduce/${Factura.idFactura}/8`);
       } else {
         this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/1`);
-
       }
     })
     // }
@@ -232,8 +234,11 @@ export class SaleslistComponent implements OnInit {
   }
 
   verFactura(idFactura: number) {
+  
     if (this.informacionService.tipoDocumento === 'Cotización') {
       this.router.navigateByUrl(`sales/newprice/view/${idFactura}/6`);
+    } else if (this.informacionService.tipoDocumento == 'Conduce') {
+      this.router.navigateByUrl(`sales/newconduce/view/${idFactura}/8`);
     }
     else {
       this.router.navigateByUrl(`sales/newsales/view/${idFactura}/1`);
@@ -267,7 +272,9 @@ export class SaleslistComponent implements OnInit {
 
   getAll(pageNumber: number, pageSize: number, tipoDocumento: string = "") {
     this.cargando = true;
-    this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, this.informacionService.tipoDocumento === "Cotización" ? 2 : 1).subscribe((data: ServiceResponse) => {
+    let idTipoDocumento = this.informacionService.tipoDocumento === "Cotización" ? 6
+      : this.informacionService.tipoDocumento === "Conduce" ? 8 : 1;
+    this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, idTipoDocumento).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
       this.totalItems = data.totalItems; // Asume que la API también devuelve el total de items
       this.pageSize = pageSize;
@@ -340,6 +347,7 @@ export class SaleslistComponent implements OnInit {
   //   }
 
   // }
+  
 
   printDiv(divId: string) {
     this.imprimiendo = true;
@@ -409,7 +417,7 @@ export class SaleslistComponent implements OnInit {
   //   window.open(url, '_blank');
   // });
   // }
- 
+
   addNewDocument(idDocument: number, isPos: boolean) {
     this.informacionService.isPos = isPos;
     if (this.facturaService.document === "Cotización" && isPos == false) {
@@ -556,7 +564,7 @@ export class SaleslistComponent implements OnInit {
   }
 
 
-  selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string): void {
+   selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(SelectPrinterComponent, {
       width: '350px',
       height: '350px',
@@ -625,4 +633,13 @@ export class SaleslistComponent implements OnInit {
   printRportVentas() {
     this.printService.printReportVentas(this.dataSource.data, this.totalFacturado, this.montoPagado, this.montoPorPagar, this.pagosVencido, this.fechaActualServer);
   }
+
+
+
+  openDialogChengeStatus(idDocument :  number) {
+    this.dialog.open(ChangeStatusComponent, {data: idDocument}).afterClosed().subscribe(result=>{
+      this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
+    })
+  }
 }
+  

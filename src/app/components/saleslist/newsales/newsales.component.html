@@ -19,7 +19,7 @@
               <mat-card-title> Datos del cliente</mat-card-title>
             </mat-card-header>
 
-            <mat-card-content style="height: 120px; display: flex;">
+            <mat-card-content style="height: 120px;">
               <mat-form-field appearance="fill" class="control mini-input no-fill-background" style="width: 20%;">
                 <mat-icon (click)="addContactDialo()" matSuffix>person_add</mat-icon>
                 <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
@@ -34,19 +34,19 @@
               </mat-form-field>
 
               &nbsp;
-              <mat-form-field *ngIf="document!=='Cotización'" style="width: 20%;" appearance="fill"
-                class="mini-input no-fill-background">
+              <mat-form-field *ngIf="document!=='Cotización'  && document!=='Conduce'" style="width: 20%;"
+                appearance="fill" class="mini-input no-fill-background">
                 <mat-label>Numeración</mat-label>
                 <mat-select formControlName="idNumeracion">
                   <mat-option *ngFor="let numeracion of dataListNumeracion"
                     [value]='numeracion.idNumeracion'>{{numeracion.nombre}}</mat-option>
                 </mat-select>
-                <mat-hint align="end">Este campo es obligatorio</mat-hint>
+                <!-- <mat-hint align="end">Este campo es obligatorio</mat-hint> -->
               </mat-form-field>
 
 
               &nbsp;
-              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 20%;">
+              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 18%;">
                 <mat-label>Fecha</mat-label>
                 <input matInput [matDatepicker]="pickerFecha" formControlName="fecha"
                   (dateChange)="setVencimiento($event)">
@@ -63,13 +63,13 @@
                 </mat-select>
               </mat-form-field>
               &nbsp;
-              <mat-form-field class="example-full-width control mini-input no-fill-background" appearance="fill"
+              <!-- <mat-form-field class="example-full-width control mini-input no-fill-background" appearance="fill"
                 style="width: 20%;">
                 <mat-label>Vencimiento</mat-label>
                 <input type="datetime" matInput formControlName="vencimiento">
-              </mat-form-field>
+              </mat-form-field> -->
               &nbsp;
-              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 20%;">
+              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 15%;">
                 <mat-label>Vendedor</mat-label>
                 <mat-select formControlName="idVendedor" (selectionChange)="setVencimiento()">
                   @for (vendedor of dataListVendedores; track vendedor) {
@@ -81,7 +81,7 @@
 
 
             </mat-card-content>
-        </mat-card>
+          </mat-card>
 
         </div>
         <!-- Seleccion de los productos -->
@@ -162,8 +162,9 @@
                   </ng-container>
                   <ng-container matColumnDef="descripcion">
                     <th mat-header-cell *matHeaderCellDef> Descripción</th>
-                    <td mat-cell class="mb-0 fw-medium op-5" *matCellDef="let element">
-                      {{element.nombre}} </td>
+                    <td mat-cell class="mb-0 fw-medium op-5" *matCellDef="let element" [matTooltip]="element.nombre"
+                      matTooltipPosition="right">
+                      {{element.nombre.length > 15 ? (element.nombre | slice:0:15) + '...' : element.nombre}} </td>
                   </ng-container>
 
 
@@ -292,7 +293,7 @@
 
               <div *ngIf="metodoPagoSeleccionado==''"
                 style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
-                <button mat-raised-button color="primary" class="margin2"
+                <button *ngIf="document!='Conduce' &&  document!='Cotización'" mat-raised-button color="primary" class="margin2"
                   (click)="setMetodoPago(1,'EFECTIVO', 0)"><mat-icon>save</mat-icon> Pagar y guardar</button>
                 <button mat-raised-button color="primary" class="margin2"
                   (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar</button>
@@ -357,7 +358,7 @@
 
 
 
-  
+
   <!-- dise1@ post -->
   <div class="containerPost" *ngIf="informationService.isPos">
 
