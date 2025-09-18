@@ -356,7 +356,7 @@
       <nav class="sidebar-nav">
 
 
-        <a [routerLink]="['/home']"  class="nav-link"  matTooltip="Inicio" matTooltipPosition="right">
+        <a [routerLink]="['/home']" class="nav-link" matTooltip="Inicio" matTooltipPosition="right">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
@@ -365,8 +365,8 @@
         </a>
 
         <div class="nav-item">
-          <div class="nav-link" [class.active]="isVentasSubmenuOpen" (click)="toggleVentasSubmenu()" matTooltipPosition="right"
-            matTooltip="Ventas">
+          <div class="nav-link" [class.active]="isVentasSubmenuOpen" (click)="toggleVentasSubmenu()"
+            matTooltipPosition="right" matTooltip="Ventas">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M3 3h18l-1 13H4L3 3z" />
               <path d="M16 16a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
@@ -429,9 +429,9 @@
             </a>
           </div>
         </div>
- 
 
-        <div class="nav-link"  (click)="facturar(0, true)" matTooltip="POS" matTooltipPosition="right">
+
+        <div class="nav-link" (click)="facturar(0, true)" matTooltip="POS" matTooltipPosition="right">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -439,7 +439,7 @@
           <span class="nav-text">POS</span>
         </div>
 
-         <!-- <a [routerLink]="['/contacts']" class="nav-link"   matTooltip="POS" matTooltipPosition="right">
+        <!-- <a [routerLink]="['/contacts']" class="nav-link"   matTooltip="POS" matTooltipPosition="right">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -447,14 +447,18 @@
           <span class="nav-text">Contactos</span>
         </a> -->
 
-         <a [routerLink]="['/inventary']" class="nav-link"   matTooltip="POS" matTooltipPosition="right">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        <a [routerLink]="['/inventary']" class="nav-link" matTooltip="Inventario" matTooltipPosition="right">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M3 21v-13l9 -4l9 4v13" />
+            <path d="M13 13h4v8h-10v-6h6" />
+            <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
           </svg>
           <span class="nav-text">Inventario</span>
         </a>
-<!-- 
+        <!-- 
           <a [routerLink]="['//cash-management']" class="nav-link"   matTooltip="POS" matTooltipPosition="right">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round"

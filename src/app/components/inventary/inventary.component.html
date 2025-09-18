@@ -1,7 +1,7 @@
 <mat-card appearance="raised">
     <mat-card-content>
         <div class="row">
-            <!-- Card column -->
+
             <div class="col-12">
                 <div class="demo-tab-content">
                     <p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
@@ -30,22 +30,11 @@
                     <div class="headerNavCard">
                         <div class="titulo"> <mat-icon>list</mat-icon>Listado de los productos <span
                                 style="margin-left: 10px;"></span>
-                            <!-- <a>
-                <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
-              </a> -->
-
                         </div>
-
-                        <!-- <div class="accionesprint">
-                            <mat-icon>print_connect</mat-icon>
-                            <mat-icon>share</mat-icon>
-                            <mat-icon>download</mat-icon>
-                        </div> -->
                     </div>
 
 
                     <div class="filterandbutton" style="margin-top: 5px;">
-
                         <div style="display: flex;">
                             <button (click)="goToNewProduct(0)" mat-raised-button class="me-8 mb-8"
                                 color="primary"><mat-icon>add</mat-icon> Crear
@@ -66,7 +55,6 @@
                     <div class="table-responsive">
                         <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
                         <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
-                            <!-- Id Column -->
                             <ng-container matColumnDef="imagen">
                                 <th mat-header-cell *matHeaderCellDef>Imagen </th>
                                 <td mat-cell class="fw-medium" *matCellDef="let element">
@@ -89,25 +77,26 @@
                                     {{element.barCode || 'No asignado'}} </td>
                             </ng-container>
 
-                            <!-- Assigned Column -->
                             <ng-container matColumnDef="nombre">
                                 <th mat-header-cell *matHeaderCellDef> Nombre </th>
                                 <td mat-cell *matCellDef="let element">
-                                    <p class="mb-0 fw-medium">{{ element.nombre.length > 20 ? (element.nombre | slice:0:20) + '...' : element.nombre }}</p>
-                                    <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                                    <p  [matTooltip]="element.nombre"  matTooltipShowDelay="500"  class="mb-0 fw-medium">{{ element.nombre.length > 20 ? (element.nombre |
+                                        slice:0:20) + '...' : element.nombre }}</p>
+                                    <p class="mb-0 fw-normal op-5">{{ element.descripcion.length > 30 ? (element.descripcion
+                                        | slice:0:30) + '...' : element.descripcion}}</p>
+
                                 </td>
                             </ng-container>
 
-                            <!-- Assigned Column -->
-                            <ng-container matColumnDef="descripcion">
+                            <!-- <ng-container matColumnDef="descripcion">
                                 <th mat-header-cell *matHeaderCellDef> Descripción </th>
                                 <td mat-cell *matCellDef="let element">
-                                    <p class="mb-0 fw-medium">{{ element.descripcion.length > 20 ? (element.descripcion | slice:0:20) + '...' : element.descripcion}}</p>
+                                    <p class="mb-0 fw-medium">{{ element.descripcion.length > 20 ? (element.descripcion
+                                        | slice:0:20) + '...' : element.descripcion}}</p>
                                     <p class="mb-0 fw-normal op-1">{{ element.work }}</p>
                                 </td>
-                            </ng-container>
+                            </ng-container> -->
 
-                            <!-- Project Column -->
                             <ng-container matColumnDef="categoria">
                                 <th mat-header-cell *matHeaderCellDef> Categoria </th>
                                 <td mat-cell *matCellDef="let element">
@@ -140,7 +129,6 @@
                                 </td>
                             </ng-container>
 
-                            <!-- Budget Column -->
                             <ng-container matColumnDef="impuesto">
                                 <th mat-header-cell *matHeaderCellDef> Impuestos </th>
                                 <td mat-cell *matCellDef="let element">
@@ -150,7 +138,6 @@
                                 </td>
                             </ng-container>
 
-                            <!-- Budget Column -->
                             <ng-container matColumnDef="cantInicial">
                                 <th mat-header-cell *matHeaderCellDef> Stock
                                 </th>
@@ -184,31 +171,19 @@
                                         <mat-menu #menu="matMenu">
                                             <button mat-menu-item
                                                 (click)="openDialogGenerateCodeBar(element.idProducto)">
-                                                <!-- <mat-icon>barcode</mat-icon> -->
                                                 <i class="fas fa-barcode"></i>
                                                 <span>Generar código de barra</span>
                                             </button>
                                             <button mat-menu-item (click)="editar(element)">
                                                 <i class="fa-solid fa-pen-to-square"></i>
-                                                <!-- <mat-icon>voicemail</mat-icon> -->
                                                 <span>Editar</span>
                                             </button>
                                             <button mat-menu-item (click)="delete(element)">
-                                              <i class="fa-solid fa-trash"></i>
+                                                <i class="fa-solid fa-trash"></i>
                                                 <span>Eliminar</span>
                                             </button>
                                         </mat-menu>
-                                        <!-- <button class="btnaccion"
-                                            (click)="openDialogGenerateCodeBar(element.idProducto)"
-                                            matTooltip="Generar codigo de barra">
-                                            <img src="../../../assets/images/barcode-2-svgrepo-com.svg" alt="">
-                                        </button>
-                                        <button class="btnaccion" (click)="editar(element)"
-                                            matTooltip="Editar producto">
-                                            <mat-icon class="editarcolor">edit</mat-icon></button>
-                                        <button class="btnaccion" (click)="delete(element)"
-                                            matTooltip="Eliminar producto">
-                                            <mat-icon class="deletecolor">delete</mat-icon></button> -->
+
                                     </div>
                                 </td>
                             </ng-container>

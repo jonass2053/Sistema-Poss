@@ -11,14 +11,40 @@
                     </div>
 
                     <form action="" [formGroup]="formularioFecha" class="controlesfilter">
+
+
+                        <mat-form-field appearance="fill" class="control mini-input no-fill-background">
+                            <mat-icon matSuffix>search</mat-icon>
+                            <mat-label matTooltip="Puede consultar un producto por su nombre">Buscar producto
+                            </mat-label>
+
+                            <input type="text" #inputProducto matInput [matAutocomplete]="prductoBuscador"
+                                (input)="searchProducto($event)" formControlName="producto">
+                            <mat-autocomplete #prductoBuscador="matAutocomplete" [displayWith]="displayFnProducto"
+                                (optionSelected)="selectProducto($event, 1)">
+                                <mat-option *ngFor="let producto of dataListProductosSearch" [value]="producto">
+                                    <div class="">
+                                        <div> {{ producto.nombre }} <br>
+                                            <div class="mb-0 fw-normal op-5">Stock: {{producto.cantInicial}}
+                                                Precio:${{producto.precioFinal}} </div>
+                                        </div>
+
+                                    </div>
+
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                        <!-- 
+
                         <mat-form-field appearance="fill">
                             <mat-label>Buscar</mat-label>
                             <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar producto"
                                 formControlName="filtro">
                             <mat-icon matSuffix>search</mat-icon>
-                        </mat-form-field>
+                        </mat-form-field> -->
                         &nbsp;
-                        <mat-form-field *ngIf="controlVistasTablas!=0">
+                        <mat-form-field *ngIf="controlVistasTablas==2" class="control mini-input no-fill-background">
                             <mat-label>Rango de fecha</mat-label>
                             <mat-date-range-input [rangePicker]="picker">
                                 <input matStartDate placeholder="Desde" formControlName="desde">
@@ -56,31 +82,32 @@
                 </div>
                 <div class="filter">
                     <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="toogle">
-                        <mat-button-toggle (click)="verAjuste(0)" [checked]='true'
-                            value="bold">Pruductos</mat-button-toggle>
+                        <mat-button-toggle (click)="verAjuste(0)" [checked]='true' value="bold">Crear
+                            ajuste</mat-button-toggle>
                         <mat-button-toggle (click)="verAjuste(1)" value="italic">Ajustes de inventarios
                             realizados</mat-button-toggle>
-                        <mat-button-toggle (click)="verAjuste(2)" value="italic">Movimiento de
-                            productos</mat-button-toggle>
+                        <mat-button-toggle (click)="verAjuste(2)" value="italic">Kardex/Movimientos</mat-button-toggle>
                     </mat-button-toggle-group>
                     <div class="flexright">
 
 
-                
-
-
-
-
-
-
+                        
+                        <button *ngIf="controlVistasTablas==2" (click)="printReporteMovimiento()" mat-raised-button class="me-8 mb-8"
+                            color="primary"><mat-icon>print</mat-icon> Imprimir
+                            reporte</button>
                     </div>
                 </div>
+
+
+
+
+
                 <div class="table-responsive" *ngIf="controlVistasTablas==0">
                     <div class="ajustes">
                         <h3>Listado de productos</h3>
                         <mat-icon (click)="refrescar()">refresh</mat-icon>
-
                     </div>
+
                     <mat-divider></mat-divider>
                     <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
                     <table mat-table [dataSource]="dataList" class="text-nowrap w-100">
@@ -105,7 +132,8 @@
                         <ng-container matColumnDef="nombre">
                             <th mat-header-cell *matHeaderCellDef> Nombre </th>
                             <td mat-cell *matCellDef="let element">
-                                <p class="mb-0 fw-medium">{{ element.nombre }}</p>
+                                <p class="mb-0 fw-medium">{{ element.nombre.length > 20 ? (element.nombre
+                                    | slice:0:20) + '...' : element.nombre}}</p>
                                 <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
                             </td>
                         </ng-container>
@@ -124,7 +152,7 @@
                             <th mat-header-cell *matHeaderCellDef> Precio Base </th>
                             <td mat-cell *matCellDef="let element">
                                 <p class="mb-0 fw-medium op-5">
-                                    {{element.precioBase}}</p>
+                                    {{informationService.moneda.simbolo}} {{element.precioBase | number : '1.2-2'}}</p>
                             </td>
                         </ng-container>
 
@@ -312,12 +340,59 @@
 
                 <div class="table-responsive" *ngIf="controlVistasTablas===2">
                     <div class="ajustes">
-                        <h3>Movimiento de los productos</h3>
+                        <h3>Kardex/Movimientos</h3>
                         <mat-icon (click)="getMovimientosProductos()">refresh</mat-icon>
                     </div>
+                    <label style="margin-left: 5px;">Resumen de opraciones</label>
+                    <div>
+                        <div class="summary-grid">
+                            <div class="summary-card">
+                                <div class="header-card">
+                                    <div class="icon">#</div>
+                                    <div class="title">Total Entradas</div>
+                                </div>
+                                <div class="amount">{{cantEntradas}}</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="header-card">
+                                    <div class="icon">#</div>
+                                    <div class="title">Total salidas</div>
+                                </div>
+                                <div class="amount">{{ cantSalidas}}</div>
+                            </div>
+
+                            <div class="summary-card">
+                                <div class="header-card">
+                                    <div class="icon">$</div>
+                                    <div matTooltip="Venta con tarjeta" class="title">Valor total</div>
+                                </div>
+                                <div class="amount">{{ montoTotalInventario || 0 | number:'1.2-2'}}</div>
+                            </div>
+
+                            <div class="summary-card">
+                                <div class="header-card">
+                                    <div class="icon">#</div>
+                                    <div matTooltip="Venta con trasferencia" class="title">Productos</div>
+                                </div>
+                                <div class="amount">{{cantProd}}</div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
                     <mat-divider></mat-divider>
                     <mat-progress-bar *ngIf="cargando" mode="indeterminate"></mat-progress-bar>
                     <table mat-table [dataSource]="dataListMovimietoProductos" class="text-nowrap w-100">
+
+                        <ng-container matColumnDef="fecha">
+                            <th mat-header-cell *matHeaderCellDef> Fecha
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium"> {{element.fecha | date : 'dd/MM/yyyy HH:mm:ss'}} </p>
+                            </td>
+                        </ng-container>
 
                         <ng-container matColumnDef="idMovimiento">
                             <th mat-header-cell *matHeaderCellDef> Codigo </th>
@@ -333,16 +408,40 @@
 
                         <!-- Assigned Column -->
                         <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                            <th mat-header-cell *matHeaderCellDef> Referencia </th>
                             <td mat-cell *matCellDef="let element">
-                                <p class="mb-0 fw-medium">{{ element.productoObj.nombre }}</p>
+                                <p class="mb-0 fw-medium">{{element.productoObj.nombre.length > 20 ?
+                                    (element.productoObj.nombre
+                                    | slice:0:20) + '...' : element.productoObj.nombre}}</p>
                                 <p class="mb-0 fw-normal op-5">{{ element.work }}</p>
+                                <p class="mb-0 fw-normal op-5">{{element.referencia.length > 30 ?
+                                    (element.referencia
+                                    | slice:0:30) + '...' : element.referencia}}</p>
+
                             </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="costo_unitario">
+                            <th mat-header-cell *matHeaderCellDef>Costo unitario</th>
+                            <td mat-cell class="fw-medium" *matCellDef="let element" class="textGreen">
+                                {{informationService.moneda.simbolo}} {{element.productoObj.costoInicial | number :
+                                '1.2-2'}}</td>
+                        </ng-container>
+
+
+
+                        <ng-container matColumnDef="costo_total">
+                            <th mat-header-cell *matHeaderCellDef>Costo Total</th>
+                            <td mat-cell class="fw-medium" *matCellDef="let element" class="textGreen">
+                                {{informationService.moneda.simbolo}} {{ element.cantidad<1? ((element.cantidad*(-1)) *
+                                    element.productoObj.costoInicial | number : '1.2-2' ) : (element.cantidad *
+                                    element.productoObj.costoInicial | number : '1.2-2' )}}</td>
                         </ng-container>
 
                         <!-- Assigned Column -->
                         <ng-container matColumnDef="isEntrada">
-                            <th mat-header-cell *matHeaderCellDef> Entrada </th>
+                            <th mat-header-cell *matHeaderCellDef> Operación </th>
 
                             <td mat-cell *matCellDef="let element">
                                 <ng-container *ngIf="element.isEntrada==true ; else isEntrada">
@@ -366,22 +465,24 @@
                             </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="saldo">
+                            <th mat-header-cell *matHeaderCellDef> Balance </th>
+                            <td mat-cell class="fw-medium" *matCellDef="let element">
+                                {{element.balance}}
+                            </td>
+
+                        </ng-container>
+
                         <!-- Budget Column -->
-                        <ng-container matColumnDef="referencia">
+                        <!-- <ng-container matColumnDef="referencia">
                             <th mat-header-cell *matHeaderCellDef> Referencia
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <p class="mb-0 fw-medium"> {{element.referencia}}</p>
                             </td>
-                        </ng-container>
+                        </ng-container> -->
 
-                        <ng-container matColumnDef="fecha">
-                            <th mat-header-cell *matHeaderCellDef> Fecha
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <p class="mb-0 fw-medium"> {{element.fecha | date : 'dd/MM/yyyy HH:mm:ss'}} </p>
-                            </td>
-                        </ng-container>
+
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsMovimientos"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsMovimientos;"></tr>

@@ -593,3 +593,22 @@ i {
   color: #6c757d;
 
 }
+
+.textGreen{
+  color: green;
+}
+
+.textred{
+  color: rgb(150, 50, 50);
+}
+
+.bgGray{
+  background-color: rgb(215, 215, 215) !important;
+}
+.center{
+  display: flex;
+  align-items: center;
+}
+.center mat-icon{
+  font-size: 20px;
+}

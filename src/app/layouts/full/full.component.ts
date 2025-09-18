@@ -380,10 +380,6 @@ export class FullComponent implements OnInit {
   }
 
 
-
-
-
-
   isCollapsed = true;
   isVentasSubmenuOpen = false
 
@@ -396,7 +392,7 @@ export class FullComponent implements OnInit {
       setTimeout(() => {
         this.isCollapsed = true;
         this.isVentasSubmenuOpen = false;
-      }, 5090);
+      }, 10000);
     }
 
   }

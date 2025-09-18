@@ -12,6 +12,10 @@ export interface ServiceResponse {
     cantPage: number,
     totalItems: number,
     data: any
+    cantEntradas : number,
+    cantSalidas : number,
+    cantProd : number,
+    montoTotalInventario : number
 }
 
 export interface ServiceResponseLogin {

@@ -19,6 +19,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NodataComponent } from '../nodata/nodata.component';
 import { GetBarCodeComponent } from 'src/app/get-bar-code/get-bar-code.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Tooltip } from "primeng/tooltip";
 
 export interface PeriodicElement {
   id: number;
@@ -39,13 +40,14 @@ export interface PeriodicElement {
     CategoryComponent,
     ModelsComponent,
     BrandComponent,
-    NodataComponent
-  ],
+    NodataComponent,
+    Tooltip
+],
   templateUrl: './inventary.component.html',
   styleUrl: './inventary.component.scss'
 })
 export class InventaryComponent {
-  displayedColumns: string[] = ['imagen', 'idProducto', 'barCode','nombre', 'descripcion', 'categoria', 'marca', 'precioBase', 'impuesto', 'cantInicial','estado', 'acciones'];
+  displayedColumns: string[] = ['imagen', 'idProducto', 'barCode','nombre', 'precioBase', 'impuesto', 'cantInicial','estado', 'acciones'];
   dataList: iProducto[] = [];
   moneda!: iMoneda;
   impuestosCodigos: iImpuestoProductoCodigo[] = [];

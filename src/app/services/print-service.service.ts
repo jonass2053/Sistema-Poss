@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { iCajaReporteConsolidado, iDetalleFactura, iFactura, iPago } from '../interfaces/iTermino';
+import { iCajaReporteConsolidado, iDetalleFactura, iFactura, iMovimientoProductos, iPago } from '../interfaces/iTermino';
 import { Facebook } from 'angular-feather/icons';
+import { ServiceResponse } from '../interfaces/service-response-login';
 
 @Injectable({
     providedIn: 'root'
@@ -1409,6 +1410,351 @@ export class PrintServiceService {
             printWindow.document.close();
         }
 
+    }
+
+    printReportKardex(data: ServiceResponse){
+       let items = '';
+        let facturasCobradas = 0;
+        data.data.forEach((movimiento: iMovimientoProductos) => {
+            items += `
+             <tr>
+                        <td class="invoice-number">${movimiento.fecha}</td>
+                        <td class="client-name">${movimiento.productoObj.nombre}</td>
+                        <td><span class="document-type">${movimiento.referencia}</span></td>
+                        <td class="date">${movimiento.isEntrada==true?'Entrada' : 'Salida'}</td>
+                        <td class="date">${movimiento.cantidad}</td>
+                        <td class="amount">${movimiento.balance}</td>
+                        <td class="amount">${movimiento.productoObj.costoInicial.toFixed(2)}</td>
+                        <td class="amount">${(movimiento.productoObj.costoInicial * movimiento.cantidad).toFixed(2)}</td>
+                        
+            </tr>
+            `;
+        });
+        const printWindow = window.open('', 'width=600,height=800');
+        const content = `
+        <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Facturas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #f9fafb;
+        }
+
+        th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 12px;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .invoice-number {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .client-name {
+            color: #4b5563;
+        }
+
+        .document-type {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .date {
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .amount {
+            font-weight: 600;
+            text-align: right;
+            color: #1f2937;
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        .status.cobrada {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status.por-pagar {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .summary {
+            margin-top: 30px;
+             margin-buttom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 10px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            body {
+                font-size: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+                max-width: none;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .table-container {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+            
+            .status {
+                border: 1px solid #000 !important;
+            }
+            
+            .status.cobrada {
+                background: #e5e5e5 !important;
+                color: #000 !important;
+            }
+            
+            .status.por-pagar {
+                background: #d5d5d5 !important;
+                color: #000 !important;
+            }
+            
+            .summary {
+                page-break-inside: avoid;
+            }
+            
+            tbody tr {
+                page-break-inside: avoid;
+            }
+        }
+
+        @page {
+            margin: 1cm;
+            size: A4 landscape;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Reporte del almacen</h1>
+            <p>Kardex / Movimiento de los productos</p>
+        </div>
+
+        <div class="report-info">
+            <div>
+                <strong>Fecha de generación:</strong> <span id="current-date">${data.dateNow}</span>
+            </div>
+            <div>
+                <strong>Total de registros:</strong> ${data.data.length}
+            </div>
+        </div>
+<div class="summary">
+            <div class="summary-card">
+                <h3>Total entradas</h3>
+                <div class="value">${data.cantEntradas}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Total salidas</h3>
+                <div class="value">${data.cantSalidas}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Monto Total del Inventario</h3>
+                <div class="value">$${data.montoTotalInventario.toFixed(2)}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Cantidad de productos</h3>
+                <div class="value">${data.cantProd}</div>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Referencia</th>
+                        <th>Movimiento</th>
+                        <th>Cantidad</th>
+                        <th>Balance</th>
+                        <th>Costo unitario</th>
+                        <th>Coasto total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${items}
+                </tbody>
+            </table>
+        </div>
+
+        
+
+        <div class="footer">
+            <p>Reporte generado automáticamente • Para uso interno únicamente</p>
+        </div>
+    </div>
+
+
+      <script>
+        window.onload = function () {
+          setTimeout(() => {
+            window.print();
+          }, 500);
+        };
+
+        window.onafterprint = function () {
+          window.close();
+        };
+      </script>
+</body>
+</html>
+  `;
+        if (printWindow) {
+
+            printWindow.document.open();
+            printWindow.document.write(content);
+            printWindow.document.close();
+        }
+
+        
+  
     }
 
 

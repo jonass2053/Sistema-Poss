@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { importaciones } from 'src/app/Core/utilities/material/material';
-import { iAjusteInventario, iMovimientoProductos, iProducto } from 'src/app/interfaces/iTermino';
+import { iAjusteInventario, iMoneda, iMovimientoProductos, iProducto } from 'src/app/interfaces/iTermino';
 import { InformationService } from 'src/app/services/information.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
@@ -12,6 +12,7 @@ import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
 import { EditAdjustmentComponent } from './edit-adjustment/edit-adjustment.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { PrintServiceService } from 'src/app/services/print-service.service';
 
 
 @Component({
@@ -31,25 +32,32 @@ export class InventaryAdjustmentComponent {
   readonly dialog = inject(MatDialog);
   constructor(
     private productoService: ProductoService,
-    private informationService: InformationService,
+    public informationService: InformationService,
     private alertaService: AlertServiceService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private printService : PrintServiceService
 
   ) {
     this.getAll();
     this.getAllAjustes();
     this.getMovimientosProductos();
+    
+    
   }
   rangeDates: Date[] | undefined;
   visible: boolean = false;
   showDialog() {
     this.visible = true;
   }
-
+  data! : ServiceResponse;
+  dataListProductosSearch: iProducto[] = [];
   displayedColumns: string[] = ['imagen', 'idProducto', 'nombre', 'precioBase', 'cantInicial', 'StockAjustado', 'Diferencia', 'Razón del Ajuste', 'accion'];
   displayedColumnsAjustada: string[] = ['idAjuste', 'nombre', 'StockAnterior', 'StockAjustado', 'Diferencia', 'Razón del Ajuste', 'accion'];
-  displayedColumnsMovimientos: string[] = ['idMovimiento', 'idProducto', 'nombre', 'isEntrada', 'cantidad', 'referencia', 'fecha'];
-
+  displayedColumnsMovimientos: string[] = ['fecha', 'nombre',  'isEntrada',  'cantidad', 'saldo', 'costo_unitario', 'costo_total'];
+  cantEntradas : number = 0;
+  cantSalidas : number =0;
+  cantProd : number =0;
+  montoTotalInventario : number = 0;
   dataList: iProducto[] = [];
   dataListProductosAjustados: iAjusteInventario[] = [];
   dataListMovimietoProductos: iMovimientoProductos[] = [];
@@ -63,6 +71,16 @@ export class InventaryAdjustmentComponent {
       this.getAllAjustes();
     });
 
+  }
+
+    searchProducto(event: any) {
+    let valor = (event.target as HTMLInputElement).value;
+    if (valor.length > 0) {
+      this.productoService.getAllFilterForDocument((event.target as HTMLInputElement).value, this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
+        this.dataListProductosSearch = data.data;
+      })
+    } else {
+    }
   }
 
   desde : any =null;
@@ -89,7 +107,9 @@ export class InventaryAdjustmentComponent {
     diferencia: this.fb.control(0),
     razonAjuste: this.fb.control(0),
     createdBy: this.fb.control(0),
-    idSucursal: this.fb.control(null)
+    idSucursal: this.fb.control(null),
+    idEmpresa : this.fb.control(null),
+    stock : this.fb.control(null)
 
   })
 
@@ -109,6 +129,9 @@ export class InventaryAdjustmentComponent {
       if (c.idProducto == id) {
         c.diferencia = event.target.value - c.cantInicial;
         c.stockAjustado = c.cantInicial + c.diferencia;
+        this.miFormulario.patchValue({
+          stock : c.cantInicial
+        });
 
       }
     });
@@ -127,7 +150,8 @@ export class InventaryAdjustmentComponent {
         stockAjustado: productoAjustado.stockAjustado,
         diferencia: productoAjustado.diferencia,
         razonAjuste: productoAjustado.razonAjuste,
-        idSucursal: this.informationService.idSucursal
+        idSucursal: this.informationService.idSucursal,
+        idEmpresa : this.informationService.idEmpresa
       })
       this.productoService.insertAjusteInventario(this.miFormulario.value).subscribe((data: ServiceResponse) => {
         if (data.status) {
@@ -139,9 +163,9 @@ export class InventaryAdjustmentComponent {
   }
 
   // Este es el filter de los productos para realizar el ajuste pertinentes
-  getAllFilter(event: any) {
-    alert(this.informationService.idSucursal)
-    const filtro = (event.target as HTMLInputElement).value;
+  getAllFilter(event: any, filter : string ="") {
+    let filtro =event==undefined? filter :  (event.target as HTMLInputElement).value;    
+    this.formularioFecha.patchValue({filtro: filtro})
     if (filtro == "") {
       this.getAll();
     }
@@ -156,10 +180,15 @@ export class InventaryAdjustmentComponent {
         else {
         }
       })
-
       this.loading();
+      
     }
   }
+
+  search(){
+
+  }
+
 
 
   //Filter de los movimientos
@@ -174,6 +203,7 @@ export class InventaryAdjustmentComponent {
       this.hasta=this.formatearFecha(this.formularioFecha.value.hasta)==''?null : this.formatearFecha(this.formularioFecha.value.hasta);
       this.productoService.getAllFilterMovimientos(filtro, this.informationService.idSucursal, this.desde, this.hasta).subscribe((data: any) => {
         this.dataListMovimietoProductos = data.data;
+         this.setResumen(data);
         if (this.dataList.length > 0) {
           // this.sinRegistros = false
         }
@@ -251,6 +281,8 @@ export class InventaryAdjustmentComponent {
       this.dataList = data.data;
       this.loading();
       this.resetFormDate();
+       this.setResumen(data);
+     
 
     })
   }
@@ -270,7 +302,7 @@ export class InventaryAdjustmentComponent {
       this.dataListMovimietoProductos = data.data;
       this.loading();
       this.resetFormDate();
-
+       this.setResumen(data);
     })
   }
 
@@ -311,4 +343,29 @@ export class InventaryAdjustmentComponent {
     this.formularioFecha.reset();
   }
 
+
+
+  selectProducto(event: any, accion: number) {
+    this.getAllFilter(undefined,event.option.value.nombre)
+  }
+      
+    displayFnProducto(producto?: iProducto): string | undefined | any {
+    return producto ? producto.nombre : undefined;
+  }
+
+
+  printReporteMovimiento(){
+    this.printService.printReportKardex(this.data);
+  }
+
+
+  setResumen(response : ServiceResponse){
+    this.data =response;
+    this.cantEntradas = response.cantEntradas;
+    this.cantSalidas = response.cantSalidas;
+    this.cantProd =response.cantProd;
+    this.montoTotalInventario  =  response.montoTotalInventario;
+   
+
+  }
 }

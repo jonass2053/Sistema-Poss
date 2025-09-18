@@ -84,6 +84,7 @@ export class LoginComponent {
           this.information.idTurno = data.data.idTurno;
           this.information.mySucursal = data.data.sucursal;
           this.information.idUsuario = data.data.idUsuario;
+          this.information.moneda = data.data.sucursal.empresa.moneda;
           this.information.idRol = data.data.rol.idRol;
           localStorage.setItem('user', JSON.stringify(data))
           document.defaultView?.localStorage.setItem('token', JSON.stringify(data.token))

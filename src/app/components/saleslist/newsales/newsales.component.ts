@@ -526,9 +526,20 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   seletProductPos(event: any, producto: any) {
-    this.miFormulario.patchValue({ cantidad: 1 })
-    this.selectProducto(event, 2, producto);
-    this.addDetails();
+
+    if (this.document == "Factura" && producto.isProduct===true) {
+      alert(producto.cantInicial)
+      if (this.validateStock(producto.cantInicial)) {
+        this.miFormulario.patchValue({ cantidad: 1 })
+        this.selectProducto(event, 2, producto);
+        this.addDetails();
+      }
+
+    } else {
+      this.miFormulario.patchValue({ cantidad: 1 })
+      this.selectProducto(event, 2, producto);
+      this.addDetails();
+    }
   }
 
   changeCant(evento: any, idProducto: number) {
@@ -750,8 +761,8 @@ export class NewsalesComponent implements OnDestroy {
 
     }
   }
-  
-  numeracionCompany : number | undefined;
+
+  numeracionCompany: number | undefined;
   setMiFormulario() {
     this.getTipoDocumentos();
 
@@ -763,12 +774,11 @@ export class NewsalesComponent implements OnDestroy {
               7;
 
 
-    if(this.document == "Cotización" && this.idTipoDocumento == 1)
-    {
-        this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes(this.document.toUpperCase()))
-        this.numeracionCompany =  this.dataListContactos.find((c: iContactoPos)=>c.idContacto==this.miFormulario.value.idContacto)?.idTipoNumeracion;
+    if (this.document == "Cotización" && this.idTipoDocumento == 1) {
+      this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes(this.document.toUpperCase()))
+      this.numeracionCompany = this.dataListContactos.find((c: iContactoPos) => c.idContacto == this.miFormulario.value.idContacto)?.idTipoNumeracion;
     }
-    
+
     this.miFormulario.patchValue({
       detalle: this.dataListDetalleFactura,
       idEmpresa: this.usuarioService.usuarioLogueado.data.sucursal.idEmpresa,
@@ -783,7 +793,7 @@ export class NewsalesComponent implements OnDestroy {
       idFactura: this.document == "Cotización" && this.idTipoDocumento == 1 ? null : this.miFormulario.value.idFactura,
       document: docValue,
       idTipoDocumento: docValue,
-      idNumeracion : (this.document == "Cotización" && this.idTipoDocumento == 1)? this.numeracionCompany : this.miFormulario.value.idNumeracion
+      idNumeracion: (this.document == "Cotización" && this.idTipoDocumento == 1) ? this.numeracionCompany : this.miFormulario.value.idNumeracion
       // idTipoDocumento: this.miFormulario.value.idDocumento == undefined || this.miFormulario.value.idDocumento == null ? this.miFormulario.value.idDocumento : 1
     })
   }
@@ -1029,5 +1039,16 @@ export class NewsalesComponent implements OnDestroy {
   // metodo para cunado no llega una imagen valida
   onImageError(event: Event) {
     (event.target as HTMLImageElement).src = '../../../../assets/images/noimg.png';
+  }
+
+
+
+  // Validacion para que no eprmita vender si no hay cantidad disponible 
+  validateStock(stock: number): boolean {
+    if (this.document == "Factura" && stock<1) {
+      this.alertaService.errorAlert("No se ha podido agregar, no hay cantidades disponible");
+      return false;
+    }
+    return true;
   }
 }

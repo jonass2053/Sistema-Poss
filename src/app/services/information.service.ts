@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UsuarioService } from './usuario.service';
-import { iEmpresa, iSucursal } from '../interfaces/iTermino';
+import { iEmpresa, iMoneda, iSucursal } from '../interfaces/iTermino';
 import { Router } from '@angular/router';
 import { AlertServiceService } from '../Core/utilities/alert-service.service';
 
@@ -17,6 +17,7 @@ export class InformationService {
   idTurno! : number;
   mySucursal! : iSucursal;
   idRol! : number;
+  moneda! : iMoneda;
 
   setTipoDocumento(tD : string){
     this.tipoDocumento = tD;

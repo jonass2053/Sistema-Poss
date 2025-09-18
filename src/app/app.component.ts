@@ -22,6 +22,7 @@ export class AppComponent {
       information.idTurno = usuario.usuarioLogueado.data.idTurno;
       information.tipoDocumento  = localStorage.getItem('tipoDocumento')!;
       information.mySucursal = usuario.usuarioLogueado.data.sucursal;
+      information.moneda = usuario.usuarioLogueado.data.sucursal.empresa.moneda;
       information.idRol  = usuario.usuarioLogueado.data.rol.idRol;
       information.isPos = (localStorage.getItem('isPos')!)=="true"? true: false;
       turnoService.getTurnoActualExeq();

@@ -379,6 +379,7 @@ export interface iMovimientoProductos {
   idDetalleFactura: number
   idProducto: number
   productoObj: iProducto
+  balance : number
   isEntrada: boolean
   cantidad: number
   referencia: string
