@@ -293,8 +293,9 @@
 
               <div *ngIf="metodoPagoSeleccionado==''"
                 style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
-                <button *ngIf="document!='Conduce' &&  document!='Cotización'" mat-raised-button color="primary" class="margin2"
-                  (click)="setMetodoPago(1,'EFECTIVO', 0)"><mat-icon>save</mat-icon> Pagar y guardar</button>
+                <button *ngIf="document!='Conduce' &&  document!='Cotización'" mat-raised-button color="primary"
+                  class="margin2" (click)="setMetodoPago(1,'EFECTIVO', 0)"><mat-icon>save</mat-icon> Pagar y
+                  guardar</button>
                 <button mat-raised-button color="primary" class="margin2"
                   (click)="guardarFactura()"><mat-icon>save</mat-icon> Guardar</button>
                 <button mat-raised-button color="warn" class="margin2"
@@ -426,6 +427,11 @@
         </div>
 
         <div style="display: flex;">
+          <button (click)="addContactDialo()" matTooltip="Agregar cliente" style="height: 50px; width: 40px;" mat-stroked-button><mat-icon
+              style="font-size: 18px; margin-left: 5px;">person_add</mat-icon>
+            
+            
+            </button>
 
           <mat-form-field appearance="fill" class="mini-input no-fill-background">
             <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
@@ -439,6 +445,7 @@
             </mat-autocomplete>
           </mat-form-field>
           &nbsp;
+          &nbsp;
           <mat-form-field appearance="fill" class="control mini-input no-fill-background">
             <mat-label>Numeración</mat-label>
             <mat-select formControlName="idNumeracion">
@@ -449,6 +456,15 @@
           </mat-form-field>
 
         </div>
+
+
+
+
+
+
+
+
+
 
         <div class="body">
           <div class="nodataSales" *ngIf="dataListDetalleFactura.length==0">

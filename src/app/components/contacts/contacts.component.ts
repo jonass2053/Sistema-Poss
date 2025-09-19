@@ -87,8 +87,8 @@ export class ContactsComponent {
   color: ThemePalette = 'primary';
   disabled = false;
   documentoSeleccionado: any = "";
-  displayedColumns: string[] = ['idContacto', 'tipoIdentificacion','rnc', 'nombreRazonSocial', 'celular', 'correo','predeterminado', 'acciones'];
- displayedColumnsProveedores: string[] = ['idContacto', 'tipoIdentificacion','rnc', 'nombreRazonSocial', 'celular', 'correo', 'acciones'];
+  displayedColumns: string[] = ['idContacto', 'tipoIdentificacion', 'nombreRazonSocial', 'celular', 'correo','predeterminado', 'acciones'];
+ displayedColumnsProveedores: string[] = ['idContacto', 'tipoIdentificacion', 'nombreRazonSocial', 'celular', 'correo', 'acciones'];
 
 
   setNoData(value: boolean) {

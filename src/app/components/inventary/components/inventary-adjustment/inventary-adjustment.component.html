@@ -3,14 +3,29 @@
         <mat-card>
             <mat-card-content>
                 <div class="containerfuncionesheader input-parent">
-                    <div class="headerNavCard col-5">
+                   
+                    <div class="headerNavCard col-12">
                         <h4>Inventario de producto</h4>
                         <a [routerLink]="['/inventary']">
                             <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
                         </a>
                     </div>
 
-                    <form action="" [formGroup]="formularioFecha" class="controlesfilter">
+                   
+
+
+                </div>
+                <div>
+                    <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="toogle">
+                        <mat-button-toggle (click)="verAjuste(0)" [checked]='true' value="bold">Crear
+                            ajuste</mat-button-toggle>
+                        <mat-button-toggle (click)="verAjuste(1)" value="italic">Ajustes de inventarios
+                            realizados</mat-button-toggle>
+                        <mat-button-toggle (click)="verAjuste(2)" value="italic">Kardex/Movimientos</mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <div class="flexright">
+
+                         <form action="" [formGroup]="formularioFecha" class="controlesfilter">
 
 
                         <mat-form-field appearance="fill" class="control mini-input no-fill-background">
@@ -28,15 +43,12 @@
                                             <div class="mb-0 fw-normal op-5">Stock: {{producto.cantInicial}}
                                                 Precio:${{producto.precioFinal}} </div>
                                         </div>
-
                                     </div>
-
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
 
                         <!-- 
-
                         <mat-form-field appearance="fill">
                             <mat-label>Buscar</mat-label>
                             <input matInput (keyup)="getAllFilter($event)" placeholder="Buscar producto"
@@ -79,22 +91,13 @@
                     </form>
 
 
-                </div>
-                <div class="filter">
-                    <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="toogle">
-                        <mat-button-toggle (click)="verAjuste(0)" [checked]='true' value="bold">Crear
-                            ajuste</mat-button-toggle>
-                        <mat-button-toggle (click)="verAjuste(1)" value="italic">Ajustes de inventarios
-                            realizados</mat-button-toggle>
-                        <mat-button-toggle (click)="verAjuste(2)" value="italic">Kardex/Movimientos</mat-button-toggle>
-                    </mat-button-toggle-group>
-                    <div class="flexright">
 
 
-                        
-                        <button *ngIf="controlVistasTablas==2" (click)="printReporteMovimiento()" mat-raised-button class="me-8 mb-8"
-                            color="primary"><mat-icon>print</mat-icon> Imprimir
-                            reporte</button>
+                            <button *ngIf="controlVistasTablas==2" (click)="printReporteMovimiento()" mat-raised-button
+                                class="me-8 mb-8" color="primary"><mat-icon>print</mat-icon> Imprimir
+                                reporte</button>
+
+
                     </div>
                 </div>
 

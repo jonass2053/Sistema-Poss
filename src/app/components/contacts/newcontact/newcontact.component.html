@@ -5,7 +5,7 @@
                 <mat-card-content>
                     <div class="headerNavCard">
                         <h4 class="mb-56">Mantenimiento de clientes/proveedores</h4>
-                        <a [routerLink]="['/contacts']">
+                        <a *ngIf="dialogRef==null" [routerLink]="['/contacts']">
                             <div class="containerIcoText"><mat-icon>arrow_back</mat-icon></div>
                         </a>
                     </div>

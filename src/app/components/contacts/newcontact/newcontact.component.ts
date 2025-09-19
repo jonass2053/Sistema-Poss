@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertServiceService } from 'src/app/Core/utilities/alert-service.service';
 import { importaciones } from 'src/app/Core/utilities/material/material';
 import { MsjService } from 'src/app/Core/utilities/msj.service';
@@ -32,7 +33,9 @@ export class NewcontactComponent {
     private terminoService: TerminosService,
     private vendedorService: VendedoresService,
     private informationService : InformationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router : Router,
+    @Optional() public dialogRef: MatDialogRef<NewcontactComponent>
   ) {
 
     this.getAll();
@@ -236,6 +239,13 @@ export class NewcontactComponent {
 
   resetForm() {
     this.miFormulario.reset();
+    if (this.dialogRef != null) {
+        this.dialogRef.close();
+      } else {
+        this.router.navigate(['/inventary'])
+      }
+    
+    
   }
 
   filterContact(value: number) {

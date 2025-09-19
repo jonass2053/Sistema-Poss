@@ -25,11 +25,7 @@
 //   margin-top: 15px;
 // }
 
-.containerfuncionesheader{
-    display: flex;
-    flex-direction: column;
-    padding: 2px;
-}
+
 .print-btn {
   background: #007bff;
   color: white;
@@ -338,5 +334,6 @@
 .containerfuncionesheader{
   display: flex;
   align-items: center;
+  border: 1px solid red;
   // width: 90vw !important;
 } 

@@ -9,6 +9,15 @@ import { ServiceResponse } from '../interfaces/service-response-login';
 export class PrintServiceService {
 
     constructor() { }
+
+
+    formatNumber(value: number): string {
+        return new Intl.NumberFormat('es-DO', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(value);
+    }
+
     printTicketFactura(factura: iFactura | any) {
         let items = '';
         factura.detalle.forEach((detalle: iDetalleFactura) => {
@@ -460,8 +469,8 @@ export class PrintServiceService {
                         <td class="date">${factura.fechaCreacion}</td>
                         <td class="date">${factura.vencimiento}</td>
                         <td class="amount">${factura.totalGeneral}</td>
-                        <td class="amount">${factura.montoPagado}</td>
-                        <td class="amount">${factura.montoPorPagar}</td>
+                        <td class="amount">${ factura.montoPagado}</td>
+                        <td class="amount">${this.formatNumber(factura.montoPorPagar)}</td>
                         <td><span class="status cobrada">${factura?.estadoFactura?.nombre || "N/A"}</span></td>
             </tr>
             `;
@@ -1412,8 +1421,8 @@ export class PrintServiceService {
 
     }
 
-    printReportKardex(data: ServiceResponse){
-       let items = '';
+    printReportKardex(data: ServiceResponse) {
+        let items = '';
         let facturasCobradas = 0;
         data.data.forEach((movimiento: iMovimientoProductos) => {
             items += `
@@ -1421,11 +1430,11 @@ export class PrintServiceService {
                         <td class="invoice-number">${movimiento.fecha}</td>
                         <td class="client-name">${movimiento.productoObj.nombre}</td>
                         <td><span class="document-type">${movimiento.referencia}</span></td>
-                        <td class="date">${movimiento.isEntrada==true?'Entrada' : 'Salida'}</td>
+                        <td class="date">${movimiento.isEntrada == true ? 'Entrada' : 'Salida'}</td>
                         <td class="date">${movimiento.cantidad}</td>
                         <td class="amount">${movimiento.balance}</td>
-                        <td class="amount">${movimiento.productoObj.costoInicial.toFixed(2)}</td>
-                        <td class="amount">${(movimiento.productoObj.costoInicial * movimiento.cantidad).toFixed(2)}</td>
+                        <td class="amount">${this.formatNumber(movimiento.productoObj.costoInicial)}</td>
+                        <td class="amount">${this.formatNumber(movimiento.productoObj.costoInicial * movimiento.cantidad)}</td>
                         
             </tr>
             `;
@@ -1696,7 +1705,7 @@ export class PrintServiceService {
             </div>
             <div class="summary-card">
                 <h3>Monto Total del Inventario</h3>
-                <div class="value">$${data.montoTotalInventario.toFixed(2)}</div>
+                <div class="value">$${this.formatNumber(data.montoTotalInventario)}</div>
             </div>
             <div class="summary-card">
                 <h3>Cantidad de productos</h3>
@@ -1753,8 +1762,8 @@ export class PrintServiceService {
             printWindow.document.close();
         }
 
-        
-  
+
+
     }
 
 
@@ -1778,14 +1787,14 @@ export class PrintServiceService {
         // fecha = `${fecha?.getFullYear()}-${(fecha?.getMonth()!) + 1}-${fecha?.getDate()}`;
 
         reportData.forEach((t: iCajaReporteConsolidado) => {
-         totalInicial+= t.totalInicial;
-         totalEfectivo+= t.totalEfectivo;
-         totalTarjetas+= t.totalTarjetas;
-         totalTrasferencias+=t.totalTrasferencias;
-         totalEntradas+=t.totalEntradas;
-         totalSalidas+= t.totalSalidas;
-         totalGeneral+= t.totalGeneral;
-         totalFaltante+= t.totalFaltante;
+            totalInicial += t.totalInicial;
+            totalEfectivo += t.totalEfectivo;
+            totalTarjetas += t.totalTarjetas;
+            totalTrasferencias += t.totalTrasferencias;
+            totalEntradas += t.totalEntradas;
+            totalSalidas += t.totalSalidas;
+            totalGeneral += t.totalGeneral;
+            totalFaltante += t.totalFaltante;
 
             items += `
              <tr>

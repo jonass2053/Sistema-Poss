@@ -204,7 +204,8 @@ table {
 .flexright {
   display: flex;
   width: 100%;
-  justify-content: right;
+  justify-content: space-between;
+  align-items: center;
 
 }
 

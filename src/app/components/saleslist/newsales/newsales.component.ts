@@ -528,7 +528,6 @@ export class NewsalesComponent implements OnDestroy {
   seletProductPos(event: any, producto: any) {
 
     if (this.document == "Factura" && producto.isProduct===true) {
-      alert(producto.cantInicial)
       if (this.validateStock(producto.cantInicial)) {
         this.miFormulario.patchValue({ cantidad: 1 })
         this.selectProducto(event, 2, producto);

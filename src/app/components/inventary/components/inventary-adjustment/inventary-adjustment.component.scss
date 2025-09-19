@@ -32,12 +32,14 @@
     color: black;
 }
 .toogle{
-    width: 1050px !important;
+    width: auto !important;
+    
 }
 .containerfuncionesheader{
     display: flex;
     justify-content: space-between; 
     flex-direction: row;
+    width: 100%;
    
 }
 

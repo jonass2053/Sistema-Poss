@@ -316,9 +316,7 @@ export class ProductsComponent {
         this.dialogRef.close();
       } else {
         this.router.navigate(['/inventary'])
-
       }
-
     }
 
   }
