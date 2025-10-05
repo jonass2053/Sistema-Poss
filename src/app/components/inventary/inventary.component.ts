@@ -19,7 +19,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NodataComponent } from '../nodata/nodata.component';
 import { GetBarCodeComponent } from 'src/app/get-bar-code/get-bar-code.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Tooltip } from "primeng/tooltip";
+import { TooltipModule } from 'primeng/tooltip';
 
 export interface PeriodicElement {
   id: number;
@@ -41,7 +41,7 @@ export interface PeriodicElement {
     ModelsComponent,
     BrandComponent,
     NodataComponent,
-    Tooltip
+    TooltipModule
 ],
   templateUrl: './inventary.component.html',
   styleUrl: './inventary.component.scss'

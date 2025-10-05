@@ -1,7 +1,7 @@
 import { Component, viewChild } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatAccordion } from '@angular/material/expansion';
-import { Select } from 'primeng/select';
+
 import { importaciones } from 'src/app/Core/utilities/material/material';
 
 @Component({

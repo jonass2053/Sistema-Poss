@@ -27,6 +27,7 @@ import { NodataComponent } from '../nodata/nodata.component';
 import { ContactosService } from 'src/app/services/contactos.service';
 import { PrintServiceService } from 'src/app/services/print-service.service';
 import { ChangeStatusComponent } from './change-status/change-status.component';
+import { RecepcionMercanciaComponent } from '../recepcion-mercancia/recepcion-mercancia.component';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -83,9 +84,11 @@ export class SaleslistComponent implements OnInit {
     this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
     facturaService.facturaEdit = undefined;
     this.doc = informacionService.tipoDocumento;
+
     this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
     this.getAllNumeraciones();
     this.getAllEstadoFactura();
+    
 
   }
 
@@ -204,7 +207,10 @@ export class SaleslistComponent implements OnInit {
         this.router.navigateByUrl(`sales/newprice/${Factura.idFactura}/6`);
       } else if (this.document == 'Conduce') {
         this.router.navigateByUrl(`sales/newconduce/${Factura.idFactura}/8`);
-      } else {
+      }
+      else if (this.document == 'Compra') {
+        this.router.navigateByUrl(`buys/newbuy/${Factura.idFactura}/7`);
+       } else {
         this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/1`);
       }
     })
@@ -234,7 +240,7 @@ export class SaleslistComponent implements OnInit {
   }
 
   verFactura(idFactura: number) {
-  
+
     if (this.informacionService.tipoDocumento === 'Cotización') {
       this.router.navigateByUrl(`sales/newprice/view/${idFactura}/6`);
     } else if (this.informacionService.tipoDocumento == 'Conduce') {
@@ -271,9 +277,12 @@ export class SaleslistComponent implements OnInit {
   }
 
   getAll(pageNumber: number, pageSize: number, tipoDocumento: string = "") {
+
     this.cargando = true;
     let idTipoDocumento = this.informacionService.tipoDocumento === "Cotización" ? 6
-      : this.informacionService.tipoDocumento === "Conduce" ? 8 : 1;
+      : this.informacionService.tipoDocumento === "Conduce" ? 8 
+      : this.informacionService.tipoDocumento === "Compra"? 7 : 1; 
+
     this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, idTipoDocumento).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
       this.totalItems = data.totalItems; // Asume que la API también devuelve el total de items
@@ -347,7 +356,7 @@ export class SaleslistComponent implements OnInit {
   //   }
 
   // }
-  
+
 
   printDiv(divId: string) {
     this.imprimiendo = true;
@@ -375,6 +384,13 @@ export class SaleslistComponent implements OnInit {
     })
   }
 
+//Este metodo es para recibir la mercancia de la orden de compra
+  recepcionMercancia(idDocument : number ){
+    this.dialog.open(RecepcionMercanciaComponent,  {width: '98vw', height : '95vh',  data: idDocument }).afterClosed().subscribe(result => {
+      this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
+    })
+  }
+  
 
   // printFactura() {
   //   const customPrintOptions: PrintOptions = new PrintOptions({
@@ -425,6 +441,9 @@ export class SaleslistComponent implements OnInit {
     }
     else if (this.facturaService.document === "Conduce" && isPos == false) {
       this.router.navigate([`sales/newsale/${idDocument}/8`]);
+    }
+    else if (this.facturaService.document === "Compra" && isPos == false) {
+      this.router.navigate([`sales/newsale/${idDocument}/7`]);
     }
     else {
       this.router.navigate([`sales/newsale/${idDocument}/1`]);
@@ -564,7 +583,7 @@ export class SaleslistComponent implements OnInit {
   }
 
 
-   selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(SelectPrinterComponent, {
       width: '350px',
       height: '350px',
@@ -607,7 +626,9 @@ export class SaleslistComponent implements OnInit {
   getAllNumeraciones() {
     this.numeracionService.getAll(this.informacionService.idEmpresa).subscribe((data: ServiceResponse) => {
       if (data.status) {
-        this.dataListNumeraciones = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1);
+        if(this.informacionService.tipoDocumento=="Factura"){
+           this.dataListNumeraciones = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1 && c.nombre.includes("Factura"));
+        }
       }
     })
   }
@@ -636,10 +657,9 @@ export class SaleslistComponent implements OnInit {
 
 
 
-  openDialogChengeStatus(idDocument :  number) {
-    this.dialog.open(ChangeStatusComponent, {data: idDocument}).afterClosed().subscribe(result=>{
+  openDialogChengeStatus(idDocument: number) {
+    this.dialog.open(ChangeStatusComponent, { data: idDocument }).afterClosed().subscribe(result => {
       this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
     })
   }
 }
-  

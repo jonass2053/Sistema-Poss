@@ -281,7 +281,8 @@ export interface iDetalleFactura {
   productoObj: any;
   producto: any;
   IdImpuesto?: number
-  impuestoObj?: iiMpuesto
+  impuestoObj?: iiMpuesto,
+  montoProceso? : { idDetalle: number, montoRecibido: number, montoRestante : number, estado: number } | any;
 }
 
 export interface iSucursal {

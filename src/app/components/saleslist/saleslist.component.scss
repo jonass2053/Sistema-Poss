@@ -16,7 +16,7 @@
 
 
 
-// .conteinerfiltros{
+// .conteinerfiltrosconteinerfiltros{
 //   // border: 5px solid red;
 //   width: 20%;
 //   padding: 20px;
@@ -334,6 +334,7 @@
 .containerfuncionesheader{
   display: flex;
   align-items: center;
-  border: 1px solid red;
-  // width: 90vw !important;
+  //  border: 1px solid red;
+   flex-direction: column;
+
 } 

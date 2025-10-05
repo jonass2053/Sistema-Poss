@@ -50,6 +50,7 @@ import { ConfiguracionesGeneralesComponent } from './components/settings/compone
 import { ReportesComponent } from './components/reportes/reportes.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { CashRegisterListComponentComponent } from './components/cash-register-list-component/cash-register-list-component.component';
+import { RecepcionMercanciaComponent } from './components/recepcion-mercancia/recepcion-mercancia.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -65,7 +66,7 @@ const routes: Routes = [
       {path:"home", component:DashboardComponent},
       {path:"sales", component:DashboardComponent},
       {path:"contacts", component : ContactsComponent},
-      {path:"contacts/new/:id", component : NewcontactComponent },
+      {path:"contacts/new/:id/:tipo", component : NewcontactComponent },
       {path:"settings", component : SettingsComponent,
         children : [
         {path: 'company', component: CompanyComponent },
@@ -95,19 +96,28 @@ const routes: Routes = [
       {path:"inventary/inventary-adjustment", component : InventaryAdjustmentComponent},
       {path:"shifts", component : ShiftsComponent},
       {path:"cashregisterlist", component : CashRegisterListComponentComponent},
+
      // Vista del listado
       {path:"sales/salelist", component : SaleslistComponent},
       {path:"sales/pricelist", component : SaleslistComponent},
       {path:"sales/conducelist", component : SaleslistComponent},
+      {path:"buys/buylist", component : SaleslistComponent},
+      {path:"buys/recepcion", component : RecepcionMercanciaComponent},
+
       // Vista de creacion
       {path:"sales/newsale/:id/:idtipo", component : NewsalesComponent},
       {path:"sales/newprice/:id/:idtipo", component : NewsalesComponent},
       {path:"sales/newconduce/:id/:idtipo", component : NewsalesComponent},
+      {path:"buys/newbuy/:id/:idtipo", component : NewsalesComponent},
+
 
       // Vista de detalle
       {path:"sales/newsales/view/:id/:idtipo", component : ViewSalesComponent},
       {path:"sales/newprice/view/:id/:idtipo", component : ViewSalesComponent},
       {path:"sales/newconduce/view/:id/:idtipo", component : ViewSalesComponent},
+      {path:"buys/newbuy/view/:id/:idtipo", component : ViewSalesComponent},
+
+      
 
 
       {path:"sales/payment", component : PaymentComponent},

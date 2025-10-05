@@ -104,9 +104,6 @@ export class NewsalesComponent implements OnDestroy {
     this.getAllCategorias();
     this.getConfiguraciones();
     this.getAllNumeracion();
-
-
-
     this.idFactura = this.route.snapshot.paramMap.get('id');
     this.idTipoDocumento = this.route.snapshot.paramMap.get('idtipo');
     this.document = informationService.tipoDocumento;
@@ -146,9 +143,10 @@ export class NewsalesComponent implements OnDestroy {
     // this.idNumeracion = this.idTipoDocumento == 1 && this.document == "Cotización" ? factura.contacto.idTipoNumeracion : ;
     if (this.idTipoDocumento == 1 && this.document == "Cotización") {
       this.idNumeracion = factura.contacto.idTipoNumeracion;
-    } else if (this.document == "Conduce") {
-      this.idNumeracion = factura.idNumeracion
-    } else {
+    } else if (this.document == "Conduce" || this.document == "Compra") {
+      this.idNumeracion = factura.idNumeracion;
+    }
+    else {
       this.idNumeracion = factura.idNumeracion;
     }
 
@@ -231,7 +229,7 @@ export class NewsalesComponent implements OnDestroy {
   subTotal: number = 0;
   cambio: number = 0;
   total: number = 0;
-  identificacion: string = "jonas dia";
+  identificacion: string = "jonas diaz";
   telefono: string = "";
   efectivo: number = 0;
   editDatils: boolean = false;
@@ -329,7 +327,6 @@ export class NewsalesComponent implements OnDestroy {
       this.dataSource.data = this.dataListDetalleFactura;
       this.resetDetails();
       this.calculoGeneral();
-      console.log(this.dataListDetalleFactura)
       this.dataListImpuestosDetails = this.dataListImpuestosDetails.filter(c => c.idProducto != detalle.idProducto);
     }
   }
@@ -348,7 +345,11 @@ export class NewsalesComponent implements OnDestroy {
 
   getAllContactos() {
     this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
-      this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      if (this.document == 'Compra') {
+        this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto == 2);
+      } else {
+        this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      }
       this.setDefaultContacto();
 
     })
@@ -436,11 +437,13 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getTipoDocumentos() {
+
     this.numeracionService.getAllTipoDocumentos().subscribe((data: ServiceResponse) => {
-      if (data.status && this.informationService.tipoDocumento !== "Cotización" && this.informationService.tipoDocumento !== "Conduce") {
+      if (data.status && this.informationService.tipoDocumento !== "Cotización" && this.informationService.tipoDocumento !== "Conduce" && this.informationService.tipoDocumento !== "Compra") {
         this.miFormulario.patchValue({
           idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("FACTURA DE VENTA")).idTipoDocumento,
         })
+
       }
       else if (data.status && this.informationService.tipoDocumento === "Conduce") {
         this.miFormulario.patchValue(
@@ -448,6 +451,16 @@ export class NewsalesComponent implements OnDestroy {
             idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("CONDUCE")).idTipoDocumento,
             idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("CONDUCE"))?.idNumeracion
           })
+
+      }
+      else if (data.status && this.informationService.tipoDocumento == "Compra") {
+
+        this.miFormulario.patchValue(
+          {
+            idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("COMPRA")).idTipoDocumento,
+            idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("COMPRA"))?.idNumeracion
+          })
+
       }
       else {
         this.miFormulario.patchValue(
@@ -455,21 +468,25 @@ export class NewsalesComponent implements OnDestroy {
             idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("COTIZAC")).idTipoDocumento,
             idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("COTIZAC"))?.idNumeracion
           })
+
       }
+
     })
+
   }
 
   selectContacto(event: any, valor?: any) {
     let currentValue = valor == undefined ? event.option.value : valor;
+    console.log(currentValue)
     this.miFormulario.patchValue({
       identificacion: currentValue.rnc,
       telefono: currentValue.telefono1,
-      idNumeracion: this.informationService.tipoDocumento === "Cotización" && this.idTipoDocumento != 1 ? 11 : currentValue.idTipoNumeracion,
+      idNumeracion: this.informationService.tipoDocumento === "Cotización" && this.idTipoDocumento != 1 ? 11 : currentValue.idNumeracion,
       idContacto: currentValue.idContacto,
       nombreClienteCompleto: currentValue
     })
 
-    this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idTipoNumeracion;
+    this.idNumeracion = this.informationService.tipoDocumento === "Cotización" ? 11 : currentValue.idNumeracion;
   }
 
   selectProducto(event: any, accion: number, producto: any = undefined) {
@@ -527,7 +544,7 @@ export class NewsalesComponent implements OnDestroy {
 
   seletProductPos(event: any, producto: any) {
 
-    if (this.document == "Factura" && producto.isProduct===true) {
+    if (this.document == "Factura" && producto.isProduct === true) {
       if (this.validateStock(producto.cantInicial)) {
         this.miFormulario.patchValue({ cantidad: 1 })
         this.selectProducto(event, 2, producto);
@@ -644,6 +661,7 @@ export class NewsalesComponent implements OnDestroy {
       }
       this.getTipoDocumentos();
     })
+
 
   }
 
@@ -763,14 +781,15 @@ export class NewsalesComponent implements OnDestroy {
 
   numeracionCompany: number | undefined;
   setMiFormulario() {
+
     this.getTipoDocumentos();
+
 
     let docValue =
       this.document === "Factura" ? 1 :
         (this.document == "Cotización" && this.idTipoDocumento == 1) ? 1 :
           this.document === "Cotización" ? 6 :
-            this.document === "Conduce" ? 8 :
-              7;
+            this.document === "Conduce" ? 8 : 7;
 
 
     if (this.document == "Cotización" && this.idTipoDocumento == 1) {
@@ -792,9 +811,12 @@ export class NewsalesComponent implements OnDestroy {
       idFactura: this.document == "Cotización" && this.idTipoDocumento == 1 ? null : this.miFormulario.value.idFactura,
       document: docValue,
       idTipoDocumento: docValue,
-      idNumeracion: (this.document == "Cotización" && this.idTipoDocumento == 1) ? this.numeracionCompany : this.miFormulario.value.idNumeracion
+      // idNumeracion: (this.document == "Cotización" && this.idTipoDocumento == 1) ? this.numeracionCompany : this.miFormulario.value.idNumeracion
       // idTipoDocumento: this.miFormulario.value.idDocumento == undefined || this.miFormulario.value.idDocumento == null ? this.miFormulario.value.idDocumento : 1
     })
+
+
+
   }
 
   guardarFactura() {
@@ -967,6 +989,11 @@ export class NewsalesComponent implements OnDestroy {
     if (this.facturaServcie.document === "Cotización") {
       this.router.navigate(['/sales/pricelist'])
     }
+    else if (this.facturaServcie.document === "Conduce") {
+      this.router.navigate(['/sales/conducelist'])
+    } else if (this.facturaServcie.document === "Compra") {
+      this.router.navigate(['/buys/buylist'])
+    }
     else {
       this.router.navigate(['/sales/salelist'])
 
@@ -1044,7 +1071,7 @@ export class NewsalesComponent implements OnDestroy {
 
   // Validacion para que no eprmita vender si no hay cantidad disponible 
   validateStock(stock: number): boolean {
-    if (this.document == "Factura" && stock<1) {
+    if (this.document == "Factura" && stock < 1) {
       this.alertaService.errorAlert("No se ha podido agregar, no hay cantidades disponible");
       return false;
     }

@@ -89,7 +89,7 @@ export class ContactsComponent {
   documentoSeleccionado: any = "";
   displayedColumns: string[] = ['idContacto', 'tipoIdentificacion', 'nombreRazonSocial', 'celular', 'correo','predeterminado', 'acciones'];
  displayedColumnsProveedores: string[] = ['idContacto', 'tipoIdentificacion', 'nombreRazonSocial', 'celular', 'correo', 'acciones'];
-
+  tipoContacto : number = 1;
 
   setNoData(value: boolean) {
     this.noData = value;
@@ -125,8 +125,12 @@ export class ContactsComponent {
 
 
   }
-  editar(contacto: iContactoPos) {
-    this.goToNewContact(contacto.idContacto!);
+  editar(contacto: iContactoPos, tipo : number) {
+    this.goToNewContact(contacto.idContacto!, tipo);
+  }
+
+  selectTipoContacto(evento: any){
+    this.tipoContacto = evento.index==0? 1 : 2;
   }
 
   update() {
@@ -232,8 +236,8 @@ export class ContactsComponent {
     value == 0 ? this.getAll() : this.getAllFilterByTipo(value);
   }
 
-  goToNewContact(id: number) {
-    this.router.navigate([`/contacts/new/${id}`])
+  goToNewContact(id: number, tipo: number) {
+    this.router.navigate([`/contacts/new/${id}/${tipo}`])
   }
 
   setDefaultCustumer(idContacto : number ){

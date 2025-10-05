@@ -56,6 +56,8 @@ export class PaymentComponent {
   displayFn(contacto?: iContactoPos): string | undefined | any {
     return contacto ? contacto.nombreRazonSocial : undefined;
   }
+
+  result!: ServiceResponse;
   noData: boolean = false;
   showFiller = false;
   desde: any;
@@ -98,10 +100,11 @@ export class PaymentComponent {
   }
 
   getAll() {
-    this.cargando=true;
+    this.cargando = true;
     this.pagoService.getAll(this.informationService.idSucursal).subscribe((data: ServiceResponse) => {
       this.dataList = data.data;
-      this.cargando=false;
+      this.result = data;
+      this.cargando = false;
       this.setNoData(data.data.length > 0 ? true : false);
       this.totalMontoPagado = data.totalMontoPagado;
       // this.alertaService.hideLoading();
@@ -110,7 +113,7 @@ export class PaymentComponent {
 
   setNoData(value: boolean) {
     this.noData = value;
-    this.cargando=false;
+    this.cargando = false;
   }
 
   editar(pago: any) {
@@ -178,9 +181,10 @@ export class PaymentComponent {
     else {
       this.cargando = true;
       this.pagoService.getAllFilter(this.informationService.idSucursal, this.miFormulario.value).subscribe((data: any) => {
-      this.dataList = data.data;
-      this.setNoData(data.data.length>0?true:false);
-      this.totalMontoPagado = data.totalMontoPagado;
+        this.dataList = data.data;
+        this.result = data;
+        this.setNoData(data.data.length > 0 ? true : false);
+        this.totalMontoPagado = data.totalMontoPagado;
 
       })
     }
@@ -205,6 +209,14 @@ export class PaymentComponent {
   printRecibo(pago: iPago) {
     this.printService.printReciboPago(pago, this.moneda.simbolo)
   }
+
+
+  printReportePagos() {
+    if (this.result != undefined) {
+      this.printService.printReportPagos(this.dataList, this.dataList.length, this.result.totalMontoPagado,  (this.result!=undefined? this.result.dateNow : new Date()), this.miFormulario.value.desde, this.miFormulario.value.hasta);
+    }
+  }
+
 
 
 }

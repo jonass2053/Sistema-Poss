@@ -16,25 +16,29 @@
         <div class="col-12">
           <mat-card appearance="outlined">
             <mat-card-header>
-              <mat-card-title> Datos del cliente</mat-card-title>
+              <mat-card-title *ngIf="this.document=='Compra'">Datos del proveedor</mat-card-title>
+              <mat-card-title *ngIf="this.document!=='Compra'">Datos del cliente</mat-card-title>
+
             </mat-card-header>
 
             <mat-card-content style="height: 120px;">
               <mat-form-field appearance="fill" class="control mini-input no-fill-background" style="width: 20%;">
                 <mat-icon (click)="addContactDialo()" matSuffix>person_add</mat-icon>
-                <mat-label matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
+                <mat-label *ngIf="this.document!='Compra'"  matTooltip="Puede consultar un cliente por identitifacion o su nombre">Cliente</mat-label>
+                <mat-label *ngIf="this.document=='Compra'" matTooltip="Puede consultar un cliente por identitifacion o su nombre">Proveedor</mat-label>
+
                 <input matInput formControlName="nombreClienteCompleto" [matAutocomplete]="auto"
                   (input)="searchContacto($event)">
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
                   (optionSelected)="selectContacto($event)">
                   <mat-option *ngFor="let contacto of dataListContactos" [value]="contacto">
-                    {{ contacto.nombreRazonSocial }}
+                    {{contacto.nombreRazonSocial}}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
 
               &nbsp;
-              <mat-form-field *ngIf="document!=='Cotización'  && document!=='Conduce'" style="width: 20%;"
+              <mat-form-field *ngIf="document!=='Cotización'  && document!=='Conduce' && document!=='Compra'" style="width: 20%;"
                 appearance="fill" class="mini-input no-fill-background">
                 <mat-label>Numeración</mat-label>
                 <mat-select formControlName="idNumeracion">
@@ -46,7 +50,7 @@
 
 
               &nbsp;
-              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 18%;">
+              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 18%;" *ngIf="document!=='Cotización'  && document!=='Conduce' && document!=='Compra'" >
                 <mat-label>Fecha</mat-label>
                 <input matInput [matDatepicker]="pickerFecha" formControlName="fecha"
                   (dateChange)="setVencimiento($event)">
@@ -54,7 +58,7 @@
                 <mat-datepicker #pickerFecha></mat-datepicker>
               </mat-form-field>
               &nbsp;
-              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 20%;">
+              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 20%;" *ngIf="document!='Compra'">
                 <mat-label>Plazo</mat-label>
                 <mat-select formControlName="idTermino" (selectionChange)="setVencimiento($event)">
                   @for (termino of dataListTerminos; track termino) {
@@ -69,7 +73,7 @@
                 <input type="datetime" matInput formControlName="vencimiento">
               </mat-form-field> -->
               &nbsp;
-              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 15%;">
+              <mat-form-field class="control mini-input no-fill-background" appearance="fill" style="width: 15%;" *ngIf="document!='Compra'">
                 <mat-label>Vendedor</mat-label>
                 <mat-select formControlName="idVendedor" (selectionChange)="setVencimiento()">
                   @for (vendedor of dataListVendedores; track vendedor) {
@@ -101,12 +105,14 @@
                   (optionSelected)="selectProducto($event, 1)">
                   <mat-option *ngFor="let producto of dataListProductosSearch" [value]="producto">
                     <div class="buscadorProductos">
-                      <div> {{ producto.nombre }} <br>
+                      <div> {{ producto.idProducto }} - {{ producto.nombre }} <br>
                         <div class="mb-0 fw-normal op-5">Stock: {{producto.cantInicial}}
                           Precio:${{producto.precioFinal}} </div>
                       </div>
                       <div><img [src]="producto.imagen" alt=""> </div>
+                  
                     </div>
+                    <hr>
 
                   </mat-option>
                 </mat-autocomplete>
@@ -293,7 +299,7 @@
 
               <div *ngIf="metodoPagoSeleccionado==''"
                 style="display: flex; justify-content: space-between; margin-top: 10px; flex-direction: column;">
-                <button *ngIf="document!='Conduce' &&  document!='Cotización'" mat-raised-button color="primary"
+                <button *ngIf="document!='Conduce' &&  document!='Cotización' &&  document!='Compra'" mat-raised-button color="primary"
                   class="margin2" (click)="setMetodoPago(1,'EFECTIVO', 0)"><mat-icon>save</mat-icon> Pagar y
                   guardar</button>
                 <button mat-raised-button color="primary" class="margin2"

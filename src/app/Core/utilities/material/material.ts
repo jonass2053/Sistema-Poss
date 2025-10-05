@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink, RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+
+/* Angular Material */
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink, RouterModule } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
-import { HttpClientModule } from '@angular/common/http';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -19,105 +21,34 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatChipsModule } from '@angular/material/chips'
+import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
-import { TableModule } from 'primeng/table'; // Importación de PrimeNG Table
-import { Dialog } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { AvatarModule } from 'primeng/avatar';
-import { DatePicker } from 'primeng/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
-
-
-
-
-
-
-
-export const material: any = [
-  MatFormFieldModule,
-  CommonModule,
-  MatIconModule,
-  MatInputModule,
-  MatFormFieldModule,
-  ReactiveFormsModule,
-  CommonModule,
-  RouterLink,
-  MatFormFieldModule,
-  MatInputModule,
-  MatSelectModule,
-  MatRadioModule,
-  MatMenuModule,
-  MatSlideToggleModule,
-  MatCardModule,
-  MatDatepickerModule,
-
-
-]
-
-export const importaciones: any = [
-  RouterLink,
-  ReactiveFormsModule,
-  CommonModule,
-  HttpClientModule,
-  MatFormFieldModule,
-  CommonModule,
-  MatIconModule,
-  MatInputModule,
-  ReactiveFormsModule,
-  CommonModule,
-  RouterLink,
-  MatSelectModule,
-  MatRadioModule,
-  MatMenuModule,
-  MatSlideToggleModule,
-  MatCardModule,
-  MatDatepickerModule,
-  MatTooltipModule,
-  MatAutocompleteModule,
-  MatStepperModule,
-  MatButtonModule,
-  MatIconModule,
-  MatListModule,
-  MatDividerModule,
-  MatTabsModule,
-  MatPaginatorModule,
-  MatCardModule,
-  MatChipsModule,
-  MatProgressBarModule,
-  MatTableModule,
-  MatExpansionModule,
-  MatProgressSpinnerModule,
-  MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule,
-  MatProgressBarModule,
-  MatButtonToggleModule,
-  TableModule,
-  Dialog,
-  ButtonModule,
-  InputTextModule,
-  AvatarModule,
-  DatePicker,
-  MatSidenavModule,
-  NgxPrintModule,
-  FormsModule,
-  RouterModule,
-
-
-
-
-]
-
-import { MatDateFormats } from '@angular/material/core';
-import { MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {
+  MatDialogModule,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose
+} from '@angular/material/dialog';
+
+/* PrimeNG */
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';   // ✅ Corregido
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AvatarModule } from 'primeng/avatar';
+
+/* Otros */
 import { NgxPrintModule } from 'ngx-print';
+
+/* Fechas personalizadas */
+import { MatDateFormats, provideNativeDateAdapter } from '@angular/material/core';
 
 export const MY_DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -131,6 +62,54 @@ export const MY_DATE_FORMATS: MatDateFormats = {
   },
 };
 
+/* Exportamos agrupados */
+export const importaciones: any = [
+  /* Angular */
+  CommonModule,
+  FormsModule,
+  ReactiveFormsModule,
+  RouterModule,
+  RouterLink,
+  HttpClientModule,
 
+  /* Material */
+  MatFormFieldModule,
+  MatInputModule,
+  MatIconModule,
+  MatSelectModule,
+  MatRadioModule,
+  MatMenuModule,
+  MatSlideToggleModule,
+  MatCardModule,
+  MatDatepickerModule,
+  MatTooltipModule,
+  MatAutocompleteModule,
+  MatStepperModule,
+  MatButtonModule,
+  MatListModule,
+  MatDividerModule,
+  MatTabsModule,
+  MatPaginatorModule,
+  MatChipsModule,
+  MatProgressBarModule,
+  MatTableModule,
+  MatExpansionModule,
+  MatProgressSpinnerModule,
+  MatDialogModule,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+  MatButtonToggleModule,
+  MatSidenavModule,
 
+  /* PrimeNG */
+  TableModule,
+  DialogModule,   // ✅ ya no error
+  ButtonModule,
+  InputTextModule,
+  AvatarModule,
 
+  /* Otros */
+  NgxPrintModule,
+];

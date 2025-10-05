@@ -1,7 +1,7 @@
 <div class="headerNavCard">
   <div class="titulo">
     <div class="centerall">
-      <mat-icon>description</mat-icon>Listado de {{document}} <span style="margin-left: 10px;"></span>
+      <mat-icon>description</mat-icon>LISTADO DE {{document.toUpperCase()}} <span style="margin-left: 10px;"></span>
     </div>
     <div class="centerall">
       <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
@@ -110,7 +110,8 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <mat-form-field class="no-fill-background">
+
+        <mat-form-field class="no-fill-background" *ngIf="document=='Factura'">
           <mat-label>Tipo de factura</mat-label>
           <mat-select formControlName="idNumeracion">
             @for (numeracion of dataListNumeraciones; track $index)
@@ -119,7 +120,8 @@
             }
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="no-fill-background">
+
+        <mat-form-field class="no-fill-background" *ngIf="document=='Factura'">
           <mat-label>Estado</mat-label>
           <mat-select formControlName="idEstado">
             @for (estado of dataListEstadosFactura; track $index)
@@ -128,6 +130,7 @@
             }
           </mat-select>
         </mat-form-field>
+
         <mat-form-field class="no-fill-background">
           <mat-label>Selec. fecha</mat-label>
           <mat-date-range-input [rangePicker]="picker">
@@ -205,14 +208,18 @@
               <table mat-table [dataSource]="dataSource" class="text-nowrap w-100">
                 <!-- Name Column -->
                 <ng-container matColumnDef="Cliente">
-                  <th mat-header-cell *matHeaderCellDef><div class="center"> <mat-icon>person</mat-icon> Cliente </div> </th>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>person</mat-icon> Cliente </div>
+                  </th>
                   <td mat-cell *matCellDef="let element"> {{element.contacto.nombreRazonSocial || ''}}
                   </td>
 
                 </ng-container>
 
                 <ng-container matColumnDef="Tipo">
-                  <th mat-header-cell *matHeaderCellDef><div class="center"> <mat-icon>category</mat-icon> Tipo </div> </th>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>category</mat-icon> Tipo </div>
+                  </th>
                   <td mat-cell *matCellDef="let element"> {{element.numeracionObj.nombre}}
                     <p class="mb-0 fw-normal op-5">{{element.numeracion || '' }}</p>
                   </td>
@@ -220,41 +227,54 @@
 
                 <!-- Weight Column -->
                 <ng-container matColumnDef="Creación">
-                  <th mat-header-cell *matHeaderCellDef> <div class="center"> <mat-icon>date_range</mat-icon>  F. Creación </div>  </th>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>date_range</mat-icon> F. Creación </div>
+                  </th>
                   <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date :'dd/MM/YYYY'}} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="Vencimiento">
-                  <th mat-header-cell *matHeaderCellDef> <div class="center"> <mat-icon>date_range</mat-icon>  F.Vencimiento </div>  </th>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>date_range</mat-icon> F.Vencimiento </div>
+                  </th>
                   <td mat-cell *matCellDef="let element"> {{element.vencimiento | date :'dd/MM/YYYY'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Total">
-                  <th mat-header-cell *matHeaderCellDef> <div class="center"> <mat-icon>payments</mat-icon>  Total </div> </th>
-                  <td mat-cell *matCellDef="let element">  {{informationService.moneda.simbolo}} {{element.totalGeneral | number : '1.2-5'}} </td>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>payments</mat-icon> Total </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element"> {{informationService.moneda.simbolo}} {{element.totalGeneral |
+                    number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="MontoPagado">
-                  <th mat-header-cell *matHeaderCellDef> <div class="center"> <mat-icon>payments</mat-icon>  M. pagado </div> </th>
-                  <td class="textGreen" mat-cell *matCellDef="let element"> {{informationService.moneda.simbolo}} {{element.montoPagado | number : '1.2-5'}} </td>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>payments</mat-icon> M. pagado </div>
+                  </th>
+                  <td class="textGreen" mat-cell *matCellDef="let element"> {{informationService.moneda.simbolo}}
+                    {{element.montoPagado | number : '1.2-5'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="MontoPorPagar">
-                  <th mat-header-cell *matHeaderCellDef> <div class="center"> <mat-icon>payments</mat-icon> M. por pagar  </div> </th>
-                  <td mat-cell *matCellDef="let element">  {{informationService.moneda.simbolo}} {{element.montoPorPagar | number : '1.2-5'}} </td>
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="center"> <mat-icon>payments</mat-icon> M. por pagar </div>
+                  </th>
+                  <td mat-cell *matCellDef="let element"> {{informationService.moneda.simbolo}} {{element.montoPorPagar
+                    | number : '1.2-5'}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Estado" >
+                <ng-container matColumnDef="Estado">
                   <th mat-header-cell *matHeaderCellDef>Estado</th>
                   <td mat-cell *matCellDef="let element">
-                    <div *ngIf="document!='Cotización' &&  element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'" class="badge rounded-pill textred"
-                      [style.background-color]="element.estadoFactura?.color">
+                    <div *ngIf="document!='Cotización' &&  element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"
+                      class="badge rounded-pill textred" [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }}
                     </div>
 
-                    <div *ngIf="document!='Cotización' &&  element.estadoFactura?.nombre.toUpperCase()=='COBRADA'" class="badge rounded-pill textGreen"
-                      [style.background-color]="element.estadoFactura?.color">
+                    <div *ngIf="document!='Cotización' &&  element.estadoFactura?.nombre.toUpperCase()=='COBRADA'"
+                      class="badge rounded-pill textGreen" [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }}
                     </div>
 
@@ -271,6 +291,17 @@
                       *ngIf="document=='Cotización' && element.estadoFactura?.nombre.toUpperCase()!='POR PAGAR'"
                       [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }} </div>
+
+                    <div class="badge rounded-pill" *ngIf="document=='Compra'"
+                      [style.background-color]="element.estadoFactura?.color">
+                      {{ (element.estadoFactura?.nombre || '').toUpperCase() }}
+                    </div>
+
+                    <div class="badge rounded-pill" *ngIf="document=='Conduce'"
+                      [style.background-color]="element.estadoFactura?.color">
+                      {{ (element.estadoFactura?.nombre || '').toUpperCase() }}
+                    </div>
+
                   </td>
                 </ng-container>
 
@@ -313,7 +344,7 @@
                       <mat-menu #menu="matMenu" xPosition="before">
 
                         <button mat-menu-item (click)="openDialogPago(element)"
-                          *ngIf="informationService.tipoDocumento!='Conduce' && element.estadoFactura.nombre!='Facturada'">
+                          *ngIf="informationService.tipoDocumento!='Conduce' && informationService.tipoDocumento!='Compra' && element.estadoFactura.nombre!='Facturada'">
                           <mat-icon color="primary">payments</mat-icon>
                           <span>Agregar pago</span>
                         </button>
@@ -328,13 +359,18 @@
                           <mat-icon color="primary">autorenew</mat-icon>
                           <span>Despachar</span>
                         </button>
-                        <button mat-menu-item (click)="getFacturaByIdForPrint(element.idFactura!)">
+                        <button mat-menu-item (click)="getFacturaByIdForPrint(element.idFactura!)">`
                           <mat-icon color="black">print</mat-icon>
                           <span>Imprimir</span>
                         </button>
-                        <button *ngIf="document=='Cotización'" mat-menu-item (click)="convertirAFactura(element)">
+                        <button *ngIf="document=='Cotización'" mat-menu-item (click)="convertirAFactura(element)">  
                           <mat-icon color="primary">transform</mat-icon>
                           <span>Convertir a factura</span>
+                        </button>
+
+                        <button  matTooltip="Recepción de mercancia" *ngIf="document=='Compra'" mat-menu-item (click)="recepcionMercancia(element.idFactura)">
+                          <mat-icon color="primary">inventory_2</mat-icon>
+                          <span>Rec.Mercancia</span>
                         </button>
                         <button
                           *ngIf="(element.montoPagado==0 || document=='Cotización') && informationService.idRol!=24 "

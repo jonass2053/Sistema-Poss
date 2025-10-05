@@ -44,9 +44,12 @@ export class NewcontactComponent {
     this.getAllTerminos();
     this.getAllVendedores();
     this.idContacto= this.route.snapshot.paramMap.get('id');
+    this.tipoContacto= this.route.snapshot.paramMap.get('tipo');
     if(this.idContacto!==0 || this.idContacto!=='0'){
       this.getContactById(this.idContacto);
     }
+
+    console.log(this.tipoContacto)
 
   }
 
@@ -91,9 +94,9 @@ export class NewcontactComponent {
   disabled = false;
   documentoSeleccionado: any = "";
   idContacto : any = 0;
+  tipoContacto : any = 1;
 
-
-
+ 
   insert() {
     this.alertaService.ShowLoading();
     this.contactoService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {

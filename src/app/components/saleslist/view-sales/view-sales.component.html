@@ -47,7 +47,7 @@
                 
             </div> -->
 
-    <div class="row barraResumen" *ngIf="informationService.tipoDocumento!='Conduce'">
+    <div class="row barraResumen" *ngIf="informationService.tipoDocumento!='Conduce' && informationService.tipoDocumento!='Compra'">
         <div class="col">
             <div class="tarjeta">
                 <p class="tip">Monto total</p>
@@ -262,7 +262,7 @@
 
 
 
-    <div class="bodypagos" *ngIf="informationService.tipoDocumento!='Conduce'">
+    <div class="bodypagos" *ngIf="informationService.tipoDocumento!='Conduce' && informationService.tipoDocumento!='Compra' ">
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
             <mat-tab label="Pagos recibidos">
 
