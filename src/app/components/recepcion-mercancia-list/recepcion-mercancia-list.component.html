@@ -1,7 +1,7 @@
 <div class="headerNavCard">
   <div class="titulo">
     <div class="centerall">
-      <mat-icon>description</mat-icon>LISTADO DE {{document.toUpperCase()}} <span style="margin-left: 10px;"></span>
+      <mat-icon>description</mat-icon>LISTADO DE RECEPCION DE MERCANCIAS<span style="margin-left: 10px;"></span>
     </div>
     <div class="centerall">
       <button color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
@@ -270,7 +270,7 @@
                   <td mat-cell *matCellDef="let element">
                     <div *ngIf="document!='Cotización' &&  document!='Compra'  && element.estadoFactura?.nombre.toUpperCase()=='POR PAGAR'"
                       class="badge rounded-pill textred" [style.background-color]="element.estadoFactura?.color">
-                      {{ (element.estadoFactura?.nombre || '').toUpperCase() }} diaz
+                      {{ (element.estadoFactura?.nombre || '').toUpperCase() }}
                     </div>
 
                     <div *ngIf="document!='Cotización' &&  element.estadoFactura?.nombre.toUpperCase()=='COBRADA'"
@@ -415,4 +415,4 @@
   </mat-card>
 
   <app-report-ticket-invoice [factura]="facturaForPrint" id="ticket" *ngIf="imprimiendo"></app-report-ticket-invoice>
-  <app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo" id="factura"></app-invoice-report>
+  <app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo" id="factura"></app-invoice-report>    

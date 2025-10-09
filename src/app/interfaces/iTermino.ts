@@ -264,6 +264,7 @@ export interface iFactura {
   tipoDocumentoObj: iTipoDocumento
   idDocumento: number
   detalle: iDetalleFactura[];
+  RecepcionesMercancia :  iRecepcion[];
 }
 
 export interface iDetalleFactura {
@@ -517,4 +518,21 @@ export interface  iResumen
 export interface iVentasPorMes{
   mes: number,
   montoTotal : number
+}
+
+
+
+export interface iRecepcion {
+  idRecepcion: number;
+  idFactura: number;
+  fechaRecepcion: string; // o Date si lo manejas como objeto de fecha
+  observaciones: string | any;
+  detalles: iDetalleRecepcion[];
+}
+
+export interface iDetalleRecepcion {
+  idDetalleRecepcion?: number;
+  idRecepcion?: number;
+  idDetalleFactura?: number;
+  cantidadRecibida?: number;
 }

@@ -89,6 +89,57 @@ export class FacturaService {
   } 
 
 
+  insertRecepcion(formualrio: any): Observable<ServiceResponse> {
+    return this.http.post<ServiceResponse>(`${this.url}/recepcion`, formualrio, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
+  }
+
+  
+  updateRecepcion(formualrio: any): Observable<ServiceResponse> {
+    return this.http.put<ServiceResponse>(`${this.url}`, formualrio, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
+  }
+
+    deleteRecepcion(id: any): Observable<ServiceResponse> {
+    return this.http.delete<ServiceResponse>(`${this.url}/${id}`, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
+  }
+
+  
+    getRecepcionByIdFactura(formualrio: any): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}`, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
+  }
+
+
+
+   getAllRecepciones(idEmpresa : number , idSucursal : number): Observable<ServiceResponse> {
+    return this.http.get<ServiceResponse>(`${this.url}/recepcion/getall/${idEmpresa}/${idSucursal}`, this.header).pipe(
+      catchError((error : HttpErrorResponse) => {
+        this.usuarioService.chekSesion(error.status);
+        this.alertaService.errorAlert(error.error.message.includes('(0x80131904)')==true? 'Por favor verifique su conexió a internet, si el error persiste comuniquese con el proveedor de servicio' : error.error.message)
+        return throwError(() => error);
+      }))
+  }
+  //recepcion de mercancia
+
+
 
 }
  

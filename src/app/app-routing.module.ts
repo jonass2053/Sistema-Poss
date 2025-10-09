@@ -51,6 +51,7 @@ import { ReportesComponent } from './components/reportes/reportes.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { CashRegisterListComponentComponent } from './components/cash-register-list-component/cash-register-list-component.component';
 import { RecepcionMercanciaComponent } from './components/recepcion-mercancia/recepcion-mercancia.component';
+import { RecepcionMercanciaListComponent } from './components/recepcion-mercancia-list/recepcion-mercancia-list.component';
 
 const routes: Routes = [
   {path:'', component :LoginComponent},
@@ -94,6 +95,8 @@ const routes: Routes = [
       {path:"inventary", component : InventaryComponent},
       {path:"inventary/product/:id", component : ProductsComponent},
       {path:"inventary/inventary-adjustment", component : InventaryAdjustmentComponent},
+      {path:"buys/recepcion", component : RecepcionMercanciaListComponent},
+
       {path:"shifts", component : ShiftsComponent},
       {path:"cashregisterlist", component : CashRegisterListComponentComponent},
 

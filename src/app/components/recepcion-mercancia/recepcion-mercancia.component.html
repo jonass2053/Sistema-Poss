@@ -207,98 +207,104 @@
     <button class="button button-primary">Confirmar Recepción</button>
 </div> -->
 
-
-<div class="container" *ngIf="ordenCompra!=undefined">
-    <div class="main-content">
-        <!-- Información de la Orden -->
-        <div class="section">
-            <div class="section-header">
-                <div class="section-number">1</div>
-                <div *ngIf="ordenCompra!=undefined" class="section-title">{{ordenCompra.contacto.nombreRazonSocial}}
-                </div>
-            </div>
-            <div class="section-content">
-                <p style="font-size: 12px; color: #6c757d; margin-bottom: 20px;">
-                    Verifica los datos de la orden de compra
-                </p>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Proveedor</label>
-                        <div class="form-value">Distribuidora Industrial S.A.</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Fecha de Recepción</label>
-                        <div class="form-value">21/2/2001</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Fecha de Orden</label>
-                        <div *ngIf="ordenCompra!=undefined" class="form-value">{{ordenCompra.fechaCreacion| date :
-                            'yyyy-MM-dd HH:mm'}}</div>
+<form [formGroup]="miFormulario">
+    <div class="container" *ngIf="ordenCompra!=undefined">
+        <div class="main-content">
+            <!-- Información de la Orden -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">1</div>
+                    <div *ngIf="ordenCompra!=undefined" class="section-title">{{ordenCompra.contacto.nombreRazonSocial}}
                     </div>
                 </div>
+                <div class="section-content">
+                    <p style="font-size: 12px; color: #6c757d; margin-bottom: 20px;">
+                        Verifica los datos de la orden de compra
+                    </p>
+                    <div class="form-grid">
+                        <div class="form-group">
+
+                            <label class="form-label">Proveedor</label>
+                            <div class="form-value">{{ordenCompra.contacto.nombreRazonSocial}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fecha de Recepción</label>
+                            <div class="form-value">{{fechaServer | date : 'dd/MM/YYYY hh:mm:ss'}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fecha de Orden</label>
+                            <div *ngIf="ordenCompra!=undefined" class="form-value">{{ordenCompra.fechaCreacion| date :
+                                'dd/MM/YYYY hh:mm:ss'}}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Verificación de Items -->
-        <div class="section">
-            <div class="section-header">
-                <div class="section-number">2</div>
-                <div class="section-title">Verificación de Items</div>
-            </div>
-            <div class="section-content">
-                <p style="font-size: 12px; color: #6c757d; margin-bottom: 20px;">
-                    Confirma las cantidades recibidas para cada producto
-                </p>
-                <table class="items-table">
-                    <thead>
-                        <tr>
-                            <th>Estado</th>
-                            <th>Código</th>
-                            <th>Descripción</th>
-                            <th>Solicitado</th>
-                            <th>Recibido</th>
-                            <th>Diferencia</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngIf="ordenCompra!=undefined">
-                        @for (detalle of ordenCompra.detalle; track $index)
-                        {
-                        <tr>
-                            <td>
-                                <span *ngIf="detalle.montoProceso.montoRestante==0 && detalle.montoProceso.montoRecibido!=0"   class="status-badge status-completo">
-                                    <span class="status-dot"></span>
-                                    Completo
-                                </span>
+            <!-- Verificación de Items -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">2</div>
+                    <div class="section-title">Verificación de Items</div>
+                </div>
+                <div class="section-content">
+                    <p style="font-size: 12px; color: #6c757d; margin-bottom: 20px;">
+                        Confirma las cantidades recibidas para cada producto
+                    </p>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Solicitado</th>
+                                <th>Recibido</th>
+                                <th>Diferencia</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="ordenCompra!=undefined">
+                            @for (detalle of ordenCompra.detalle; track $index)
+                            {
+                            <tr>
+                                <td>
+                                    <span
+                                        *ngIf="detalle.montoProceso.montoRestante==0 && detalle.montoProceso.montoRecibido!=0"
+                                        class="status-badge status-completo">
+                                        <span class="status-dot"></span>
+                                        Completo
+                                    </span>
 
-                                <span *ngIf="detalle.montoProceso.montoRestante!=0" class="status-badge status-parcial">
-                                    <span class="status-dot"></span>
-                                    Parcial
-                                </span>
-
-
-                                 <span *ngIf="detalle.montoProceso.montoRecibido==0" class="status-badge status-pendiente">
-                                    <span class="status-dot"></span>
-                                    Pendiente
-                                </span>
-                            </td>
+                                    <span *ngIf="detalle.montoProceso.montoRestante!=0"
+                                        class="status-badge status-parcial">
+                                        <span class="status-dot"></span>
+                                        Parcial
+                                    </span>
 
 
+                                    <span *ngIf="detalle.montoProceso.montoRecibido==0"
+                                        class="status-badge status-pendiente">
+                                        <span class="status-dot"></span>
+                                        Pendiente
+                                    </span>
+                                </td>
 
-                            <td>PROD-{{detalle.idProducto}}</td>
-                            <td>{{detalle.producto.nombre}}</td>
-                            <td>{{detalle.cantidad}}</td>
-                            <td>
-                                <input (focus)="getIndex($index)" type="number"
-                                    style="border-radius: 5px; border: 1px solid silver; width: 100px; text-align: center;"
-                                    (input)="SumarMontoTotalPagado($event)" [value]=0>
-                            </td>
-                            <td *ngIf="detalle.montoProceso!=undefined">{{detalle.montoProceso.montoRestante || 0}}</td>
-                            <td *ngIf="detalle.montoProceso==undefined" class="difference-zero">0</td>
 
-                        </tr>
 
-                        }
-                        <!-- <tr>
+                                <td>PROD-{{detalle.idProducto}}</td>
+                                <td>{{detalle.producto.nombre}}</td>
+                                <td>{{detalle.cantidad}}</td>
+                                <td>
+                                    <input (focus)="getIndex($index)" type="number"
+                                        style="border-radius: 5px; border: 1px solid silver; width: 100px; text-align: center;"
+                                        (input)="SumarMontoTotalPagado($event)" [value]=0>
+                                </td>
+                                <td *ngIf="detalle.montoProceso!=undefined">{{detalle.montoProceso.montoRestante || 0}}
+                                </td>
+                                <td *ngIf="detalle.montoProceso==undefined" class="difference-zero">0</td>
+
+                            </tr>
+
+                            }
+                            <!-- <tr>
                             <td>
                                 <span class="status-badge status-completo">
                                     <span class="status-dot"></span>
@@ -350,99 +356,102 @@
                             <td>24</td>
                             <td class="difference-zero">0</td>
                         </tr> -->
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <!-- Observaciones -->
-        <div class="section">
-            <div class="section-header">
-                <div class="section-number">3</div>
-                <div class="section-title">Observaciones</div>
-            </div>
-            <div class="section-content">
-                <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">
-                    Registra cualquier incidencia o comentario sobre la recepción
-                </p>
-                <textarea class="observations-textarea" placeholder="Comentarios"></textarea>
+            <!-- Observaciones -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">3</div>
+                    <div class="section-title">Observaciones</div>
+                </div>
+                <div class="section-content">
+                    <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">
+                        Registra cualquier incidencia o comentario sobre la recepción
+                    </p>
+                    <textarea class="observations-textarea" placeholder="Comentarios" formControlName="observaciones"></textarea>
 
-                <div class="signature-section">
-                    <div class="signature-field">
-                        <div class="signature-label">Recibido por</div>
+                    <div class="signature-section">
+                        <div class="signature-field">
+                            <div class="signature-label">Recibido por</div>
+                        </div>
+                        <div class="signature-field">
+                            <div class="signature-label">Transportista</div>
+                        </div>
                     </div>
-                    <div class="signature-field">
-                        <div class="signature-label">Transportista</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <!-- Resumen de Recepción -->
+            <div class="summary-card">
+                <div class="summary-header">
+                    <div class="summary-title">Resumen de Recepción</div>
+                    <div class="summary-subtitle">Estado actual de la orden</div>
+                </div>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total de Ítems</span>
+                        <span class="stat-value"></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Ítems Completos</span>
+                        <span class="stat-value">{{itemsCompletos}}</span>
+                    </div>
+                    <div class="stat-item">
+
+                        <span class="stat-label">Ítems Parciales</span>
+                        <span class="stat-value">{{itemsParciales}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Ítems Faltantes</span>
+                        <span class="stat-value">{{itemsPendientes}}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Estado General</span>
+                        <span *ngIf="itemsParciales!=0 || itemsPendientes!=0" class="stat-value"
+                            style="color: #ffc107;">Recepción Parcial</span>
+                        <span *ngIf="itemsParciales==0 && itemsPendientes==0" class="stat-value"
+                            style="color: #059c2b;">Recepción Completa</span>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Requeridas -->
+            <div class="actions-card">
+                <div class="actions-header">
+                    <div class="actions-title">Acciones Requeridas</div>
+                </div>
+                <div class="actions-list">
+                    <div class="action-item">
+                        <span class="action-bullet">•</span>
+                        <span>Contactar proveedor por faltantes</span>
+                    </div>
+                    <div class="action-item">
+                        <span class="action-bullet">•</span>
+                        <span>Generar nota de crédito por diferencias</span>
+                    </div>
+                    <div class="action-item">
+                        <span class="action-bullet">•</span>
+                        <span>Actualizar inventario con cantidades recibidas</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="sidebar">
-        <!-- Resumen de Recepción -->
-        <div class="summary-card">
-            <div class="summary-header">
-                <div class="summary-title">Resumen de Recepción</div>
-                <div class="summary-subtitle">Estado actual de la orden</div>
-            </div>
-            <div class="summary-stats">
-                <div class="stat-item">
-                    <span class="stat-label">Total de Ítems</span>
-                    <span class="stat-value"></span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Ítems Completos</span>
-                    <span class="stat-value">{{itemsCompletos}}</span>
-                </div>
-                <div class="stat-item">
-
-                    <span class="stat-label">Ítems Parciales</span>
-                    <span class="stat-value">{{itemsParciales}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Ítems Faltantes</span>
-                    <span class="stat-value">{{itemsPendientes}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Estado General</span>
-                    <span *ngIf="itemsParciales!=0 || itemsPendientes!=0" class="stat-value" style="color: #ffc107;">Recepción Parcial</span>
-                    <span *ngIf="itemsParciales==0 && itemsPendientes==0" class="stat-value" style="color: #059c2b;">Recepción Completa</span>
-
-                </div>
-            </div>
+        <div class="centerall">
+            <button color="primary" mat-raised-button class="me-8 mb-8">Imprimir reporte de recepción
+                <mat-icon>print</mat-icon> </button>
+            <button (click)="save()" color="primary" mat-raised-button class="me-8 mb-8">Guardar
+                <mat-icon>save</mat-icon> nuevo</button>
+            <button color="primary" mat-raised-button class="me-8 mb-8">Cancelar
+                <mat-icon>cancel</mat-icon></button>
         </div>
 
-        <!-- Acciones Requeridas -->
-        <div class="actions-card">
-            <div class="actions-header">
-                <div class="actions-title">Acciones Requeridas</div>
-            </div>
-            <div class="actions-list">
-                <div class="action-item">
-                    <span class="action-bullet">•</span>
-                    <span>Contactar proveedor por faltantes</span>
-                </div>
-                <div class="action-item">
-                    <span class="action-bullet">•</span>
-                    <span>Generar nota de crédito por diferencias</span>
-                </div>
-                <div class="action-item">
-                    <span class="action-bullet">•</span>
-                    <span>Actualizar inventario con cantidades recibidas</span>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <div class="centerall">
-        <button color="primary" mat-raised-button class="me-8 mb-8">Imprimir reporte de recepción
-            <mat-icon>print</mat-icon> </button>
-        <button color="primary" mat-raised-button class="me-8 mb-8">Guardar
-            <mat-icon>save</mat-icon> nuevo</button>
-        <button color="primary" mat-raised-button class="me-8 mb-8">Cancelar
-            <mat-icon>cancel</mat-icon></button>
-    </div>
-
-</div>
-
+</form>
