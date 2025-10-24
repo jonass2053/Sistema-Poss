@@ -26,6 +26,7 @@ export class AppComponent {
       information.idRol  = usuario.usuarioLogueado.data.rol.idRol;
       information.isPos = (localStorage.getItem('isPos')!)=="true"? true: false;
       turnoService.getTurnoActualExeq();
+
      }
 
   }

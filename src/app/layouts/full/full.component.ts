@@ -363,7 +363,10 @@ export class FullComponent implements OnInit {
     }
     else if (tipoDocument == "Compra") {
       this.router.navigate(['buys/buylist']);
-    } else {
+    } else if (tipoDocument == "Nota de credito") {
+      this.router.navigate(['returns/creditnoteslist']);
+    }
+    else {
       this.router.navigate(['sales/salelist']);
     }
   }
@@ -384,8 +387,9 @@ export class FullComponent implements OnInit {
 
 
   isCollapsed = true;
-  isVentasSubmenuOpen = false
-  isComprasSubmenuOpen = false
+  isVentasSubmenuOpen = false;
+  isComprasSubmenuOpen = false;
+  isCajaSubmenuOpen = false;
 
 
   // Toggle sidebar collapse state
@@ -393,11 +397,13 @@ export class FullComponent implements OnInit {
     this.isCollapsed = !this.isCollapsed
     this.isVentasSubmenuOpen = false;
     this.isComprasSubmenuOpen = false;
+    this.isCajaSubmenuOpen  = false;
     if (!this.isCollapsed) {
       setTimeout(() => {
         this.isCollapsed = true;
         this.isVentasSubmenuOpen = false;
         this.isComprasSubmenuOpen = false;
+        this.isCajaSubmenuOpen  = false;
       }, 10000);
     }
 
@@ -414,6 +420,12 @@ export class FullComponent implements OnInit {
   toggleComprasSubmenu(): void {
     if (!this.isCollapsed) {
       this.isComprasSubmenuOpen = !this.isComprasSubmenuOpen
+    }
+  }
+    // Toggle caja submenu
+  toggleCajaSubmenu(): void {
+    if (!this.isCollapsed) {
+      this.isCajaSubmenuOpen = !this.isCajaSubmenuOpen
     }
   }
 

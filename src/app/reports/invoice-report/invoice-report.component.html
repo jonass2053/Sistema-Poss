@@ -54,7 +54,7 @@
         <tbody>
             <tr *ngFor="let detalle of factura.detalle">
                 <td>{{detalle.cantidad}}</td>
-                <td>{{detalle.idProducto}}</td>
+                <td>PRO-{{detalle.idProducto}}</td>
                 <td>{{detalle.nombre}}</td>
                 <td *ngIf="factura.idTipoDocumento!=8">{{moneda.simbolo}}{{detalle.precio | number : '1.2-5'}}</td>
                 <td *ngIf="factura.idTipoDocumento!=8">{{moneda.simbolo}}{{detalle.descuento | number : '1.2-5'}}</td>
@@ -65,6 +65,26 @@
     </table>
 
     <!-- Se ocultan totales y pagos cuando es conduce -->
+    <div style="display: flex; justify-content: space-between;">
+
+     <div *ngIf="factura.idTipoDocumento!=8 && (factura.idTipoDocumento==1 || factura.idTipoDocumento==6)" class="totals-section">
+      
+        <table class="totals-table">
+            <tr>
+                <td class="total-label">Condición</td>
+                <td class="total-amount">{{factura.terminoObj.nombre.toUpperCase()}}</td>
+            </tr>
+            <tr>
+                <td class="total-label">Monto pagado</td>
+                <td class="total-amount">{{moneda.simbolo}}{{factura.totalRecibido | number : '1.2-5'}}</td>
+            </tr>
+             <tr>
+                <td class="total-label">Cambio</td>
+                <td class="total-amount">{{moneda.simbolo}}{{factura.cambio | number : '1.2-5'}}</td>
+            </tr>
+        </table>
+    </div>
+
     <div *ngIf="factura.idTipoDocumento!=8" class="totals-section">
         <table class="totals-table">
             <tr>
@@ -77,13 +97,15 @@
             </tr>
             <tr>
                 <td class="total-label">ITBIS (18%):</td>
-                <td class="total-amount">{{moneda.simbolo}}{{factura.itbis}}</td>
+                <td class="total-amount">{{moneda.simbolo}}{{factura.itbis | number : '1.2-5'}}</td>
             </tr>
             <tr>
                 <td class="total-label grand-total">TOTAL:</td>
-                <td class="total-amount grand-total">{{moneda.simbolo}}{{factura.totalGeneral}}</td>
+                <td class="total-amount grand-total">{{moneda.simbolo}}{{factura.totalGeneral | number : '1.2-5'}}</td>
             </tr>
         </table>
+    </div>
+
     </div>
 
     <div class="payment-info">

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { iCajaReporteConsolidado, iDetalleFactura, iFactura, iMovimientoProductos, iPago } from '../interfaces/iTermino';
+import { iCajaReporteConsolidado, iDetalleFactura, iDetalleRecepcion, iFactura, iMovimientoProductos, iPago, iRecepcion } from '../interfaces/iTermino';
 import { Facebook } from 'angular-feather/icons';
 import { ServiceResponse } from '../interfaces/service-response-login';
 
@@ -29,8 +29,9 @@ export class PrintServiceService {
         <div class="item">
             <div class="item-name">${detalle.nombre.toUpperCase()}</div>
             <div class="item-details">
-                <span>${detalle.cantidad} x RD$ ${detalle.precio.toFixed(2)}</span>
-                <span class="bold">RD$ ${detalle.total.toFixed(2)}</span>
+                <span>${detalle.cantidad} x RD$ ${this.formatNumber(detalle.precio)}</span>
+                 <span>RD$ ${this.formatNumber(detalle.impuestos)}</span>
+                <span class="bold">RD$ ${this.formatNumber(detalle.total)}</span>
             </div>
         </div>
             `;
@@ -337,6 +338,7 @@ export class PrintServiceService {
         <div class="items-header">
             <div class="items-header-row">
                 <span>DESCRIPCION</span>
+                <span>ITBIS</span>
                 <span>TOTAL</span>
             </div>
         </div>
@@ -349,11 +351,11 @@ export class PrintServiceService {
             </div>
             <div class="total-row">
                 <span>SUBTOTAL:</span>
-                <span>RD$ ${factura.subTotal.toFixed(2)}</span>
+                <span>RD$ ${this.formatNumber(factura.subTotal)}</span>
             </div>
             <div class="total-row">
                 <span>DESCUENTO:</span>
-                <span>RD$ ${factura.descuento.toFixed(2)}</span>
+                <span>RD$ ${this.formatNumber(factura.descuento)}</span>
             </div>
             <!-- <div class="total-row">
                  <span>SUBTOTAL GRAVADO:</span>
@@ -366,7 +368,7 @@ export class PrintServiceService {
 
             <div class="total-row">
                 <span>ITBIS (18%):</span>
-                <span>RD$ ${factura.itbis.toFixed(2)}</span>
+                <span>RD$ ${this.formatNumber(factura.itbis)}</span>
             </div>
             <!-- <div class="total-row">
                  <span>PROPINA:</span>
@@ -374,7 +376,7 @@ export class PrintServiceService {
              </div> -->
             <div class="total-row final">
                 <span>TOTAL A PAGAR:</span>
-                <span>RD$ ${factura.totalGeneral.toFixed(2)}</span>
+                <span>RD$ ${this.formatNumber(factura.totalGeneral)}</span>
             </div>
         </div>
 
@@ -385,11 +387,11 @@ export class PrintServiceService {
             </div>
             <div class="total-row">
                 <span>${factura.terminoObj.nombre.toUpperCase()}</span>
-                <span>RD$ ${factura.totalRecibido.toFixed(2)}</span>
+                <span>RD$ ${this.formatNumber(factura.totalRecibido)}</span>
             </div>
             <div class="total-row">
                 <span>CAMBIO:</span>
-                <span>RD$ ${factura.cambio.toFixed(2)}</span>
+                <span>RD$ ${this.formatNumber(factura.cambio)}</span>
             </div>
         </div>
 
@@ -428,8 +430,8 @@ export class PrintServiceService {
         <!-- Información del Sistema -->
         <div class="footer">
             <div class="extra-small">Sistema POS v1.0</div>
-            <div class="extra-small">TechSolutions</div>
-            <div class="extra-small">Soporte: (809) 569-0981</div>
+            <div class="extra-small">DiazTechSolutions</div>
+            <div class="extra-small">Soporte: (849) 569-0981</div>
         </div>
     </div>
 
@@ -2137,14 +2139,14 @@ export class PrintServiceService {
             items += `
              <tr>
                         <td class="invoice-number">${t.cajaNombre}</td>
-                        <td class="invoice-number">${t.totalInicial.toFixed(2)}</td>
-                        <td class="client-name">${t.totalEfectivo.toFixed(2)}</td>
-                        <td><span class="document-type">${t.totalTarjetas.toFixed(2)}</span></td>
-                        <td class="date">${t.totalTrasferencias.toFixed(2)}</td>
-                        <td class="date">${t.totalEntradas.toFixed(2)}</td>
-                        <td class="amount">${t.totalSalidas.toFixed(2)}</td>
-                        <td class="amount">${t.totalFaltante.toFixed(2)}</td>
-                        <td class="amount">${t.totalGeneral.toFixed(2)}</td>
+                        <td class="invoice-number">${this.formatNumber(t.totalInicial)}</td>
+                        <td class="client-name">${this.formatNumber(t.totalEfectivo)}</td>
+                        <td><span class="document-type">${this.formatNumber(t.totalTarjetas)}</span></td>
+                        <td class="date">${this.formatNumber(t.totalTrasferencias)}</td>
+                        <td class="date">${this.formatNumber(t.totalEntradas)}</td>
+                        <td class="amount">${this.formatNumber(t.totalSalidas)}</td>
+                        <td class="amount">${this.formatNumber(t.totalFaltante)}</td>
+                        <td class="amount">${this.formatNumber(t.totalGeneral)}</td>
             </tr>
             `;
         });
@@ -2408,19 +2410,19 @@ export class PrintServiceService {
 <div class="summary">
             <div class="summary-card">
                 <h3>Total Inicial</h3>
-                <div class="value">${totalInicial.toFixed(2)}</div>
+                <div class="value">${this.formatNumber(totalInicial)}</div>
             </div>
             <div class="summary-card">
                 <h3>Total de ventas en efectivo</h3>
-                <div class="value">${totalEfectivo.toFixed(2)}</div>
+                <div class="value">${this.formatNumber(totalEfectivo)}</div>
             </div>
             <div class="summary-card">
                 <h3>Total de ventas en tarjeta</h3>
-                <div class="value">$${totalTarjetas.toFixed(2)}</div>
+                <div class="value">$${this.formatNumber(totalTarjetas)}</div>
             </div>
             <div class="summary-card">
                 <h3>Total de vnetas en trasferencia</h3>
-                <div class="value">${totalTrasferencias.toFixed(2)}</div>
+                <div class="value">${this.formatNumber(totalTrasferencias)}</div>
             </div>
         </div>
         <div class="table-container">
@@ -2473,6 +2475,358 @@ export class PrintServiceService {
             printWindow.document.close();
         }
 
+    }
+
+
+    printReporteRecepcionMercancia( recepcion : iRecepcion){
+        console.log(recepcion)
+        let items = '';
+        recepcion.detalles.forEach((detalle: iDetalleRecepcion) => {
+            items += `
+         <tr>
+                    <td>PRO-${detalle!.detalleObj!.producto.idProducto}</td>
+                    <td>${detalle!.detalleObj!.producto.nombre.toUpperCase() || ''}</td>
+                    <td>${detalle!.detalleObj!.cantidad}</td>
+                    <td> ${detalle.cantidadRecibida}</td>
+        </tr>
+            `;
+        });
+        const printWindow = window.open('', 'width=600,height=800');
+        const content = `
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Recepción de Mercancía</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Encabezado más compacto */
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 11px;
+        }
+
+        /* Grid más compacto con menos espaciado */
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 3px;
+        }
+
+        .info-box h3 {
+            font-size: 11px;
+            color: #333;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 3px;
+            font-weight: bold;
+        }
+
+        .info-box p {
+            font-size: 10px;
+            color: #666;
+            margin: 2px 0;
+            line-height: 1.3;
+        }
+
+        .info-box strong {
+            color: #333;
+        }
+
+        /* Tabla más compacta con menos padding */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 10px;
+        }
+
+        table thead {
+            background-color: #333;
+            color: white;
+        }
+
+        table th {
+            padding: 6px 4px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 5px 4px;
+            border-bottom: 1px solid #ddd;
+            font-size: 10px;
+            color: #333;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Observaciones más compactas */
+        .observations {
+            margin-bottom: 15px;
+        }
+
+        .observations h3 {
+            font-size: 11px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .observations-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            min-height: 40px;
+            border-radius: 3px;
+            background-color: #fafafa;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        /* Firmas más compactas con menos espacio superior */
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-line {
+            border-top: 2px solid #333;
+            margin-bottom: 5px;
+            padding-top: 5px;
+        }
+
+        .signature-box p {
+            font-size: 10px;
+            color: #666;
+            margin: 2px 0;
+        }
+
+        .signature-box strong {
+            font-size: 11px;
+            color: #333;
+        }
+
+        .print-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .print-button:hover {
+            background-color: #555;
+        }
+
+        /* Footer más compacto */
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 9px;
+            color: #999;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .print-button {
+                display: none;
+            }
+
+            table tbody tr:hover {
+                background-color: transparent;
+            }
+
+            .info-section {
+                page-break-inside: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+
+            .signatures {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Márgenes reducidos para aprovechar mejor el espacio */
+        @page {
+            margin: 0.5cm;
+            size: letter;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">Imprimir</button>
+
+    <div class="container">
+        <!-- Encabezado -->
+        <div class="header">
+            <h1>REPORTE DE RECEPCIÓN DE MERCANCÍA</h1>
+            <p>Documento de Control de Inventario</p>
+        </div>
+
+        <!-- Información General -->
+        <div class="info-section">
+            <div class="info-box">
+                <h3>INFORMACIÓN DE RECEPCIÓN</h3>
+                <p><strong>No. Recepción:</strong> REC-${recepcion.idRecepcion}</p>
+                <p><strong>Fecha:</strong>${recepcion.fechaRecepcion}</p>
+             
+            </div>
+
+            <div class="info-box">
+                <h3>PROVEEDOR</h3>
+                <p><strong>Nombre:</strong> ${recepcion.facturaObj?.contacto.nombreRazonSocial}</p>
+                <p><strong>RNC: ${recepcion.facturaObj?.contacto.rnc}</strong></p>
+                <p><strong>Contacto:</strong> ${recepcion.facturaObj?.contacto.telefono1}</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-box">
+                <h3>ORDEN DE COMPRA</h3>
+                <p><strong>No. Orden:</strong> OC-${recepcion.facturaObj?.numeracion}</p>
+                <p><strong>Fecha:</strong> $${recepcion.facturaObj?.fechaCreacion}</p>
+            </div>
+
+            <div class="info-box">
+                <h3>TRANSPORTISTA</h3>
+                <p><strong>Chofer:</strong> ${recepcion.entregadoPor}</p>
+            </div>
+        </div>
+
+        <!-- Tabla de Mercancía -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Esperada</th>
+                    <th>Recibida</th>
+                </tr>
+            </thead>
+            <tbody>
+               ${items}
+            </tbody>
+        </table>
+
+        <!-- Observaciones -->
+        <div class="observations">
+            <h3>OBSERVACIONES</h3>
+            <div class="observations-box">
+                ${recepcion.observaciones}
+            </div>
+        </div>
+
+        <!-- Firmas -->
+        <div class="signatures">
+            <div class="signature-box">
+                ${recepcion.entregadoPor}
+                <div class="signature-line">
+                    <strong>Entregado por</strong>
+                </div>
+                <p>Nombre: _______________________</p> <br>
+                <p>Firma: _______________________</p>
+              
+            </div>
+
+            <div class="signature-box">
+             ${recepcion.recibidoPor}
+                <div class="signature-line">
+                   
+                    <strong>Recibido por</strong>
+                </div>
+                <p>Nombre: _______________________</p>  <br>
+                <p>Firma: _______________________</p>
+                
+            </div>
+        </div>
+
+        <!-- Pie de página -->
+        <div class="footer">
+            <p>Este documento es válido como comprobante de recepción de mercancía - Generado el 10/01/2025</p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+  `;
+        if (printWindow) {
+
+            printWindow.document.open();
+            printWindow.document.write(content);
+            printWindow.document.close();
+        }
     }
 
 

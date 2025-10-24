@@ -39,12 +39,15 @@ export class AlertServiceService {
       timer: 1500
     });
   }
+
   errorAlert(msj: string) {
     Swal.fire({
       text: msj,
-      icon: "error"
+      icon: "error",
+      showConfirmButton: true,
     });
   }
+
   warnigAlert(msj: string) {
     Swal.fire({
       text: msj,
@@ -75,7 +78,7 @@ export class AlertServiceService {
     }).then((result) => {
       if (result.isConfirmed) {
         value = true;
-        this.successAlert("Se removio un elemento");
+      
       }
       else {
         value = false;

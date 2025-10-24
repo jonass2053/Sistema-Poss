@@ -105,6 +105,7 @@ const routes: Routes = [
       {path:"sales/pricelist", component : SaleslistComponent},
       {path:"sales/conducelist", component : SaleslistComponent},
       {path:"buys/buylist", component : SaleslistComponent},
+      {path:"returns/creditnoteslist", component : SaleslistComponent},
       {path:"buys/recepcion", component : RecepcionMercanciaComponent},
 
       // Vista de creacion
@@ -112,6 +113,7 @@ const routes: Routes = [
       {path:"sales/newprice/:id/:idtipo", component : NewsalesComponent},
       {path:"sales/newconduce/:id/:idtipo", component : NewsalesComponent},
       {path:"buys/newbuy/:id/:idtipo", component : NewsalesComponent},
+      {path:"returns/newcreditnote/:id/:idtipo/:numeracion/:idcontacto", component : NewsalesComponent},
 
 
       // Vista de detalle
@@ -119,6 +121,8 @@ const routes: Routes = [
       {path:"sales/newprice/view/:id/:idtipo", component : ViewSalesComponent},
       {path:"sales/newconduce/view/:id/:idtipo", component : ViewSalesComponent},
       {path:"buys/newbuy/view/:id/:idtipo", component : ViewSalesComponent},
+      {path:"returns/newcreditnote/view/:id/:idtipo", component : ViewSalesComponent},
+
 
       
 

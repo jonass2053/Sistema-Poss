@@ -88,7 +88,7 @@ export class SaleslistComponent implements OnInit {
     this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
     this.getAllNumeraciones();
     this.getAllEstadoFactura();
-    
+
 
   }
 
@@ -150,6 +150,7 @@ export class SaleslistComponent implements OnInit {
   totalItems = 0; // Total de elementos que hay en la API
   private previousPageIndex = 0; // Página anterior
   document: string = "";
+  public idTipoDocumentoGlobal: number = 0;
 
 
   goToNewProduct(idProducto: number) {
@@ -173,7 +174,7 @@ export class SaleslistComponent implements OnInit {
 
   getAllContactos() {
     this.contactoService.getAll(this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
-      this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+      this.dataListContactos = this.document == 'Compra' ? data.data.filter((c: iContactoPos) => c.idTipoContacto == 2) : data.data.filter((c: iContactoPos) => c.idTipoContacto == 1);
       // this.setDefaultContacto();
 
     })
@@ -184,7 +185,7 @@ export class SaleslistComponent implements OnInit {
     let valor = (event.target as HTMLInputElement).value;
     if (valor.length > 0) {
       this.contactoService.getAllFilter((event.target as HTMLInputElement).value, this.informationService.idEmpresa).subscribe((data: ServiceResponse) => {
-        this.dataListContactos = data.data.filter((c: iContactoPos) => c.idTipoContacto != 2);
+        this.dataListContactos = this.document == 'Compra' ? data.data.filter((c: iContactoPos) => c.idTipoContacto == 2) : data.data.filter((c: iContactoPos) => c.idTipoContacto == 1);
       })
     }
     else {
@@ -210,11 +211,21 @@ export class SaleslistComponent implements OnInit {
       }
       else if (this.document == 'Compra') {
         this.router.navigateByUrl(`buys/newbuy/${Factura.idFactura}/7`);
-       } else {
+      } else if (this.document == "Nota") {
+        this.router.navigateByUrl(`returns/newcreditnote/${Factura.idFactura}/10`);
+      }
+      else {
         this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/1`);
       }
     })
     // }
+  }
+
+  setDocumentDevolucion() {
+    this.document = "Nota de credito";
+    this.informacionService.tipoDocumento = 'Nota de credito';
+    this.facturaService.document = this.document;
+    localStorage.setItem("tipoDocumento", this.document);
   }
 
   selectContacto(event: any, valor?: any) {
@@ -280,8 +291,11 @@ export class SaleslistComponent implements OnInit {
 
     this.cargando = true;
     let idTipoDocumento = this.informacionService.tipoDocumento === "Cotización" ? 6
-      : this.informacionService.tipoDocumento === "Conduce" ? 8 
-      : this.informacionService.tipoDocumento === "Compra"? 7 : 1; 
+      : this.informacionService.tipoDocumento === "Conduce" ? 8
+        : this.informacionService.tipoDocumento === "Compra" ? 7
+          : this.informacionService.tipoDocumento === "Nota de credito" ? 10
+            : 1;
+    this.idTipoDocumentoGlobal = idTipoDocumento;
 
     this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, idTipoDocumento).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'
@@ -324,7 +338,7 @@ export class SaleslistComponent implements OnInit {
       this.cargando = true;
       this.facturaService.getAllFilter(
         this.informacionService.idSucursal,
-        this.informacionService.tipoDocumento === "Cotización" ? 6 : 1,
+        this.informacionService.tipoDocumento === "Cotización" ? 6 : this.informacionService.tipoDocumento === "Compra" ? 7 : 1,
         this.pageNumber,
         this.pageSize,
         this.miFormulario.value
@@ -358,7 +372,8 @@ export class SaleslistComponent implements OnInit {
   // }
 
 
-  printDiv(divId: string) {
+  printDiv
+    (divId: string) {
     this.imprimiendo = true;
     setTimeout(() => {
       const printContents = document.getElementById(divId)?.innerHTML;
@@ -379,18 +394,18 @@ export class SaleslistComponent implements OnInit {
     this.facturaService.getById(idFactura).subscribe((data: ServiceResponse) => {
       if (data.status) {
         this.facturaForPrint = data.data;
-        this.selectPrinter('2', '2');
+        this.selectPrinter('2', '2', data.data);
       }
     })
   }
 
-//Este metodo es para recibir la mercancia de la orden de compra
-  recepcionMercancia(idDocument : number ){
-    this.dialog.open(RecepcionMercanciaComponent,  {width: '98vw', height : '95vh',  data: idDocument }).afterClosed().subscribe(result => {
+  //Este metodo es para recibir la mercancia de la orden de compra
+  recepcionMercancia(idDocument: number) {
+    this.dialog.open(RecepcionMercanciaComponent, { width: '98vw', height: '95vh', data: idDocument }).afterClosed().subscribe(result => {
       this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
     })
   }
-  
+
 
   // printFactura() {
   //   const customPrintOptions: PrintOptions = new PrintOptions({
@@ -434,7 +449,7 @@ export class SaleslistComponent implements OnInit {
   // });
   // }
 
-  addNewDocument(idDocument: number, isPos: boolean) {
+  addNewDocument(idDocument: number, isPos: boolean, numeroDocumento?: string | null, idContacto?: string | null, idDoc?: string | null) {
     this.informacionService.isPos = isPos;
     if (this.facturaService.document === "Cotización" && isPos == false) {
       this.router.navigate([`sales/newprice/${idDocument}/6`]);
@@ -444,6 +459,9 @@ export class SaleslistComponent implements OnInit {
     }
     else if (this.facturaService.document === "Compra" && isPos == false) {
       this.router.navigate([`sales/newsale/${idDocument}/7`]);
+    }
+    else if (this.facturaService.document === "Nota de credito" && isPos == false) {
+      this.router.navigate([`returns/newcreditnote/${idDocument}/10/${numeroDocumento}/${idContacto}`]);
     }
     else {
       this.router.navigate([`sales/newsale/${idDocument}/1`]);
@@ -583,15 +601,22 @@ export class SaleslistComponent implements OnInit {
   }
 
 
-  selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  selectPrinter(enterAnimationDuration: string, exitAnimationDuration: string, data: iFactura): void {
     this.dialog.open(SelectPrinterComponent, {
-      width: '350px',
-      height: '350px',
+      width: '700px',
+      height: '140px',
       enterAnimationDuration,
       exitAnimationDuration,
     }).afterClosed().subscribe(result => {
       if (result != 4) {
-        this.printDiv(result == 1 ? 'ticket' : 'factura')
+        // this.printDiv
+        //   (result == 1 ? 'ticket' : 'factura')
+
+          if(result==1){
+         this.printService.printTicketFactura(data); 
+          }else{
+            this.printDiv('factura');
+          }
       }
     });
   }
@@ -626,8 +651,8 @@ export class SaleslistComponent implements OnInit {
   getAllNumeraciones() {
     this.numeracionService.getAll(this.informacionService.idEmpresa).subscribe((data: ServiceResponse) => {
       if (data.status) {
-        if(this.informacionService.tipoDocumento=="Factura"){
-           this.dataListNumeraciones = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1 && c.nombre.includes("Factura"));
+        if (this.informacionService.tipoDocumento == "Factura") {
+          this.dataListNumeraciones = data.data.filter((c: idNumeracion) => c.idTipoDocumento == 1 && c.nombre.includes("Factura"));
         }
       }
     })

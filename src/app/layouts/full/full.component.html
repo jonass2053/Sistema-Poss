@@ -418,14 +418,13 @@
               <span class="submenu-text">Conduces</span>
             </a>
 
-            <a href="#" class="submenu-item"
-              (click)="onSubmenuItemClick('Nota Crédito/Débito'); $event.preventDefault()">
+            <a class="submenu-item" (click)="selectDocument('Nota de credito')">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
                 <line x1="8" y1="21" x2="16" y2="21" />
                 <line x1="12" y1="17" x2="12" y2="21" />
               </svg>
-              <span class="submenu-text">Nota Crédito/Débito</span>
+              <span class="submenu-text">Nota Crédito</span>
             </a>
           </div>
         </div>
@@ -462,10 +461,10 @@
           </div>
 
           <div class="submenu" [class.show]="isComprasSubmenuOpen">
-            <a  [routerLink]="['buys/recepcion']" class="submenu-item"
-              [class.active]="isComprasSubmenuOpen" [routerLinkActive]="routerActive">
-              <svg  class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a [routerLink]="['buys/recepcion']" class="submenu-item" [class.active]="isComprasSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 7V17a2 2 0 0 0 2 2h13" />
                 <path d="M16 17h5v-6l-3-4h-2z" />
                 <circle cx="7.5" cy="17.5" r="1.5" />
@@ -523,6 +522,95 @@
           </svg>
           <span class="nav-text">Contactos</span>
         </a>
+
+
+        <!-- <div *ngIf="sidenav.menu==='Caja'" style="display: flex; flex-direction: column; width: 100%;">
+          <a matRipple [matRippleColor]="'#f7f8f443'" (click)="showListCaja()"
+            class="sidebar-menu w-100 d-flex align-items-center" [routerLinkActive]="routerActive">
+            <i class="{{ sidenav.icon }}"></i> {{ sidenav.menu }}
+            <div style="margin-left: 80px">
+              <i-feather *ngIf="!rowIconCaja" name="chevron-down"></i-feather>
+              <i-feather *ngIf="rowIconCaja" name="chevron-up"></i-feather>
+            </div>
+          </a>
+          <div class="contItem" [class.show]="listCaja">
+            <a routerLink="/shifts"> <span class="centerall"> • Manejo de turno</span></a>
+            <a routerLink="/cash-management"> <span class="centerall"> • Gastos/Ingresos</span></a>
+            <a routerLink="/cashregisterlist"> <span class="centerall"> • Crear caja</span></a>
+          </div>
+        </div> -->
+
+
+        <!-- Menu de caja -->
+        <div class="nav-item">
+          <div class="nav-link" [class.active]="isCajaSubmenuOpen" (click)="toggleCajaSubmenu()"
+            matTooltipPosition="right" matTooltip="Cajas">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="18" height="13" rx="2" ry="2"></rect>
+              <path d="M16 3h-8v5h8V3z"></path>
+              <path d="M10 12h4"></path>
+              <path d="M8 16h8"></path>
+            </svg>
+
+
+
+            <span class="nav-text">Cajas</span>
+            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </div>
+
+          <div class="submenu" [class.show]="isCajaSubmenuOpen">
+            <a [routerLink]="['/shifts']" class="submenu-item" [class.active]="isCajaSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="7" width="18" height="14" rx="2" ry="2" />
+                <path d="M12 3v4" />
+                <path d="M10 10h4a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h4" />
+              </svg>
+
+              <span class="submenu-text">Manejo de turno</span>
+            </a>
+          </div>
+
+          <div class="submenu" [class.show]="isCajaSubmenuOpen">
+            <a [routerLink]="['/cash-management']" class="submenu-item" [class.active]="isCajaSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V17a2 2 0 0 0 2 2h13" />
+                <path d="M16 17h5v-6l-3-4h-2z" />
+                <circle cx="7.5" cy="17.5" r="1.5" />
+                <circle cx="17.5" cy="17.5" r="1.5" />
+                <path d="M3 7h13v10" />
+              </svg>
+              <span class="submenu-text">Gastos e ingresos
+              </span>
+            </a>
+          </div>
+
+          <div class="submenu" [class.show]="isCajaSubmenuOpen">
+            <a [routerLink]="['/cashregisterlist']" class="submenu-item" [class.active]="isCajaSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V17a2 2 0 0 0 2 2h13" />
+                <path d="M16 17h5v-6l-3-4h-2z" />
+                <circle cx="7.5" cy="17.5" r="1.5" />
+                <circle cx="17.5" cy="17.5" r="1.5" />
+                <path d="M3 7h13v10" />
+              </svg>
+              <span class="submenu-text">Crear caja
+              </span>
+            </a>
+          </div>
+
+
+        </div>
+
+
         <!-- 
           <a [routerLink]="['//cash-management']" class="nav-link"   matTooltip="POS" matTooltipPosition="right">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">

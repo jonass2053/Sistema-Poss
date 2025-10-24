@@ -61,7 +61,7 @@ export class ReportTicketInvoiceComponent implements OnInit {
   }
   idFactura: number | any;
   @Input() factura!: iFactura;
-  formatCurrency(amount: number): string {
+ public formatCurrency(amount: number): string {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",
       currency: "COP",

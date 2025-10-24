@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ChangeStatusComponent } from '../saleslist/change-status/change-status.component';
 import { ServiceResponse } from 'src/app/interfaces/service-response-login';
-import { iContactoPos, idNumeracion, iEstadoFactura, iFactura, iMoneda } from 'src/app/interfaces/iTermino';
+import { iContactoPos, idNumeracion, iEstadoFactura, iFactura, iMoneda, iRecepcion } from 'src/app/interfaces/iTermino';
 import { SelectPrinterComponent } from '../saleslist/select-printer/select-printer.component';
 import jsPDF from 'jspdf';
 import { RecepcionMercanciaComponent } from '../recepcion-mercancia/recepcion-mercancia.component';
@@ -28,6 +28,7 @@ import { importaciones } from 'src/app/Core/utilities/material/material';
 import { ReportTicketInvoiceComponent } from '../saleslist/report-ticket-invoice/report-ticket-invoice.component';
 import { InvoiceReportComponent } from 'src/app/reports/invoice-report/invoice-report.component';
 import { NodataComponent } from '../nodata/nodata.component';
+import { RecepcionDetalleComponent } from '../recepcion-detalle/recepcion-detalle.component';
 
 @Component({
   selector: 'app-recepcion-mercancia-list',
@@ -38,7 +39,7 @@ import { NodataComponent } from '../nodata/nodata.component';
     InvoiceReportComponent,
     NodataComponent,
     OverlayModule,
-    
+
   ],
   templateUrl: './recepcion-mercancia-list.component.html',
   styleUrl: './recepcion-mercancia-list.component.scss'
@@ -54,7 +55,6 @@ export class RecepcionMercanciaListComponent implements OnInit {
     this.document = this.informacionService.tipoDocumento;
 
   }
-  color: ThemePalette = 'primary'; // Puede ser 'primary', 'accent', 'warn'
 
   constructor(
     private fb: FormBuilder,
@@ -76,15 +76,7 @@ export class RecepcionMercanciaListComponent implements OnInit {
 
   ) {
 
-    this.moneda = this.usuarioService.usuarioLogueado.data.sucursal.empresa.moneda;
-    facturaService.facturaEdit = undefined;
-    this.doc = informacionService.tipoDocumento;
-
     this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
-    this.getAllNumeraciones();
-    this.getAllEstadoFactura();
-
-
   }
 
   miFormulario: FormGroup = this.fb.group({
@@ -109,7 +101,7 @@ export class RecepcionMercanciaListComponent implements OnInit {
   montoPorPagar: number = 0;
   pagosVencido: number = 0;
   totalFacturado: number = 0;
-  displayedColumns: string[] = ['Cliente', 'Tipo', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
+  displayedColumns: string[] = ['#','Proveedor', 'NoOrden', 'Fecha', 'Observaciones', 'Acciones'];
   dialog = inject(MatDialog);
   facturaForPrint: any;
   doc: string = "";
@@ -146,6 +138,21 @@ export class RecepcionMercanciaListComponent implements OnInit {
   private previousPageIndex = 0; // Página anterior
   document: string = "";
 
+
+
+  async deleteRecepcion(idRecepcion : number){
+    if(await this.alertaService.questionDelete()){
+      this.alertaService.ShowLoading();
+      this.facturaService.deleteRecepcion(idRecepcion).subscribe((result : ServiceResponse)=>{
+        if(result.status){
+          this.alertaService.successAlert(result.message);
+          this.getAll(this.pageNumber, this.pageSize); 
+
+        }
+      })
+    }
+    
+  }
 
   goToNewProduct(idProducto: number) {
     this.router.navigate([`inventary/product/${idProducto}`]);
@@ -188,28 +195,8 @@ export class RecepcionMercanciaListComponent implements OnInit {
   }
 
 
-  editar(Factura: iFactura) {
-    // alert(this.document)
-    // if (Factura.montoPorPagar === 0 && this.document=='Cotización') {
-    //   this.alertaService.warnigAlert("La factura no se puede editar Ten en cuenta que para editarla no puede estar cancelada o tener algún pago asociado.")
-    // }
-    // else {
-    this.cargando = true;
-    this.informacionService.isPos = false;
-    this.facturaService.getById(Factura.idFactura!).subscribe((data: any) => {
-      this.facturaService.facturaEdit = data.data;
-      if (this.document == 'Cotización') {
-        this.router.navigateByUrl(`sales/newprice/${Factura.idFactura}/6`);
-      } else if (this.document == 'Conduce') {
-        this.router.navigateByUrl(`sales/newconduce/${Factura.idFactura}/8`);
-      }
-      else if (this.document == 'Compra') {
-        this.router.navigateByUrl(`buys/newbuy/${Factura.idFactura}/7`);
-      } else {
-        this.router.navigateByUrl(`sales/newsale/${Factura.idFactura}/1`);
-      }
-    })
-    // }
+  editar(idRecepcion: number) {
+   this.recepcionMercancia(idRecepcion);
   }
 
   selectContacto(event: any, valor?: any) {
@@ -234,16 +221,10 @@ export class RecepcionMercanciaListComponent implements OnInit {
     })
   }
 
-  verFactura(idFactura: number) {
-
-    if (this.informacionService.tipoDocumento === 'Cotización') {
-      this.router.navigateByUrl(`sales/newprice/view/${idFactura}/6`);
-    } else if (this.informacionService.tipoDocumento == 'Conduce') {
-      this.router.navigateByUrl(`sales/newconduce/view/${idFactura}/8`);
-    }
-    else {
-      this.router.navigateByUrl(`sales/newsales/view/${idFactura}/1`);
-    }
+  verDetalleRecepcion(idRecepcion: number) {
+    this.dialog.open(RecepcionDetalleComponent, { width: '60%', height: '500px', data: idRecepcion }).afterClosed().subscribe(result => {
+      // this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
+    })
   }
 
   update() {
@@ -272,8 +253,7 @@ export class RecepcionMercanciaListComponent implements OnInit {
   }
 
   getAll(pageNumber: number, pageSize: number, tipoDocumento: string = "") {
-
-    this.facturaService.getAllRecepciones(this.informationService.idEmpresa, this.informationService.idSucursal).subscribe((result : ServiceResponse)=>{
+    this.facturaService.getAllRecepciones(this.informationService.idEmpresa, this.informationService.idSucursal).subscribe((result: ServiceResponse) => {
       this.dataSource.data = result.data;
     })
   }
@@ -346,18 +326,18 @@ export class RecepcionMercanciaListComponent implements OnInit {
 
   }
 
-  getFacturaByIdForPrint(idFactura: number) {
-    this.facturaService.getById(idFactura).subscribe((data: ServiceResponse) => {
-      if (data.status) {
-        this.facturaForPrint = data.data;
-        this.selectPrinter('2', '2');
+  getRecepcionById(idRecepcion: number) {
+    this.facturaService.getRecepcionById(idRecepcion).subscribe((result: ServiceResponse) => {
+      if (result.status) {
+        this.printService.printReporteRecepcionMercancia(result.data);
       }
     })
+
   }
 
   //Este metodo es para recibir la mercancia de la orden de compra
   recepcionMercancia(idDocument: number) {
-    this.dialog.open(RecepcionMercanciaComponent, { width: '98vw', height: '95vh', data: idDocument }).afterClosed().subscribe(result => {
+    this.dialog.open(RecepcionMercanciaComponent, { width: '98vw', maxHeight: '600px', data: idDocument, disableClose: true }).afterClosed().subscribe(result => {
       this.getAll(this.pageNumber, this.pageSize); // Cargar los primeros 10 elementos
     })
   }
@@ -406,19 +386,7 @@ export class RecepcionMercanciaListComponent implements OnInit {
   // }
 
   addNewDocument(idDocument: number, isPos: boolean) {
-    this.informacionService.isPos = isPos;
-    if (this.facturaService.document === "Cotización" && isPos == false) {
-      this.router.navigate([`sales/newprice/${idDocument}/6`]);
-    }
-    else if (this.facturaService.document === "Conduce" && isPos == false) {
-      this.router.navigate([`sales/newsale/${idDocument}/8`]);
-    }
-    else if (this.facturaService.document === "Compra" && isPos == false) {
-      this.router.navigate([`sales/newsale/${idDocument}/7`]);
-    }
-    else {
-      this.router.navigate([`sales/newsale/${idDocument}/1`]);
-    }
+    this.recepcionMercancia(0);
   }
 
 

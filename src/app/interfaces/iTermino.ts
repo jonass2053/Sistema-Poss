@@ -97,6 +97,7 @@ export interface iContactoPos {
   idVendedor: number
   incluirEstadoCuenta: boolean;
   predeterminado: boolean
+  idNumeracion : number
 }
 
 export interface idTipoContacto {
@@ -145,7 +146,7 @@ export interface iProducto {
   categoriaObj: iCategoria;
   idEmpresa: number
   impuestos: iiMpuesto[]
-  ImpuestosObj: iiMpuesto[]
+  impuestosObj: iiMpuesto[]
   idMarca: number;
   marcaObj: iMarca;
   idModelo: number;
@@ -265,6 +266,9 @@ export interface iFactura {
   idDocumento: number
   detalle: iDetalleFactura[];
   RecepcionesMercancia :  iRecepcion[];
+  recepcionRecibida? : boolean;
+  refNotaDevolucion? : string;
+  permiteNotaCredito : boolean;
 }
 
 export interface iDetalleFactura {
@@ -284,6 +288,7 @@ export interface iDetalleFactura {
   IdImpuesto?: number
   impuestoObj?: iiMpuesto,
   montoProceso? : { idDetalle: number, montoRecibido: number, montoRestante : number, estado: number } | any;
+  cantRecibida? : number;
 }
 
 export interface iSucursal {
@@ -520,19 +525,23 @@ export interface iVentasPorMes{
   montoTotal : number
 }
 
-
-
 export interface iRecepcion {
   idRecepcion: number;
   idFactura: number;
   fechaRecepcion: string; // o Date si lo manejas como objeto de fecha
   observaciones: string | any;
+  recibidoPor : string;
+  entregadoPor : string;
   detalles: iDetalleRecepcion[];
+  facturaObj? :  iFactura;
 }
 
 export interface iDetalleRecepcion {
   idDetalleRecepcion?: number;
+  detalleObj? :iDetalleFactura | undefined;
+  idProducto : number;
   idRecepcion?: number;
   idDetalleFactura?: number;
+  idDetalleFacturaObj? : iDetalleFactura;
   cantidadRecibida?: number;
 }

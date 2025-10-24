@@ -32,9 +32,9 @@ export class NewcontactComponent {
     private numeracionService: NumeracionService,
     private terminoService: TerminosService,
     private vendedorService: VendedoresService,
-    private informationService : InformationService,
+    private informationService: InformationService,
     private route: ActivatedRoute,
-    private router : Router,
+    private router: Router,
     @Optional() public dialogRef: MatDialogRef<NewcontactComponent>
   ) {
 
@@ -43,13 +43,15 @@ export class NewcontactComponent {
     this.getAllTipoNumeracion();
     this.getAllTerminos();
     this.getAllVendedores();
-    this.idContacto= this.route.snapshot.paramMap.get('id');
-    this.tipoContacto= this.route.snapshot.paramMap.get('tipo');
-    if(this.idContacto!==0 || this.idContacto!=='0'){
+    this.idContacto = this.route.snapshot.paramMap.get('id');
+    this.tipoContacto = this.route.snapshot.paramMap.get('tipo');
+    
+
+    if (this.idContacto !== 0 || this.idContacto !== '0') {
       this.getContactById(this.idContacto);
     }
 
-    console.log(this.tipoContacto)
+
 
   }
 
@@ -65,13 +67,13 @@ export class NewcontactComponent {
       celular: this.fb.control("", Validators.required),
       telefono1: this.fb.control(""),
       telefono2: this.fb.control(""),
-      idTipoNumeracion: this.fb.control(0),
+      idNumeracion: this.fb.control(null, Validators.required),
       limiteCredito: this.fb.control(0),
       idVendedor: this.fb.control(null),
       idTermino: this.fb.control("", Validators.required),
       incluirEstadoCuenta: this.fb.control(false),
-      predeterminado :  this.fb.control(false),
-      idEmpresa  :  this.fb.control(false),
+      predeterminado: this.fb.control(false),
+      idEmpresa: this.fb.control(false),
     });
 
 
@@ -93,12 +95,13 @@ export class NewcontactComponent {
   color: ThemePalette = 'primary';
   disabled = false;
   documentoSeleccionado: any = "";
-  idContacto : any = 0;
-  tipoContacto : any = 1;
+  idContacto: any = 0;
+  tipoContacto: any = 1;
 
- 
+
   insert() {
     this.alertaService.ShowLoading();
+    console.log(this.miFormulario.value)
     this.contactoService.insert(this.miFormulario.value).subscribe((data: ServiceResponse) => {
       setTimeout(() => {
         this.alertaService.successAlert(data.message);
@@ -138,6 +141,7 @@ export class NewcontactComponent {
   }
 
   save() {
+    this.setNumeracion();
     if (this.miFormulario.valid) {
       this.miFormulario.get('idContacto')?.value === null ? this.insert() : this.update()
     }
@@ -208,7 +212,9 @@ export class NewcontactComponent {
   getAllTipoNumeracion() {
     this.numeracionService.getAll(this.informationService.idEmpresa).subscribe((response: ServiceResponse) => {
       if (response.status) {
-        this.dataListTipoNumeracion = response.data.filter((c: any) => c.idTipoDocumento == 1);
+        this.dataListTipoNumeracion = response.data;
+        this.setNumeracion();
+
       }
     })
   }
@@ -231,11 +237,10 @@ export class NewcontactComponent {
     })
   }
 
-  getContactById(id : number) {
-    this.contactoService.getById(id).subscribe((data: ServiceResponse)=>{
-      if(data.data){
+  getContactById(id: number) {
+    this.contactoService.getById(id).subscribe((data: ServiceResponse) => {
+      if (data.data) {
         this.miFormulario.reset(data.data);
-        console.log(this.miFormulario.value)
       }
     })
   }
@@ -243,16 +248,26 @@ export class NewcontactComponent {
   resetForm() {
     this.miFormulario.reset();
     if (this.dialogRef != null) {
-        this.dialogRef.close();
-      } else {
-        this.router.navigate(['/inventary'])
-      }
-    
-    
+      this.dialogRef.close();
+    } else {
+      this.router.navigate(['/inventary'])
+    }
+
+
   }
 
   filterContact(value: number) {
     value == 0 ? this.getAll() : this.getAllFilterByTipo(value);
+  }
+
+  setNumeracion() {
+    if (this.tipoContacto == 2) {
+
+      this.miFormulario.patchValue({ idNumeracion: this.dataListTipoNumeracion.find(c => c.nombre.includes("Compra"))?.idNumeracion });
+    }else{
+      this.dataListTipoNumeracion = this.dataListTipoNumeracion.filter(c=>c.nombre.includes("Factu"))
+    }
+
   }
 
 }

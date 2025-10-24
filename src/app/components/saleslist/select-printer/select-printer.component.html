@@ -1,15 +1,9 @@
-<div class="headerNavCard">
-    <div class="titulo"> <mat-icon>description</mat-icon>Seleccione una de las opciones <span
-            style="margin-left: 10px;"></span>
-    </div>
-</div>
+
 
 <mat-dialog-content>
-
-    <button color="primary"  (click)="closeModal(1)">Imprimir ticket <mat-icon>print</mat-icon></button>
-    <button  (click)="closeModal(2)">Imprimir en formato carta <mat-icon>print</mat-icon> </button>
-    <!-- <button  (click)="closeModal(3)"> Compartir <mat-icon>shared</mat-icon></button> -->
-    
+    <button mat-stroked-button  (click)="closeModal(1)"><mat-icon>receipt_long</mat-icon>Imprimir en Formato Ticket </button>
+    <button mat-stroked-button  (click)="closeModal(2)"><mat-icon>description</mat-icon> Imprimir en Formato Carta ('8.5'x'11') </button>
+    <!-- <button  (click)="closeModal(3)"> Compartir <mat-icon>shared</mat-icon></button> -->    
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button (click)="closeModal(4)">Cancelar</button>
