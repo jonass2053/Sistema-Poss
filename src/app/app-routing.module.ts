@@ -80,6 +80,14 @@ const routes: Routes = [
         {path: 'generalsetting', component : ConfiguracionesGeneralesComponent}
         ]
       },
+        {path: 'company', component: CompanyComponent },
+        {path: 'paymentsterms', component : PaymentTermsComponent},
+        {path: 'taxes', component : TaxesComponent},
+        {path: 'numbers', component : NumbersComponent},
+        {path: 'users', component : UsersComponent},
+        {path: 'role', component : RoleComponent},
+        // {path: 'inventary', component : SettingInventaryComponent},
+        {path: 'generalsetting', component : ConfiguracionesGeneralesComponent},
 
 
       {path:"settings/company", component : CompanyComponent},

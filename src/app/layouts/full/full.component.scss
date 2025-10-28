@@ -261,7 +261,7 @@
   padding: 2rem;
   transition: margin-left 0.3s ease;
   min-height: 100vh;
-  background-color: #ecf0f1;
+  background-color: white;
 }
 
 .sidebar.collapsed + .main-content {
@@ -327,3 +327,126 @@
   width: 60px;
 }
 
+
+
+
+
+
+.trigger-button {
+  font-weight: 500;
+  color: #111;
+  text-transform: none;
+
+  mat-icon {
+    font-size: 20px;
+    margin-right: 4px;
+    color: #111;
+  }
+
+  .days-remaining {
+    font-size: 12px;
+    color: #777;
+    margin-left: 6px;
+  }
+}
+
+/* --- Forzar estilo dentro del panel del mat-menu --- */
+::ng-deep .subscription-menu-panel .mat-mdc-menu-content {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+::ng-deep .subscription-menu-panel .menu-container {
+  width: 270px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  font-family: 'Inter', 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .subscription-menu-panel h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+::ng-deep .subscription-menu-panel .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  margin-bottom: 6px;
+
+  flex-direction: row;
+}
+
+::ng-deep .subscription-menu-panel .label {
+  color: #777;
+   width: 50%;
+   text-align: left;
+}
+
+::ng-deep .subscription-menu-panel .value {
+  font-weight: 600;
+  color: #111;
+     width: 50%;
+     text-align: right;
+}
+
+::ng-deep .subscription-menu-panel .status {
+  background-color: #111;
+  color: #fff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+       width: 25%;
+       text-align: center;
+       margin-right: 10px;
+}
+
+::ng-deep .subscription-menu-panel .calendar {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 13px;
+  margin-top: 4px;
+
+  mat-icon {
+    font-size: 18px;
+    margin-right: 6px;
+    color: #666;
+  }
+}
+
+::ng-deep .subscription-menu-panel .divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 10px 0;
+}
+
+::ng-deep .subscription-menu-panel .manage-btn {
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  border-color: #ddd;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 4px 0;
+  box-shadow: none !important;
+
+  mat-icon {
+    font-size: 18px;
+    margin-right: 6px;
+    color: #111;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}

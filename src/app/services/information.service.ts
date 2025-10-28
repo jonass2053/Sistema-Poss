@@ -8,7 +8,9 @@ import { AlertServiceService } from '../Core/utilities/alert-service.service';
   providedIn: 'root'
 })
 export class InformationService {
-  constructor(private router : Router, private alertasService : AlertServiceService){}
+  constructor(private router : Router, private alertasService : AlertServiceService, private usuarioService : UsuarioService){
+    
+  }
   isPos : boolean = false;
   idEmpresa: number=0;
   idSucursal : number=0;
@@ -23,4 +25,12 @@ export class InformationService {
     this.tipoDocumento = tD;
     localStorage.setItem("tipoDocumento", tD)
   } 
+  
+  tienePermiso(modulo: string, funcion: string): boolean {
+  const user = this.usuarioService.usuarioLogueado.data;
+  return user?.rol?.modulos?.some((m: any) =>
+    m.nombre === modulo &&
+    m.funcionalidades?.some((f: any) => f.nombreFuncion === funcion && f.checked)
+  ) || false;
+}
 }

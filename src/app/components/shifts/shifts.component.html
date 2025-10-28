@@ -1,4 +1,4 @@
-<div class="container-fluit">
+<div class="container">
     <div class="row">
         <div class="col ml-3 header">
             <div class="flex">
@@ -23,17 +23,15 @@
 
             </div>
             <div style="display: flex;">
-                <button *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado.isOpen!=true" (click)="printMe()" type="button"
-                    class="btn btn-primary"><mat-icon>print</mat-icon>Imprimir</button>
-                <button *ngIf="turnoService.isOpen!=undefined" (click)="openModalCloseShift()" type="button"
-                    class="btn btn-danger"><mat-icon>logout</mat-icon> Cerra turno</button>
+                <button mat-stroked-button *ngIf="turnoSeleccionado!=undefined && turnoSeleccionado.isOpen!=true" (click)="printMe()" type="button"><mat-icon>print</mat-icon>Imprimir</button>
+                <button mat-stroked-button *ngIf="turnoService.isOpen!=undefined" (click)="openModalCloseShift()" type="button"><mat-icon>logout</mat-icon> Cerra turno</button>
                 <button *ngIf="turnoService.isOpen==undefined" (click)="openShift()" type="button"
                     class="btn btn-primary"><mat-icon>menu_open</mat-icon> Abrir turno</button>
             </div>
         </div>
     </div>
 
-</div>
+
 
 
 <mat-drawer-container class="example-container" >
@@ -132,7 +130,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="space-y-1">
-                            <h1>{{informationService.mySucursal.empresa?.nombreComercial?.toUpperCase()}} </h1>
+                            <h1>{{informationService.mySucursal.empresa?.razonSocial?.toUpperCase()}} </h1>
                             <p class="text-muted">{{informationService.mySucursal.direccion}}</p>
                             <p class="text-muted">RNC: {{informationService.mySucursal.empresa?.rnc}}</p>
                         </div>
@@ -274,3 +272,4 @@
 
     </mat-drawer-content>
 </mat-drawer-container>
+</div>

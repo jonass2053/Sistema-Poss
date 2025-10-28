@@ -38,7 +38,7 @@ export class PaymentComponent {
     private pagoService: PagosService,
     private impuestoService: ImpuestosService,
     private almacenService: AlmacenService,
-    private usuarioService: UsuarioService,
+    public usuarioService: UsuarioService,
     private marcaService: MarcasService,
     private modeloService: ModelosService,
     public informationService: InformationService,

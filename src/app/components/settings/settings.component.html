@@ -92,20 +92,30 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <i class="fas fa-cog"></i>
       <h2>Configuraciones</h2>
     </div>
 
     <nav class="sidebar-nav">
       <a (click)="chooseOpcion()" [routerLink]="['company']" color="primary" routerLinkActive="active"
         class="nav-item active" data-section="business">
-        <mat-icon>store</mat-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9L4 4h16l1 5M3 9h18v11H3V9zM9 22v-4h6v4" />
+          <path d="M9 13h6M9 17h6" />
+        </svg>
         <span>Negocio</span>
       </a>
       <a (click)="chooseOpcion()" [routerLink]="['paymentsterms']" color="primary" routerLinkActive="active"
         class="nav-item active" class="nav-item" data-section="printers">
-        <mat-icon>account_balance</mat-icon>
-        <span>Cond/Term.de Pagos</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2" ry="2" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+          <circle cx="8" cy="15" r="1" />
+          <path d="M16 15h2" />
+        </svg>
+
+        <span>Terminos de Pagos</span>
       </a>
       <a (click)="chooseOpcion()" [routerLink]="['taxes']" color="primary" routerLinkActive="active"
         class="nav-item active" class="nav-item" data-section="printers">

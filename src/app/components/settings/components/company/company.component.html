@@ -1,152 +1,133 @@
-<!-- <mat-card appearance="raised" class="mainContainer"> -->
-  <div class="card-header">
-    <h3>Información del Negocio</h3>
-    <p>Configuración básica de tu establecimiento</p>
-  </div>
-  <!-- <mat-card-content> -->
-
-
-    <div class="containerInter">
-      <div class="formularioCard mt-3">
-        <form class="formulario" [formGroup]="miFormulario">
-          <div class="container">
-            <div class="row">
-              <div class="col">
-                <mat-form-field appearance="fill">
-                  <mat-label>Razón social</mat-label>
-                  <input matInput #message maxlength="256" class="" placeholder="Escriba nombre"
-                    formControlName="razonSocial">
-                </mat-form-field>
-              </div>
-              &nbsp;
-              <div class="col">
-                <mat-form-field class="example-full-width control" appearance="fill">
-                  <mat-label>Nombre comercial</mat-label>
-                  <input matInput #message maxlength="256" class="control" placeholder="Escriba nombre"
-                    formControlName="nombreComercial">
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <mat-form-field class="example-full-width control" appearance="fill">
-                  <mat-label>Dirección</mat-label>
-                  <input matInput #message maxlength="256" class="control" placeholder="Escriba nombre"
-                    formControlName="direccion">
-                  <mat-icon matSuffix>explore_nearby</mat-icon>
-
-                </mat-form-field>
-              </div>
-              &nbsp;
-              <div class="col">
-                <mat-form-field class="example-full-width control" appearance="fill">
-                  <mat-label>Correo Electronico</mat-label>
-                  <input matInput #message maxlength="256" class="control" placeholder="example@gmail.com"
-                    formControlName="correo">
-                  <mat-hint align="end">{{'example@gmail.com'}}</mat-hint>
-                  <mat-icon matSuffix>alternate_email</mat-icon>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="example-full-width control" appearance="fill">
-                <mat-label>Cedula o rnc</mat-label>
-                <input matInput #message maxlength="256" class="control" formControlName="rnc">
-                <mat-icon matSuffix>assignment_ind</mat-icon>
-
-              </mat-form-field>
-            </div>
-            &nbsp;
-            <div class="col">
-              <mat-form-field class="example-full-width control" appearance="fill">
-                <mat-label>Telefono 1</mat-label>
-                <input matInput #message maxlength="256" class="control" formControlName="telefono1">
-                <mat-icon matSuffix>call</mat-icon>
-              </mat-form-field>
-            </div>
-            &nbsp;
-            <div class="col">
-              <mat-form-field class="example-full-width control" appearance="fill">
-                <mat-label>Telefono 2</mat-label>
-                <input matInput #message maxlength="256" class="control" formControlName="telefono2">
-                <mat-icon matSuffix>call</mat-icon>
-              </mat-form-field>
-            </div>
-            &nbsp;
-            <div class="col">
-              <mat-form-field class="example-full-width control" appearance="fill">
-                <mat-label>Sitio web</mat-label>
-                <input matInput #message maxlength="256" class="control" placeholder="example@gmail.com"
-                  formControlName="web">
-              </mat-form-field>
-            </div>
-          </div>
-
-          <div>
-            <div class="form-group mb-3" id="imagen">
-              <label for="logo">Selecciona el logo de tu empresa</label>
-              <input type="file" (change)="onFileSelected($event)" class="form-control form-control-sm mb-3" id="logo">
-              <div *ngIf="selectedFile || imageUrl!=null">
-                <img [src]="imageUrl" class="img-thumbnail" alt="Selected Image">
-              </div>
-            </div>
-          </div>
-
-          <mat-divider></mat-divider>
-
-          <p>Configuraciones adicionales</p>
-          <div class="row">
-            <div class="col">
-              <mat-form-field appearance="fill" class="select control">
-                <mat-label>Regimen</mat-label>
-                <mat-select formControlName="idRegimen">
-                  <mat-option *ngFor="let regimen of dataLisRegimen"
-                    [value]="regimen.idRegimen">{{regimen.nombre}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            &nbsp;
-            <div class="col">
-              <mat-form-field appearance="fill" class="select control">
-                <mat-label>Sector</mat-label>
-                <mat-select formControlName="idSector">
-                  <mat-option *ngFor="let sector of dataListSector"
-                    [value]="sector.idSector">{{sector.nombre}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            &nbsp;
-            <div class="col">
-              <mat-form-field appearance="fill" class="select control">
-                <mat-label>Numero de empleados</mat-label>
-                <mat-select formControlName="cantEmpleados">
-                  <mat-option *ngFor="let num of numEmpleadosData" [value]="num.value">{{num.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            &nbsp;
-            <div class="col">
-              <mat-form-field appearance="fill" class="select control">
-                <mat-label>Selecciona una moneda</mat-label>
-                <mat-select formControlName="idMoneda">
-                  <mat-option *ngFor="let moneda of dataListMonedas" [value]="moneda.idMoneda">{{moneda.nombre}} -
-                    {{moneda.abreviatura}} -{{moneda.simbolo}} </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-          <small class="form-text text-muted"> Los campos marcados con * son obligatorios</small>
-          <div class="botones mb-5">
-            <br>
-            <button style="width: auto; padding: 10px;" mat-raised-button class="me-8 mb-8" color="primary"
-              (click)="insert($event)"><mat-icon>save</mat-icon> Guardar configuración</button>
-          </div>
-        </form>
-      </div>
+<mat-card appearance="raised" class="mainContainer">
+  <div class="container">
+    <div class="card-header">
+      <h3>Información del Negocio</h3>
+      <p>Configuración básica de tu establecimiento</p>
     </div>
-  <!-- </mat-card-content>
-</mat-card> -->
+    <mat-card-content>
 
+
+      <div class="container">
+        <div class="formularioCard mt-3">
+          <form class="formulario" [formGroup]="miFormulario">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Razón social</mat-label>
+                    <input matInput #message maxlength="256" class="" placeholder="Escriba nombre"
+                      formControlName="razonSocial">
+                  </mat-form-field>
+                </div>
+                &nbsp;
+                <div class="col">
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Nombre comercial</mat-label>
+                    <input matInput #message maxlength="256" class="control" placeholder="Escriba nombre"
+                      formControlName="nombreComercial">
+                  </mat-form-field>
+
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Dirección</mat-label>
+                    <input matInput #message maxlength="256" class="control" placeholder="Escriba nombre"
+                      formControlName="direccion">
+                    <mat-icon matSuffix>explore_nearby</mat-icon>
+
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Cedula o rnc</mat-label>
+                    <input matInput #message maxlength="256" class="control" formControlName="rnc">
+                    <mat-icon matSuffix>assignment_ind</mat-icon>
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Telefono 1</mat-label>
+                    <input matInput #message maxlength="256" class="control" formControlName="telefono1">
+                    <mat-icon matSuffix>call</mat-icon>
+                  </mat-form-field>
+
+
+
+                  <mat-form-field appearance="fill" class="select control">
+                    <mat-label>Regimen</mat-label>
+                    <mat-select formControlName="idRegimen">
+                      <mat-option *ngFor="let regimen of dataLisRegimen"
+                        [value]="regimen.idRegimen">{{regimen.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="select control">
+                    <mat-label>Sector</mat-label>
+                    <mat-select formControlName="idSector">
+                      <mat-option *ngFor="let sector of dataListSector"
+                        [value]="sector.idSector">{{sector.nombre}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                &nbsp;
+                <div class="col">
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Correo Electronico</mat-label>
+                    <input matInput #message maxlength="256" class="control" placeholder="example@gmail.com"
+                      formControlName="correo">
+                    <mat-hint align="end">{{'example@gmail.com'}}</mat-hint>
+                    <mat-icon matSuffix>alternate_email</mat-icon>
+                  </mat-form-field>
+
+
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Telefono 2</mat-label>
+                    <input matInput #message maxlength="256" class="control" formControlName="telefono2">
+                    <mat-icon matSuffix>call</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field class="example-full-width control" appearance="fill">
+                    <mat-label>Sitio web</mat-label>
+                    <input matInput #message maxlength="256" class="control" placeholder="example@gmail.com"
+                      formControlName="web">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="select control">
+                    <mat-label>Numero de empleados</mat-label>
+                    <mat-select formControlName="cantEmpleados">
+                      <mat-option *ngFor="let num of numEmpleadosData" [value]="num.value">{{num.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="select control">
+                    <mat-label>Selecciona una moneda</mat-label>
+                    <mat-select formControlName="idMoneda">
+                      <mat-option *ngFor="let moneda of dataListMonedas" [value]="moneda.idMoneda">{{moneda.nombre}} -
+                        {{moneda.abreviatura}} -{{moneda.simbolo}} </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="form-group mb-3" id="imagen">
+                <label for="logo">Selecciona el logo de tu empresa</label>
+                <input type="file" (change)="onFileSelected($event)" class="form-control form-control-sm mb-3"
+                  id="logo">
+                <div *ngIf="selectedFile || imageUrl!=null">
+                  <img [src]="imageUrl" class="img-thumbnail" alt="Selected Image">
+                </div>
+              </div>
+            </div>
+
+
+            <small class="form-text text-muted"> Los campos marcados con * son obligatorios</small>
+            <div class="botones mb-5">
+              <br>
+              <button style="width: auto; padding: 10px;" mat-raised-button class="me-8 mb-8" color="primary"
+                (click)="insert($event)"><mat-icon>save</mat-icon> Guardar configuración</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card-content>

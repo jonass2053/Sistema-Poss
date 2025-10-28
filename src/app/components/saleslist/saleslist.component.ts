@@ -65,7 +65,7 @@ export class SaleslistComponent implements OnInit {
     private fb: FormBuilder,
     private alertaService: AlertServiceService,
     private msjService: MsjService,
-    private usuarioService: UsuarioService,
+    public usuarioService: UsuarioService,
     private facturaService: FacturaService,
     private router: Router,
     private overlay: Overlay,
@@ -114,7 +114,7 @@ export class SaleslistComponent implements OnInit {
   montoPorPagar: number = 0;
   pagosVencido: number = 0;
   totalFacturado: number = 0;
-  displayedColumns: string[] = ['Cliente', 'Tipo', 'Creación', 'Vencimiento', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
+  displayedColumns: string[] = ['Cliente', 'Tipo', 'Creación', 'Total', 'MontoPagado', 'MontoPorPagar', 'Estado', 'Acciones'];
   dialog = inject(MatDialog);
   facturaForPrint: any;
   doc: string = "";
@@ -296,6 +296,7 @@ export class SaleslistComponent implements OnInit {
           : this.informacionService.tipoDocumento === "Nota de credito" ? 10
             : 1;
     this.idTipoDocumentoGlobal = idTipoDocumento;
+
 
     this.facturaService.getAll(this.usuarioService.usuarioLogueado.data.sucursal.idSucursal, pageNumber, pageSize, idTipoDocumento).subscribe((data: ServiceResponse) => {
       this.dataSource.data = data.data; // Asume que la API devuelve los items en 'items'

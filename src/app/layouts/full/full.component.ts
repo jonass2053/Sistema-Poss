@@ -390,6 +390,7 @@ export class FullComponent implements OnInit {
   isVentasSubmenuOpen = false;
   isComprasSubmenuOpen = false;
   isCajaSubmenuOpen = false;
+  isConfiguracionesSubmenuOpen = false;
 
 
   // Toggle sidebar collapse state
@@ -398,12 +399,14 @@ export class FullComponent implements OnInit {
     this.isVentasSubmenuOpen = false;
     this.isComprasSubmenuOpen = false;
     this.isCajaSubmenuOpen  = false;
+    this.isConfiguracionesSubmenuOpen = false;
     if (!this.isCollapsed) {
       setTimeout(() => {
         this.isCollapsed = true;
         this.isVentasSubmenuOpen = false;
         this.isComprasSubmenuOpen = false;
         this.isCajaSubmenuOpen  = false;
+        this.isConfiguracionesSubmenuOpen = false;
       }, 10000);
     }
 
@@ -428,6 +431,14 @@ export class FullComponent implements OnInit {
       this.isCajaSubmenuOpen = !this.isCajaSubmenuOpen
     }
   }
+
+     // Toggle caja submenu
+  toggleConfiguracionSubmenu(): void {
+    if (!this.isCollapsed) {
+      this.isConfiguracionesSubmenuOpen = !this.isConfiguracionesSubmenuOpen
+    }
+  }
+
 
   // Listen for window resize events
   @HostListener("window:resize", ["$event"])

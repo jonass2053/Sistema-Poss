@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+.mat-mdc-checkbox .mdc-form-field {
+  display: flex;
+  align-items: center;
+}
+
+label{
+  margin-bottom: 0;
+}
 
 .headerNavCard {
   display: flex;
@@ -518,6 +526,8 @@ h4 {
   width: 100%;
   box-sizing: border-box;
   overflow-x: auto; /* Opcional: para evitar desbordes horizontales */
+  // border: 1px solid red;
+  height: 91vh;
 }
 .conteinerfiltros {
   // border: 5px solid red;

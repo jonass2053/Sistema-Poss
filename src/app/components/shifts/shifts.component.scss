@@ -36,41 +36,43 @@
     color: silver;
 }
 .estadoClosed {
-    color: white;
-    background-color: red;
+    color: rgb(79, 6, 6);
+    background-color: #f1948a;
     font-size: 10px;
     padding: 5px;
     text-align: center;
     border-radius: 10px;
-    height: 20px; 
+    height: 30px; 
 }
 .item .estadoClosed {
-    color: white;
-    background-color: red;
+    color: rgb(100, 5, 5);
+    background-color: #f1948a;
     font-size: 10px;
     padding: 5px;
     text-align: center;
     border-radius: 10px;
-    height: 20px; 
+    height: 30px; 
 }
 .estadoOpen {
-    color: white;
-    background-color: green;
+    color: rgb(25, 71, 3);
+    background-color:  #95e6b7;
     font-size: 10px;
     padding: 5px;
     text-align: center;
     border-radius: 10px;
-    height: 20px; 
+     height: 30px; 
+  
 }
 
 .item .estadoOpen {
-    color: white;
-    background-color: green;
+    color: rgb(25, 71, 3);
+    background-color: #95e6b7;
     font-size: 10px;
     padding: 5px;
     text-align: center;
     border-radius: 10px;
-    height: 20px; 
+     height: 30px; 
+  
 }
 
 
@@ -82,9 +84,11 @@
     padding-right   : 20px;
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    
-    
+    justify-content: space-between;  
+}
+.headerCabecera{
+  border: 1px solid red;
+  width: 80%;
 }
 
 mat-list-item .estado

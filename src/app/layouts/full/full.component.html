@@ -455,7 +455,6 @@
                 <path d="M12 3v4" />
                 <path d="M10 10h4a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h4" />
               </svg>
-
               <span class="submenu-text">Orden de compra</span>
             </a>
           </div>
@@ -475,7 +474,6 @@
               </span>
             </a>
           </div>
-
 
         </div>
 
@@ -544,7 +542,7 @@
         <!-- Menu de caja -->
         <div class="nav-item">
           <div class="nav-link" [class.active]="isCajaSubmenuOpen" (click)="toggleCajaSubmenu()"
-            matTooltipPosition="right" matTooltip="Cajas">
+            matTooltipPosition="right" matTooltip="Caja">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="8" width="18" height="13" rx="2" ry="2"></rect>
@@ -620,6 +618,84 @@
           <span class="nav-text">Manejo de efectivo</span>
         </a> -->
 
+
+
+        <!-- Menu de configuraciones -->
+        <div class="nav-item">
+          <div class="nav-link" [class.active]="isConfiguracionesSubmenuOpen" (click)="toggleConfiguracionSubmenu()"
+            matTooltipPosition="right" matTooltip="Configuraciones">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.52-.878 3.304.906 2.426 2.426a1.724 1.724 0 0 0 1.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.878 1.52-.906 3.304-2.426 2.426a1.724 1.724 0 0 0-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.52.878-3.304-.906-2.426-2.426a1.724 1.724 0 0 0-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.878-1.52.906-3.304 2.426-2.426.996.574 2.223.109 2.573-1.066z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+
+
+
+            <span class="nav-text">Configuraciones</span>
+            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </div>
+
+          <div class="submenu" [class.show]="isConfiguracionesSubmenuOpen">
+            <a [routerLink]="['company']" class="submenu-item" [class.active]="isConfiguracionesSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="7" width="18" height="14" rx="2" ry="2" />
+                <path d="M12 3v4" />
+                <path d="M10 10h4a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h4" />
+              </svg>
+
+              <span class="submenu-text">Información Empresarial</span>
+            </a>
+          </div>
+
+          <div class="submenu" [class.show]="isConfiguracionesSubmenuOpen">
+            <a [routerLink]="['settings']" class="submenu-item" [class.active]="isConfiguracionesSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V17a2 2 0 0 0 2 2h13" />
+                <path d="M16 17h5v-6l-3-4h-2z" />
+                <circle cx="7.5" cy="17.5" r="1.5" />
+                <circle cx="17.5" cy="17.5" r="1.5" />
+                <path d="M3 7h13v10" />
+              </svg>
+              <span class="submenu-text">Configuraciones generales
+              </span>
+            </a>
+          </div>
+
+          <div class="submenu" [class.show]="isConfiguracionesSubmenuOpen">
+            <a [routerLink]="['/cashregisterlist']" class="submenu-item" [class.active]="isConfiguracionesSubmenuOpen"
+              [routerLinkActive]="routerActive">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V17a2 2 0 0 0 2 2h13" />
+                <path d="M16 17h5v-6l-3-4h-2z" />
+                <circle cx="7.5" cy="17.5" r="1.5" />
+                <circle cx="17.5" cy="17.5" r="1.5" />
+                <path d="M3 7h13v10" />
+              </svg>
+              <span class="submenu-text">Crear caja
+              </span>
+            </a>
+
+            
+          </div>
+
+
+
+        <!-- Menu usuario -->
+         
+
+
+        </div>
+
+
       </nav>
     </div>
   </div>
@@ -634,7 +710,60 @@
         <button *ngIf="turnoService.isOpen!==undefined" (click)="openModalCloseShift()"
           mat-stroked-button><mat-icon>lock_closed_circle</mat-icon> Cerrar turno</button>
       </div>
+
+
+
+
+
       <div class="ms-auto d-flex">
+
+        <!-- <button mat-button [matMenuTriggerFor]="menu" class="subscription-button">
+          <mat-icon>workspace_premium</mat-icon>
+          <span class="plan-info">
+            <span class="plan-name">Premium</span>
+            <span class="days-remaining">
+              15 dias restantes </span>
+          </span>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button> -->
+
+        <button mat-button [matMenuTriggerFor]="menuSubCripcion" class="trigger-button">
+          <mat-icon>workspace_premium</mat-icon>
+          Premium
+          <span class="days-remaining">15 días restantes</span>
+        </button>
+
+        <mat-menu #menuSubCripcion="matMenu" class="subscription-menu-panel">
+          <div class="menu-container">
+            <h4>Estado de Suscripción</h4>
+            <mat-divider></mat-divider>
+
+            <div class="row">
+              <div class="label">Plan actual:</div>
+              <div class="value">Premium</div>
+            </div>
+
+            <div class="row">
+              <div class="label">Estado:</div>
+              <div class="status">Activo</div>
+            </div>
+
+            <div class="row">
+              <div class="label">Días restantes:</div>
+              <div class="value">15</div>
+            </div>
+
+            <div class="calendar">
+              <mat-icon>event</mat-icon>
+              <span>Renueva el 8 de noviembre de 2025</span>
+            </div>
+            <div class="divider"></div>
+            <button mat-stroked-button class="manage-btn">
+              <mat-icon>settings</mat-icon>
+              Gestionar suscripción
+            </button>
+          </div>
+        </mat-menu>
         <button mat-button class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted d-flex align-items-center"
           [matMenuTriggerFor]="menu">
           <div class="d-flex align-items-center">

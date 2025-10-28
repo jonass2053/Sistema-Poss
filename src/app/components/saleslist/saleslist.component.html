@@ -4,9 +4,19 @@
       <mat-icon>description</mat-icon>LISTADO DE {{document.toUpperCase()}} <span style="margin-left: 10px;"></span>
     </div>
     <div class="centerall">
-      <button *ngIf="idTipoDocumentoGlobal!=10" color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
+      <button *ngIf="(idTipoDocumentoGlobal==1 && informationService.tienePermiso('Facturas', 'Crear'))
+        || (idTipoDocumentoGlobal==6 && informationService.tienePermiso('Cotizaciones', 'Crear'))
+        || (idTipoDocumentoGlobal==8 && informationService.tienePermiso('Conduces', 'Crear'))
+        || (idTipoDocumentoGlobal==7 && informationService.tienePermiso('Ordenes de compra', 'Crear'))
+        || (idTipoDocumentoGlobal==10 && informationService.tienePermiso('Nota de credito', 'Crear'))
+        " color="primary" (click)="addNewDocument(0, false)" mat-raised-button class="me-8 mb-8">Crear
         <mat-icon>add</mat-icon> nuevo</button>
-      <button color="primary" (click)="drawer.toggle()" mat-raised-button class="me-8 mb-8">Filtrar
+      <button *ngIf="(idTipoDocumentoGlobal==1 && informationService.tienePermiso('Facturas', 'Filtrar'))
+        || (idTipoDocumentoGlobal==6 && informationService.tienePermiso('Cotizaciones', 'Filtrar'))
+        || (idTipoDocumentoGlobal==8 && informationService.tienePermiso('Conduces', 'Filtrar'))
+        || (idTipoDocumentoGlobal==7 && informationService.tienePermiso('Ordenes de compra', 'Filtrar'))
+        || (idTipoDocumentoGlobal==10 && informationService.tienePermiso('Nota de credito', 'Filtrar'))
+        " color="primary" (click)="drawer.toggle()" mat-raised-button class="me-8 mb-8">Filtrar
         <mat-icon>manage_search</mat-icon></button>
     </div>
 
@@ -232,18 +242,16 @@
                 <!-- Weight Column -->
                 <ng-container matColumnDef="Creación">
                   <th mat-header-cell *matHeaderCellDef>
-                    <div class="center"> <mat-icon>date_range</mat-icon> F. Creación </div>
+                    <div class="center"> <mat-icon>date_range</mat-icon> Fechas </div>
                   </th>
-                  <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date :'dd/MM/YYYY'}} </td>
+                  <td mat-cell *matCellDef="let element">Creación: {{element.fechaCreacion | date :'dd/MM/YYYY'}}
+                    <p class="mb-0 fw-normal op-5">Vencimiento: {{element.vencimiento | date :'dd/MM/YYYY'}}</p>
+
+                  </td>
+
                 </ng-container>
 
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="Vencimiento">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <div class="center"> <mat-icon>date_range</mat-icon> F.Vencimiento </div>
-                  </th>
-                  <td mat-cell *matCellDef="let element"> {{element.vencimiento | date :'dd/MM/YYYY'}} </td>
-                </ng-container>
+
 
                 <ng-container matColumnDef="Total">
                   <th mat-header-cell *matHeaderCellDef>
@@ -312,7 +320,7 @@
                       RECIBIDA
                     </div>
 
-                    
+
                     <div class="badge rounded-pill textGreen" *ngIf="document=='Nota de credito'"
                       [style.background-color]="element.estadoFactura?.color">
                       {{ (element.estadoFactura?.nombre || '').toUpperCase() }}
@@ -362,37 +370,51 @@
                       <mat-menu #menu="matMenu" xPosition="before">
 
                         <button mat-menu-item (click)="openDialogPago(element)"
-                          *ngIf="informationService.tipoDocumento!='Conduce' && informationService.tipoDocumento!='Compra' && informationService.tipoDocumento!='Nota de credito' && element.estadoFactura.nombre!='Facturada'">
+                          *ngIf="(informationService.tipoDocumento!='Conduce' && informationService.tipoDocumento!='Compra' && informationService.tipoDocumento!='Nota de credito' && element.estadoFactura.nombre!='Facturada') && usuarioService.usuarioLogueado.data.rol.modulos[0].funcionalidades[2].checked==true">
                           <mat-icon color="primary">payments</mat-icon>
                           <span>Agregar pago</span>
                         </button>
 
-                        <button mat-menu-item (click)="verFactura(element.idFactura!)">
+                        <button *ngIf="(idTipoDocumentoGlobal==1 && informationService.tienePermiso('Facturas', 'Ver detalle'))
+        || (idTipoDocumentoGlobal==6 && informationService.tienePermiso('Cotizaciones', 'Ver detalle'))
+        || (idTipoDocumentoGlobal==8 && informationService.tienePermiso('Conduces', 'Ver detalle'))
+        || (idTipoDocumentoGlobal==7 && informationService.tienePermiso('Ordenes de compra', 'Ver detalle'))
+        || (idTipoDocumentoGlobal==10 && informationService.tienePermiso('Nota de credito', 'Ver detalle'))
+        " mat-menu-item (click)="verFactura(element.idFactura!)">
                           <mat-icon color="primary">visibility</mat-icon>
                           <span>Ver detalle</span>
                         </button>
 
-                        <button *ngIf="informationService.tipoDocumento=='Conduce'" mat-menu-item
+                        <button *ngIf="informationService.tipoDocumento=='Conduce' && informationService.tienePermiso('Conduces', 'Despachar')" mat-menu-item
                           (click)="openDialogChengeStatus(element.idFactura!)">
                           <mat-icon color="primary">autorenew</mat-icon>
                           <span>Despachar</span>
                         </button>
-                        <button mat-menu-item (click)="getFacturaByIdForPrint(element.idFactura!)">`
+                        <button *ngIf="(idTipoDocumentoGlobal==1 && informationService.tienePermiso('Facturas', 'Imprimir'))
+        || (idTipoDocumentoGlobal==6 && informationService.tienePermiso('Cotizaciones', 'Imprimir'))
+        || (idTipoDocumentoGlobal==8 && informationService.tienePermiso('Conduces', 'Imprimir'))
+        || (idTipoDocumentoGlobal==7 && informationService.tienePermiso('Ordenes de compra', 'Imprimir'))
+        || (idTipoDocumentoGlobal==10 && informationService.tienePermiso('Nota de credito', 'Imprimir'))
+        " mat-menu-item (click)="getFacturaByIdForPrint(element.idFactura!)">`
                           <mat-icon color="black">print</mat-icon>
                           <span>Imprimir</span>
                         </button>
-                        <button *ngIf="document=='Cotización'" mat-menu-item (click)="convertirAFactura(element)">
+                        <button *ngIf="document=='Cotización' && informationService.tienePermiso('Cotizaciones', 'Convertir a factura') " mat-menu-item (click)="convertirAFactura(element)">
                           <mat-icon color="primary">transform</mat-icon>
                           <span>Convertir a factura</span>
                         </button>
 
-                        <button matTooltip="Recibir de mercancia" *ngIf="document=='Compra'" mat-menu-item
+                        <button matTooltip="Recibir de mercancia" *ngIf="(document=='Compra' && element.recepcionRecibida==false) && informationService.tienePermiso('Ordenes de compra', 'Recepcion de mercancia') " mat-menu-item
                           (click)="recepcionMercancia(element.idFactura)">
                           <mat-icon color="primary">inventory_2</mat-icon>
                           <span>Rec.Mercancia</span>
                         </button>
-                        <button *ngIf="element.montoPagado==0  && element.recepcionRecibida==false && element.estadoFactura.nombre.toUpperCase()!='FACTURADA'" at-menu-item
-                          (click)="editar(element)" mat-menu-item>
+                        <button *ngIf="(idTipoDocumentoGlobal==1 && (element.montoPagado==0  && element.recepcionRecibida==false && element.estadoFactura.nombre.toUpperCase()!='FACTURADA') && informationService.tienePermiso('Facturas', 'Editar'))
+        || (idTipoDocumentoGlobal==6 && informationService.tienePermiso('Cotizaciones', 'Editar'))
+        || (idTipoDocumentoGlobal==8 && informationService.tienePermiso('Conduces', 'Editar'))
+        || (idTipoDocumentoGlobal==7 && informationService.tienePermiso('Ordenes de compra', 'Editar'))
+        "
+                          at-menu-item (click)="editar(element)" mat-menu-item>
                           <mat-icon color="primary">edit</mat-icon>
                           <span>Editar</span>
                         </button>
@@ -403,8 +425,8 @@
                           <span>Nota de credito / Devolución</span>
                         </button> -->
 
-                        <button *ngIf="informationService.tipoDocumento=='Factura' && element.permiteNotaCredito==true" mat-menu-item
-                          (click)="setDocumentDevolucion(); editar(element)" mat-menu-item>
+                        <button *ngIf="(informationService.tipoDocumento=='Factura' && element.permiteNotaCredito==true) && informationService.tienePermiso('Factura', 'Nota de credito / Devolución') "
+                          mat-menu-item (click)="setDocumentDevolucion(); editar(element)" mat-menu-item>
                           <mat-icon color="primary">receipt_long</mat-icon>
                           <span>Nota de credito / Devolución</span>
                         </button>
@@ -444,4 +466,4 @@
   </mat-card>
 
   <!-- <app-report-ticket-invoice [factura]="facturaForPrint" id="ticket" *ngIf="imprimiendo"></app-report-ticket-invoice> -->
-  <app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo"  id="factura"></app-invoice-report>
+  <app-invoice-report [factura]="facturaForPrint" *ngIf="imprimiendo" id="factura"></app-invoice-report>

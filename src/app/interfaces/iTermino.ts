@@ -545,3 +545,17 @@ export interface iDetalleRecepcion {
   idDetalleFacturaObj? : iDetalleFactura;
   cantidadRecibida?: number;
 }
+
+export interface iModulo {
+  id: number;
+  nombre: string;
+  descripcion?: string;
+  funcionalidades: iFuncionalidad[];
+}
+
+export interface iFuncionalidad {
+  id: number;
+  moduloId: number;
+  nombreFuncion: string;
+  checked : boolean;
+}

@@ -256,7 +256,7 @@ export class RecepcionMercanciaComponent {
       valor => valor === undefined || valor === null || (typeof valor === 'string' && valor.trim() === '')
     );
 
-    this.facturaService.getAllFilter(
+    this.facturaService.getAllFilterRecepcion(
       this.information.idSucursal, 7, 1, 10,
       this.miFormularioFilter.value
     ).subscribe((data: any) => {

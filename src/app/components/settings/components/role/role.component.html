@@ -1,107 +1,99 @@
-<mat-card appearance="raised">
+<mat-card appearance="raised" class="mainContainer">
     <div class="card-header">
-        <h3>Gestión de Roles y Permisos</h3>
-        <p>Administra usuarios, roles y permisos del sistema de forma centralizada</p>
+        <h3>Configuraciones generales de los roles y permisos <label for=""></label></h3>
+        <p>Asignacion de los roles que se van a utilizar en el sistema</p>
+        <button *ngIf="viewForm==false" mat-raised-button class="me-8 mb-8 tbnacciones" color="primary"
+            (click)="showForm()"> Ver formulario</button>
+          <button *ngIf="viewForm==true" mat-raised-button class="me-8 mb-8 tbnacciones" color="primary"
+            (click)="showForm()"> Ocultar formulario</button>
     </div>
     <mat-card-content>
-        <mat-tab-group>
-            <mat-tab label="Roles">
-                <mat-card-title>
-                    <button class="btn btn-primary">Nuevo Rol</button>
-                </mat-card-title>
-                <div class="containerrolecar">
-                     <div class="role-card">
-                    <div class="role-header">
-                        <h2 class="role-title">Administrador</h2>
-                        <span class="role-badge">ADMIN</span>
-                    </div>
+        <div>
 
-                    <p class="role-description">
-                        Control completo del sistema con acceso a todas las funcionalidades y configuraciones.
-                    </p>
+            <form class="formulario" [formGroup]="miFormulario" *ngIf="viewForm==true">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="example-full-width control">
+                                <mat-label>Nombre</mat-label>
+                                <input type="text" matInput class="control" placeholder="Escriba la nombre del rol"
+                                    formControlName="nombre">
+                            </mat-form-field>
+                        </div> &nbsp;
+                        <div class="col">
+                            <mat-form-field appearance="fill" class="example-full-width control">
+                                <mat-label>Descripcion</mat-label>
+                                <input type="text" matInput class="control" placeholder="Escriba la descripcion del rol"
+                                    formControlName="descripcion">
+                            </mat-form-field>
+                        </div>
 
-                    <div class="permissions">
-                        <h4>Permisos:</h4>
-                        <ul>
-                            <li>Gestionar usuarios</li>
-                            <li>Configurar sistema</li>
-                            <li>Ver todos los reportes</li>
-                            <li>Crear y eliminar contenido</li>
-                            <li>Administrar roles</li>
-                        </ul>
-                    </div>
-
-                    <div class="role-actions">
-                        <button class="btn btn-primary">Editar</button>
-                        <button class="btn btn-secondary">Eliminar</button>
                     </div>
                 </div>
 
-                 <div class="role-card">
-                    <div class="role-header">
-                        <h2 class="role-title">Administrador</h2>
-                        <span class="role-badge">ADMIN</span>
+                <mat-checkbox [checked]="todo" (click)="selectAll()"> Seleccionar todos </mat-checkbox>
+
+                <div class="cardModulo" *ngFor="let modulo of dataListModulos; let i = index">
+                    <div class="nombreModulo">
+                        {{modulo.nombre}}
                     </div>
-
-                    <p class="role-description">
-                        Control completo del sistema con acceso a todas las funcionalidades y configuraciones.
-                    </p>
-
-                    <div class="permissions">
-                        <h4>Permisos:</h4>
-                        <ul>
-                            <li>Gestionar usuarios</li>
-                            <li>Configurar sistema</li>
-                            <li>Ver todos los reportes</li>
-                            <li>Crear y eliminar contenido</li>
-                            <li>Administrar roles</li>
-                        </ul>
-                    </div>
-
-                    <div class="role-actions">
-                        <button class="btn btn-primary">Editar</button>
-                        <button class="btn btn-secondary">Eliminar</button>
+                    <div class="permisosModulo">
+                        <mat-checkbox *ngFor="let f of modulo.funcionalidades; let indexF = index" [checked]="f.checked"
+                            (change)="select(i, indexF, $event)"> {{f.nombreFuncion}} </mat-checkbox>
                     </div>
                 </div>
 
+                <div class="modal-footer">
+                    <button mat-raised-button class="me-8 mb-8 tbnacciones" color="primary"
+                        (click)="save()"><mat-icon>save</mat-icon> Guardar</button>
+                    <button mat-raised-button class="me-8 mb-8 tbnacciones" color="warn"
+                        (click)="resetForm()"><mat-icon>cancel</mat-icon> Cancelar</button>
+                </div>
+            </form>
 
-                 <div class="role-card">
-                    <div class="role-header">
-                        <h2 class="role-title">Administrador</h2>
-                        <span class="role-badge">ADMIN</span>
-                    </div>
+            <div class="container">
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataList" class="text-nowrap w-100" *ngIf="cargando==false">
+                        <!-- Assigned Column -->
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef> Nombre del rol </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.nombre }}</p>
+                            </td>
+                        </ng-container>
 
-                    <p class="role-description">
-                        Control completo del sistema con acceso a todas las funcionalidades y configuraciones.
-                    </p>
+                        <ng-container matColumnDef="descripcion">
+                            <th mat-header-cell *matHeaderCellDef> Nombre del rol </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="mb-0 fw-medium">{{ element.nombre }}</p>
+                            </td>
+                        </ng-container>
 
-                    <div class="permissions">
-                        <h4>Permisos:</h4>
-                        <ul>
-                            <li>Gestionar usuarios</li>
-                            <li>Configurar sistema</li>
-                            <li>Ver todos los reportes</li>
-                            <li>Crear y eliminar contenido</li>
-                            <li>Administrar roles</li>
-                        </ul>
-                    </div>
+                        <!-- Project Column -->
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="mb-0 fw-medium op-5 acciones">
+                                    <!-- {{element.project}} -->
 
-                    <div class="role-actions">
-                        <button class="btn btn-primary">Editar</button>
-                        <button class="btn btn-secondary">Eliminar</button>
-                    </div>
+                                    <button class="btnaccion" (click)="editar(element)"> <mat-icon
+                                            class="editarcolor">edit</mat-icon></button>
+                                    <button class="btnaccion" (click)="delete(element.idNumeracion)"> <mat-icon
+                                            class="deletecolor">delete</mat-icon></button>
+
+                                </div>
+                            </td>
+                        </ng-container>
+
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <app-loader *ngIf="cargando==true"></app-loader>
                 </div>
 
-                </div>    
-               
 
-
-
-
-
-            </mat-tab>
-            <mat-tab label="Modulos"> Content 2 </mat-tab>
-            <mat-tab label="Permisos"> Content 3 </mat-tab>
-        </mat-tab-group>
+            </div>
+        </div>
     </mat-card-content>
 </mat-card>

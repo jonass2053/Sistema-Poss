@@ -460,6 +460,7 @@ export class PrintServiceService {
 
     //Reporte de ventas
     printReportVentas(facturas: iFactura[] | any, totalFacturado: number, totalPagado: number, totalPorPagar: number, totalVencido: number, fecha: string) {
+
         let items = '';
         let facturasCobradas = 0;
         facturas.forEach((factura: iFactura) => {
@@ -474,8 +475,8 @@ export class PrintServiceService {
                         <td><span class="document-type">${factura.numeracionObj.nombre}</span></td>
                         <td class="date">${factura.fechaCreacion}</td>
                         <td class="date">${factura.vencimiento}</td>
-                        <td class="amount">${factura.totalGeneral}</td>
-                        <td class="amount">${ factura.montoPagado}</td>
+                        <td class="amount">${this.formatNumber(factura.totalGeneral)}</td>
+                        <td class="amount">${this.formatNumber(factura.montoPagado)}</td>
                         <td class="amount">${this.formatNumber(factura.montoPorPagar)}</td>
                         <td><span class="status cobrada">${factura?.estadoFactura?.nombre || "N/A"}</span></td>
             </tr>
@@ -724,7 +725,7 @@ export class PrintServiceService {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Reporte de Facturas</h1>
+            <h1>Reporte de ${facturas[0].tipoDocumentoObj.nombre}</h1>
             <p>Estado de cuentas y pagos</p>
         </div>
 
@@ -739,15 +740,15 @@ export class PrintServiceService {
 <div class="summary">
             <div class="summary-card">
                 <h3>Total Facturado</h3>
-                <div class="value">${totalFacturado}</div>
+                <div class="value">${this.formatNumber(totalFacturado)}</div>
             </div>
             <div class="summary-card">
                 <h3>Total Cobrado</h3>
-                <div class="value">${totalPagado}</div>
+                <div class="value">${this.formatNumber(totalPagado)}</div>
             </div>
             <div class="summary-card">
                 <h3>Pendiente por Cobrar</h3>
-                <div class="value">$${totalPorPagar}</div>
+                <div class="value">$${this.formatNumber(totalPorPagar)}</div>
             </div>
             <div class="summary-card">
                 <h3>Facturas Cobradas</h3>
@@ -797,23 +798,329 @@ export class PrintServiceService {
 </body>
 </html>
   `;
+
+        const content1 = `
+        <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Facturas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #f9fafb;
+        }
+
+        th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 12px;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .invoice-number {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .client-name {
+            color: #4b5563;
+        }
+
+        .document-type {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .date {
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .amount {
+            font-weight: 600;
+            text-align: right;
+            color: #1f2937;
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        .status.cobrada {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status.por-pagar {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .summary {
+            margin-top: 30px;
+             margin-buttom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .summary-card h3 {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 10px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 20px;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            body {
+                font-size: 10px;
+            }
+            
+            .container {
+                padding: 10px;
+                max-width: none;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .table-container {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+            
+            .status {
+                border: 1px solid #000 !important;
+            }
+            
+            .status.cobrada {
+                background: #e5e5e5 !important;
+                color: #000 !important;
+            }
+            
+            .status.por-pagar {
+                background: #d5d5d5 !important;
+                color: #000 !important;
+            }
+            
+            .summary {
+                page-break-inside: avoid;
+            }
+            
+            tbody tr {
+                page-break-inside: avoid;
+            }
+        }
+
+        @page {
+            margin: 1cm;
+            size: A4 landscape;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Reporte de ${facturas[0].tipoDocumentoObj.nombre}</h1>
+            <p>Estado de cuentas y pagos</p>
+        </div>
+
+        <div class="report-info">
+            <div>
+                <strong>Fecha de generación:</strong> <span id="current-date">${fecha}</span>
+            </div>
+            <div>
+                <strong>Total de registros:</strong> ${facturas.length}
+            </div>
+        </div>
+<div class="summary">
+            
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>F. Creación</th>
+                        <th>F. Vencimiento</th>
+                        <th>Total</th>
+                        <th>M. pagado</th>
+                        <th>M. por pagar</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${items}
+                </tbody>
+            </table>
+        </div>
+
+        
+
+        <div class="footer">
+            <p>Reporte generado automáticamente • Para uso interno únicamente</p>
+        </div>
+    </div>
+
+
+      <script>
+        window.onload = function () {
+          setTimeout(() => {
+            window.print();
+          }, 500);
+        };
+
+        window.onafterprint = function () {
+          window.close();
+        };
+      </script>
+</body>
+</html>
+  `;
         if (printWindow) {
 
             printWindow.document.open();
-            printWindow.document.write(content);
+            if (facturas[0].idTipoDocumento == 1 || facturas[0].idTipoDocumento == 7) {
+                printWindow.document.write(content);
+            } else {
+                printWindow.document.write(content1);
+            }
+
             printWindow.document.close();
         }
 
     }
 
 
-       //Reporte de ventas
-    printReportPagos(pagos: iPago[] | any, cantPagos: number, totalPagado: number, fecha: Date, desde: Date, hasta : Date) {
+    //Reporte de ventas
+    printReportPagos(pagos: iPago[] | any, cantPagos: number, totalPagado: number, fecha: Date, desde: Date, hasta: Date) {
         let items = '';
         let facturasCobradas = 0;
-        let subTitulo =""; 
+        let subTitulo = "";
 
-        if(desde!=null){
+        if (desde != null) {
             subTitulo = `Pagos realizados desde : ${desde.toLocaleDateString()} /  ${hasta.toLocaleDateString()}`
         }
 
@@ -1142,7 +1449,7 @@ export class PrintServiceService {
         }
 
     }
-    
+
     //Reporte de los recibos de cada pago
     printReciboPago(pago: iPago, moneda: string) {
         let items = '';
@@ -2478,7 +2785,7 @@ export class PrintServiceService {
     }
 
 
-    printReporteRecepcionMercancia( recepcion : iRecepcion){
+    printReporteRecepcionMercancia(recepcion: iRecepcion) {
         console.log(recepcion)
         let items = '';
         recepcion.detalles.forEach((detalle: iDetalleRecepcion) => {

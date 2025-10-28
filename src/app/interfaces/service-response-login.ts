@@ -1,3 +1,5 @@
+import { iModulo } from "./iTermino"
+
 export interface ServiceResponse {
     dateNow: Date,
     totalFacturado: number,
@@ -27,5 +29,7 @@ export interface ServiceResponseLogin {
 
 export interface iRol {
     idRol?: number,
-    nombre: string
+    nombre: string,
+    descripcion : string,
+    modulos : iModulo[]
 }

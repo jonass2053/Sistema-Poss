@@ -3,9 +3,9 @@
       style="margin-left: 10px;"></span>
   </div>
   <div class="centerall">
-    <button color="primary" (click)="newPay()" mat-raised-button class="me-8 mb-8">Crear
+    <button *ngIf="usuarioService.usuarioLogueado.data.rol.modulos[2].funcionalidades[0].checked==true" color="primary" (click)="newPay()" mat-raised-button class="me-8 mb-8">Crear
       <mat-icon>add</mat-icon> nuevo</button>
-    <button color="primary" (click)="drawer.toggle()" mat-raised-button class="me-8 mb-8">Filtrar
+    <button  *ngIf="usuarioService.usuarioLogueado.data.rol.modulos[2].funcionalidades[4].checked==true"   color="primary" (click)="drawer.toggle()" mat-raised-button class="me-8 mb-8">Filtrar
       <mat-icon>manage_search</mat-icon></button>
   </div>
 </div>
@@ -168,7 +168,7 @@
                     <mat-icon>more_vert</mat-icon>
                   </button>
                   <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="printRecibo(element)">
+                    <button *ngIf="informationService.tienePermiso('Pagos', 'Imprimir')" mat-menu-item (click)="printRecibo(element)">
                       <mat-icon>print</mat-icon>
                       <span>Imprimir recibo</span>
                     </button>
@@ -176,11 +176,11 @@
                         <mat-icon>shared</mat-icon>
                         <span>Compartir</span>
                       </button> -->
-                    <button *ngIf="informationService.idRol!==24" mat-menu-item (click)="editar(element)">
+                    <button *ngIf="informationService.tienePermiso('Pagos', 'Editar')" mat-menu-item (click)="editar(element)">
                       <mat-icon>edit</mat-icon>
                       <span>Editar</span>
                     </button>
-                    <button *ngIf="informationService.idRol!==24" mat-menu-item (click)="delete(element.idPago)">
+                    <button *ngIf="informationService.tienePermiso('Pagos', 'Eliminar')" mat-menu-item (click)="delete(element.idPago)">
                       <mat-icon>delete</mat-icon>
                       <span>Eliminar</span>
                     </button>

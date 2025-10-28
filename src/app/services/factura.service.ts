@@ -76,6 +76,10 @@ export class FacturaService {
     return this.http.post<ServiceResponse>(`${this.url}/getallfilter/${idSucursal}/${idTipoDocumento}/${pageNumber}/${pageSize}`, miFormulario, this.header,)
   }
 
+  getAllFilterRecepcion(idSucursal: number, idTipoDocumento: number, pageNumber?: number, pageSize?: number, miFormulario?: any): Observable<ServiceResponse> {
+    return this.http.post<ServiceResponse>(`${this.url}/getallfilterrecepcion/${idSucursal}/${idTipoDocumento}/${pageNumber}/${pageSize}`, miFormulario, this.header,)
+  }
+
   getEstadoFacturas(): Observable<ServiceResponse> {
     return this.http.get<ServiceResponse>(`${this.url}/estados_document`, this.header,)
   }

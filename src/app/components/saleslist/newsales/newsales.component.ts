@@ -355,6 +355,7 @@ export class NewsalesComponent implements OnDestroy {
       }
       this.alertaService.hideLoading();
     })
+     this.alertaService.hideLoading();
   }
   getAllProduct() {
     this.showLoader();
@@ -365,6 +366,7 @@ export class NewsalesComponent implements OnDestroy {
         this.hidenLoader();
       }
     })
+     this.hidenLoader();
   }
 
   getProductByIdCategoria(idCategoria: number | any) {
@@ -438,6 +440,7 @@ export class NewsalesComponent implements OnDestroy {
   }
 
   getTipoDocumentos() {
+ 
     this.numeracionService.getAllTipoDocumentos().subscribe((data: ServiceResponse) => {
       if (data.status && this.informationService.tipoDocumento !== "Cotización" && this.informationService.tipoDocumento !== "Conduce" && this.informationService.tipoDocumento !== "Compra") {
         this.miFormulario.patchValue({
@@ -459,7 +462,6 @@ export class NewsalesComponent implements OnDestroy {
             idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("COMPRA")).idTipoDocumento,
             idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("COMPRA"))?.idNumeracion
           })
-
       }
       else if (data.status && this.informationService.tipoDocumento == "Nota de credito") {
         this.idNumeracion = this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("NOTA"))?.idNumeracion;
@@ -472,14 +474,12 @@ export class NewsalesComponent implements OnDestroy {
       }
     
       else if(this.document=="Cotización" && this.idTipoDocumento!=1) {
-        alert(this.document)
-         alert(this.idTipoDocumento)
-          alert(this.document=="Cotización" && this.idTipoDocumento!=1)
         this.miFormulario.patchValue(
           {
             idTipoDocumento: data.data.find((c: iTipoDocumento) => c.nombre.toUpperCase().includes("COTIZAC")).idTipoDocumento,
             idNumeracion: this.dataListNumeracion.find(c => c.nombre.toUpperCase().includes("COTIZAC"))?.idNumeracion
           })
+          
 
       }
 
@@ -686,6 +686,7 @@ getAllNumeracion() {
     //   this.miFormulario.patchValue({ "idNumeracion": (data.data.find((c: idNumeracion) => c.predeterminada == true)).idNumeracion })
     // }
     this.getTipoDocumentos();
+    
   })
 
 
